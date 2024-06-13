@@ -1,0 +1,86 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/bg_color_white" >
+
+    <LinearLayout
+        android:id="@+id/ll_remark"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/et_data">
+
+        <TextView
+            android:id="@+id/tv_update_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5sp"
+            android:layout_marginRight="5sp"
+            android:layout_marginTop="5sp"
+            android:text="Updated on"
+            android:textColor="#717171"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_alarm_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5sp"
+            android:layout_marginRight="5sp"
+            android:layout_marginTop="2sp"
+            android:text="Alarm Detail"
+            android:textColor="#717171"
+            android:textSize="15sp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tv_update_by"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5sp"
+            android:layout_marginRight="5sp"
+            android:layout_marginTop="2sp"
+            android:text="Updated By"
+            android:textColor="#717171"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_update_field"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5sp"
+            android:layout_marginRight="5sp"
+            android:layout_marginTop="2sp"
+            android:paddingBottom="3sp"
+            android:text="Updated"
+            android:textColor="#717171"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/tv_update_doc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="3sp"
+            android:layout_marginLeft="5sp"
+            android:layout_marginRight="5sp"
+            android:layout_marginTop="2sp"
+            android:text="Uploaded Document"
+            android:textColor="#717171"
+            android:textSize="15sp"
+            />
+
+        <TextView
+            android:id="@+id/tv_alarm_telly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5sp"
+            android:layout_marginLeft="5sp"
+            android:layout_marginRight="5sp"
+            android:text="Alarm Tally"
+            android:textColor="#717171"
+            android:textSize="15sp"
+            android:minHeight="45dp"
+            android:visibility="gone"/>
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="clear_pad">Reset</string>
+    <string name="save_signature">Save</string>
+    <string name="enter_email_id_amp_password_to_access_your_account"><![CDATA[Enter Email ID & Password to access your account]]></string>
+    <string name="email_id">Email ID</string>
+    <string name="password">Password</string>
+    <string name="capital_login">Login</string>
+    <string name="login_with_ad">Login with AD</string>
+    <string name="sign_in">Sign In</string>
+    <string name="home">Home</string>
+    <string name="my_tasks">My Tasks</string>
+    <string name="notifications">Notifications</string>
+    <string name="my_profile">My profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="i_tower">I-Tower</string>
+    <string name="assign_task">Assign task</string>
+    <string name="scheduled_text">Scheduled text :</string>
+    <string name="added_today">Added Today :</string>
+</resources>
