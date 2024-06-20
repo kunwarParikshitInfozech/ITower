@@ -6,8 +6,7 @@ import android.content.IntentFilter;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
-import com.isl.constant.AppConstants;
-import com.isl.util.Utils;
+import com.isl.leaseManagement.api.ApiClient;
 
 /**
  * Created by dhakan on 10/11/2018.
@@ -27,12 +26,13 @@ public class MyApp extends Application {
         //Utils.createFolder(AppConstants.PIC_PATH);
         IntentFilter filter = new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE");
         final DataSyncReceiver myReceiver = new DataSyncReceiver();
-        registerReceiver( myReceiver, filter );
-       }
+        registerReceiver(myReceiver, filter);
+        ApiClient.INSTANCE.init();
+    }
 
     public static Context getAppContext() {
         return appContext;
     }
 
 
- }
+}

@@ -402,13 +402,13 @@ public class AuthenticateUser extends Activity {
                 @Override
                 public void onClick(View arg0) {
                     //    performLogin();
-                    showOnOffDutypopup();
+                    showOnOffDutyPopup();
                 }
             });
         }
     }
 
-    void showOnOffDutypopup() {
+    void showOnOffDutyPopup() {
         Dialog dialog = new Dialog(this);
         // Use View Binding
         OnOffDutyPopupBinding binding = OnOffDutyPopupBinding.inflate(getLayoutInflater());

@@ -17,8 +17,6 @@ class LsmHomeActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tasks_home)
-
         binding = DataBindingUtil.setContentView(this, R.layout.activity_tasks_home)
         init()
     }

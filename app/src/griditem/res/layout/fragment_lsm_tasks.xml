@@ -9,6 +9,16 @@
         tools:background="@color/white"
         tools:context="com.isl.leaseManagement.fragments.home.LsmHomeFragment">
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <com.isl.leaseManagement.utils.CustomTextView
             android:id="@+id/myTasksText"
             android:layout_width="wrap_content"
@@ -20,7 +30,6 @@
             android:textSize="@dimen/_20ssp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-
             />
 
         <RelativeLayout
@@ -49,8 +58,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/tasksRv"
             android:layout_width="match_parent"
-            android:layout_marginHorizontal="@dimen/_4sdp"
             android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_4sdp"
             android:layout_marginTop="@dimen/_8sdp"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/myTasksText"

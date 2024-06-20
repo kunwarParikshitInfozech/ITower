@@ -1,0 +1,511 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:theme="@style/LightTheme">
+
+
+        <RelativeLayout
+            android:id="@+id/rlClose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/light_white_top_rounded_rect_bg"
+            android:paddingBottom="@dimen/_8sdp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/closeTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:text="@string/close"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16ssp" />
+
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/nameTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:text="@string/task_details"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_18ssp"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </RelativeLayout>
+
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/light_white"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toTopOf="@id/llStartActivity"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rlClose">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/clTaskDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_6sdp"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:paddingBottom="@dimen/_8sdp"
+                android:theme="@style/LightTheme">
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/taskNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:textColor="@color/color_606F8A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="10000023" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/taskName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/taskNumber"
+                    tools:text="Payment Process" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/taskPriority"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:background="@drawable/rounded_bg_tv_orange"
+                    android:textColor="@color/color_ff3B30"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@id/taskNumber"
+                    tools:text="High" />
+
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/forecastStartDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/forecast_start_date"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/taskName" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/forecastStartDateValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_00AC69"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/forecastStartDate"
+                    tools:text="22.05.2023" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/forecastEndDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/forecast_end_date"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/forecastStartDate" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/forecastEndDateValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_ff3B30"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/forecastEndDate"
+                    tools:text="22.05.2023" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/taskStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/task_status"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/forecastEndDate" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/taskStatusValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/taskStatus"
+                    tools:text="In-Progress" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/slaStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/sla_status"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/taskStatus" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/slaStatusValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_ff3B30"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/slaStatus"
+                    tools:text="Delayed" />
+
+
+                <View
+                    android:id="@+id/line1"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:background="@color/color_E2E2E2"
+                    app:layout_constraintTop_toBottomOf="@id/slaStatus" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/customerSiteId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:text="@string/customer_site_id"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/line1" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/customerSiteIdValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/customerSiteId"
+                    tools:text="IGWA12331" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/tawalSiteId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/tawal_site_id"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/customerSiteId" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/tawalSiteIdValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/tawalSiteId"
+                    tools:text="1004233" />
+
+                <View
+                    android:id="@+id/line2"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:background="@color/color_E2E2E2"
+                    app:layout_constraintTop_toBottomOf="@id/tawalSiteId" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/planStartDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:text="@string/plan_start_date"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/line2" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/planStartDateValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/planStartDate"
+                    tools:text="22.05.2023" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/planEndDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/plan_end_date"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/planStartDate" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/planEndDateValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/planEndDate"
+                    tools:text="22.05.2023" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/actualStartDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/actual_start_date"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/planEndDate" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/actualStartDateValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/actualStartDate"
+                    tools:text="22.05.2023" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/actualEndDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/actual_end_date"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/actualStartDate" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/actualEndDateValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/actualEndDate"
+                    tools:text="22.05.2023" />
+
+                <View
+                    android:id="@+id/line3"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_1sdp"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:background="@color/color_E2E2E2"
+                    app:layout_constraintTop_toBottomOf="@id/actualEndDate" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/requester"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/requester"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/line3" />
+
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/requesterValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/requester"
+                    tools:text="-" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/siteTowerType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/site_tower_type"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/requester" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/siteTowerTypeValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/siteTowerType"
+                    tools:text="Rooftop" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/requestType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/request_type"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/siteTowerType" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/requestTypeValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/requestType"
+                    tools:text="BTS" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/region"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/region"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/requestType" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/regionTypeValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/region"
+                    tools:text="East" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/district"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/district"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/region" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/districtValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/district"
+                    tools:text="Dammam" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:text="@string/city"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/taskNumber"
+                    app:layout_constraintTop_toBottomOf="@id/district" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/cityValue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_48484A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="@id/taskPriority"
+                    app:layout_constraintTop_toTopOf="@id/city"
+                    tools:text="Dammam" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </ScrollView>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:id="@+id/llStartActivity"
+            android:paddingTop="@dimen/_16sdp"
+            android:paddingBottom="@dimen/_16sdp"
+            android:theme="@style/LightTheme"
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/startActivity"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_orange_rect_bg"
+                android:gravity="center"
+                android:text="@string/start_activity"
+                android:textAlignment="gravity"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/unAssign"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_grey_border_bg"
+                android:gravity="center"
+                android:text="@string/un_assign"
+                android:textAlignment="gravity"
+                android:textColor="@color/color_606F8A"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintTop_toBottomOf="@id/login" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

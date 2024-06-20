@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="infozech.itower" >
+    package="infozech.itower">
     <!--
          <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
          tools:ignore="ScopedStorage" />
@@ -74,11 +74,18 @@
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.NoTitleBar"
-        android:usesCleartextTraffic="true" >
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name="com.isl.leaseManagement.activities.TaskInProgressActivity"
+            android:theme="@style/LightTheme"
+            android:exported="false" />
+        <activity
+            android:name="com.isl.leaseManagement.base.BaseActivity"
+            android:exported="false" />
         <activity
             android:name="com.isl.leaseManagement.activities.LsmHomeActivity"
-            android:theme="@style/LightTheme"
-            android:exported="true" >
+            android:exported="true"
+            android:theme="@style/LightTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -94,7 +101,7 @@
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
-            android:grantUriPermissions="true" >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
@@ -119,12 +126,14 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.LoginPageTheme"
-            android:windowSoftInputMode="adjustPan" >
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+            android:windowSoftInputMode="adjustPan">
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name="com.isl.app.auth.TokenActivity"
@@ -347,7 +356,7 @@
         <receiver
             android:name="com.isl.itower.BootCompleteReceiver"
             android:exported="false"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED" >
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
 
@@ -356,7 +365,7 @@
         </receiver>
         <receiver
             android:name="com.isl.itower.InstallAppReceiver"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.PACKAGE_INSTALL" />
                 <action android:name="android.intent.action.PACKAGE_ADDED" />
@@ -368,7 +377,7 @@
 
         <service
             android:name="com.isl.itower.FirebaseMsgReceive"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -383,7 +392,7 @@
             android:exported="false" />
         <receiver
             android:name="com.isl.user.tracking.PowerConnectionReceiver"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
@@ -493,7 +502,7 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
             android:name="net.openid.appauth.RedirectUriReceiverActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -558,7 +567,7 @@
         <receiver
             android:name="com.isl.userTracking.SensorRestarterBroadcastReceiver"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

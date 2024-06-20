@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:layout_marginTop="@dimen/_6sdp"
         android:layout_marginHorizontal="@dimen/_4sdp"
+        android:id="@+id/clTasks"
+        android:layout_marginTop="@dimen/_6sdp"
+        android:background="@color/white"
         android:paddingBottom="@dimen/_8sdp"
         android:theme="@style/LightTheme">
 
@@ -16,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginTop="@dimen/_12sdp"
-            android:text="10000023"
+            tools:text="10000023"
             android:textColor="@color/color_606F8A"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8sdp"
-            android:text="Payment Process"
+            tools:text="Payment Process"
             android:textColor="@color/color_48484A"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintStart_toStartOf="@id/taskNumber"
@@ -38,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8sdp"
-            android:text="Assigned"
+            tools:text="Assigned"
             android:textColor="@color/color_48484A"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintStart_toStartOf="@id/taskNumber"
@@ -51,7 +53,7 @@
             android:layout_marginTop="@dimen/_8sdp"
             android:drawableStart="@drawable/calendar_small_icon"
             android:drawablePadding="@dimen/_4sdp"
-            android:text="2 Days"
+            tools:text="2 Days"
             android:textColor="@color/color_ff3B30"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintStart_toStartOf="@id/taskNumber"
@@ -59,11 +61,11 @@
 
 
         <com.isl.leaseManagement.utils.CustomTextView
-            android:id="@+id/delayed"
+            android:id="@+id/slaStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
-            android:text="Delayed"
+            tools:text="Delayed"
             android:textColor="@color/color_ff3B30"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintStart_toEndOf="@id/taskDays"
@@ -76,12 +78,11 @@
             android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginEnd="@dimen/_16sdp"
             android:background="@drawable/rounded_bg_tv_orange"
-            android:text="High"
+            tools:text="High"
             android:textColor="@color/color_ff3B30"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/taskNumber"
-
             />
 
         <com.isl.leaseManagement.utils.CustomTextView
@@ -90,11 +91,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginEnd="@dimen/_16sdp"
-            android:text="23 June 2023"
+            tools:text="23 June 2023"
             android:textColor="@color/color_48484A"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/delayed"
+            app:layout_constraintTop_toTopOf="@id/slaStatus"
 
             />
 

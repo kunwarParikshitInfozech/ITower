@@ -51,6 +51,10 @@
  <color name="color_48484A">#48484A</color>
  <color name="color_f8fafb">#f8fafb</color>
  <color name="color_ff3B30">#FF3B30</color>
+ <color name="color_00AC69">#00AC69</color>
+ <color name="color_F7FAFB">#F7FAFB</color>
+ <color name="color_E2E2E2">#E2E2E2</color>
+ <color name="light_white">#FAFFFFFF</color>
 
  <!--color for kenya/Manmar-->
 <!-- <color name="colorPrimary">#3F51B5</color>
