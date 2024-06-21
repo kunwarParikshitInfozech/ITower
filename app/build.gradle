@@ -45,11 +45,11 @@ android {
     //buildToolsVersion '29.0.2'
     defaultConfig {
         //where build app client wise then check 1.SHA256 key 2. color theme 3. launcher icon 4. App Name
-         //tawal_icon.png for tawal and logo.png for other/
-         //applicationId "infozech.safari"
-         applicationId "tawal.com.sa"
-         //applicationId "infozech.tawal"
-       // applicationId "infozech.demo"
+        //tawal_icon.png for tawal and logo.png for other/
+        //applicationId "infozech.safari"
+        applicationId "tawal.com.sa"
+        //applicationId "infozech.tawal"
+        // applicationId "infozech.demo"
         // applicationId "apollo.com.sa"
         //applicationId "infozech.zamil"
         //applicationId "ock.com.sa"
