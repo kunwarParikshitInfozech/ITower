@@ -76,9 +76,13 @@
         android:theme="@android:style/Theme.NoTitleBar"
         android:usesCleartextTraffic="true">
         <activity
+            android:name="com.isl.leaseManagement.activities.ShowLoaderActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
             android:name="com.isl.leaseManagement.activities.TaskInProgressActivity"
-            android:theme="@style/LightTheme"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/LightTheme" />
         <activity
             android:name="com.isl.leaseManagement.base.BaseActivity"
             android:exported="false" />

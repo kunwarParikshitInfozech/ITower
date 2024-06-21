@@ -11,7 +11,7 @@ import android.widget.ImageView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.isl.leaseManagement.activities.TaskInProgressActivity
+import com.isl.leaseManagement.activities.ShowLoaderActivity
 import com.isl.leaseManagement.adapters.TasksAdapter
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.base.BaseFragment
@@ -107,7 +107,7 @@ class LsmTasksFragment : BaseFragment() {
             dialog.dismiss()
         }
         binding.startActivity.setOnClickListener {
-            baseActivity.launchActivity(TaskInProgressActivity::class.java)
+            baseActivity.launchActivity(ShowLoaderActivity::class.java)
         }
     }
 
@@ -137,7 +137,7 @@ class LsmTasksFragment : BaseFragment() {
 
                 binding.unAssignedTask.scheduledValue.text =
                     taskSummary.totalUnassignedNum.toString()
-                binding.unAssignedTask.scheduledValue.text =
+                binding.unAssignedTask.addedTodayValue.text =
                     taskSummary.totalUnassignedToday.toString()
             }
         }
@@ -149,7 +149,6 @@ class LsmTasksFragment : BaseFragment() {
         val totalUnassignedNum: Int,
         val totalUnassignedToday: Int
     )
-
 
     private fun calculateTaskSummary(tasks: List<TasksSummaryResponse>): TaskSummary {
         val assignedTasks = tasks.filter { it.taskStatus == "Assigned" }

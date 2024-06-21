@@ -39,4 +39,8 @@
     <string name="start_activity">Start Activity</string>
     <string name="un_assign">Un-assign</string>
     <string name="loading_your_content_this_may_take_a_few_seconds">Loading your content, this may take a few seconds...</string>
+    <string name="task_in_progress">Task In Progress</string>
+    <string name="due_by">Due by</string>
+    <string name="basic_details">Basic Details</string>
+    <string name="additional_documents">Additional Documents</string>
 </resources>

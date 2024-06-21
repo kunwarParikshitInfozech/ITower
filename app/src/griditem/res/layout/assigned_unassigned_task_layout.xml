@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -46,7 +47,7 @@
             android:id="@+id/scheduledValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="17"
+            tools:text="17"
             android:textAlignment="center"
             android:textColor="@color/color_48484A"
             android:textSize="@dimen/_12ssp"
@@ -69,7 +70,7 @@
             android:id="@+id/addedTodayValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="03"
+            tools:text="03"
             android:textAlignment="center"
             android:textColor="@color/color_48484A"
             android:textSize="@dimen/_12ssp"
