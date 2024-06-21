@@ -65,7 +65,7 @@ import com.isl.constant.AppConstants;
 import com.isl.constant.WebMethods;
 import com.isl.dao.DataBaseHelper;
 import com.isl.dao.cache.AppPreferences;
-import com.isl.itower.AuthenticateUser;
+import com.isl.itower.ValidateUDetails;
 import com.isl.itower.CustomGrid;
 import com.isl.itower.ExpandableHeightGridView;
 import com.isl.itower.GPSTracker;
@@ -835,7 +835,7 @@ public class HomeFragement extends Fragment {
             Utils.toast(getActivity(), "36");
             stopLocationService();
             stopPunchNotification();
-            Intent i = new Intent(getActivity(), AuthenticateUser.class);
+            Intent i = new Intent(getActivity(), ValidateUDetails.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
             try {

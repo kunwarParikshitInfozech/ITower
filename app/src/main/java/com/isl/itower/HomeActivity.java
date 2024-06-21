@@ -63,6 +63,7 @@ import com.isl.notification.ShortcutBadger;
 import com.isl.userTracking.PunchInNotificationService;
 import com.isl.userTracking.userttracking.LocationService;
 import com.isl.util.HttpUtils;
+import com.isl.util.NetworkManager;
 import com.isl.util.Utils;
 import com.isl.workflow.constant.Constants;
 
@@ -108,6 +109,7 @@ public class HomeActivity extends AppCompatActivity
     String mobileVersion = "";
     String refresh = "0";
     public static final String TAG_MY_WORK = "mywork";
+    private NetworkManager networkManager;//108
 
     /*Added by Anshul Sharma*/
     private BroadcastReceiver mNetworkReceiver;
@@ -140,6 +142,7 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate( savedInstanceState );
         try{
             setContentView( R.layout.activity_home );
+
 
             try {
                 pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -265,10 +268,26 @@ public class HomeActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        networkManager = new NetworkManager(); //108
         updateNotificationCount();
         if (refresh.equalsIgnoreCase("0") &&
                 Utils.isNetworkAvailable(HomeActivity.this)) {
-            new LoginTask(HomeActivity.this).execute();
+            //108
+
+            networkManager.getToken(new NetworkManager.TokenCallback() {
+                @Override
+                public void onTokenReceived(String token) {
+                    new LoginTask(HomeActivity.this,token).execute();
+                }
+
+                @Override
+                public void onTokenError(String error) {
+                    Toast.makeText(HomeActivity.this, error, Toast.LENGTH_SHORT).show();
+                }
+            });
+            //108
+          //  new LoginTask(HomeActivity.this).execute();
+          //  getToken();
         }
     }
 
@@ -617,6 +636,7 @@ public class HomeActivity extends AppCompatActivity
                                 ("tawal.com.sa")){
                     signOut();
                     new LogoutAuth2(HomeActivity.this).execute();
+                  //  new LogoutTask1(HomeActivity.this).execute();
 
                 } else if (Utils.isNetworkAvailable(HomeActivity.this) &&
                         getApplicationContext().getPackageName().equalsIgnoreCase
@@ -695,21 +715,22 @@ public class HomeActivity extends AppCompatActivity
             if (pd != null && pd.isShowing()) {
                 pd.dismiss();
             }
-            //Toast.makeText(getActivity(),"Successfully logout", Toast.LENGTH_SHORT).show();
-            Utils.toast( HomeActivity.this, "36" );
-            stopLocationService();
-            stopPunchInnotificatioService();
-            Intent i = new Intent( HomeActivity.this, AuthenticateUser.class );
-            i.setFlags( Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
-            startActivity( i );
-            DataBaseHelper dbHelper = new DataBaseHelper( HomeActivity.this );
-            dbHelper.open();
-            dbHelper.clearFormRights();
-            dbHelper.close();
-            mAppPreferences.setLoginState( 0 );
-            mAppPreferences.saveSyncState( 0 );
-            //mAppPreferences.setGCMRegistationId("");
-            finish();
+            //Toast.mak+eText(getActivity(),"Successfully logout", Toast.LENGTH_SHORT).show();
+          //  Utils.toast( HomeActivity.this, "36" );
+//            stopLocationService();
+//            stopPunchInnotificatioService();
+//            Intent i = new Intent( HomeActivity.this, ValidateUDetails.class );
+//            i.setFlags( Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
+//            startActivity( i );
+//            DataBaseHelper dbHelper = new DataBaseHelper( HomeActivity.this );
+//            dbHelper.open();
+//            dbHelper.clearFormRights();
+//            dbHelper.close();
+//            mAppPreferences.setLoginState( 0 );
+//            mAppPreferences.saveSyncState( 0 );
+//            //mAppPreferences.setGCMRegistationId("");
+//            finish();
+            new LogoutTask1(HomeActivity.this).execute();
         }
     }
 
@@ -1120,7 +1141,60 @@ public class HomeActivity extends AppCompatActivity
             stopLocationService();
             stopPunchInnotificatioService();
             Utils.toast( HomeActivity.this, "36" );
-            Intent i = new Intent( HomeActivity.this, AuthenticateUser.class );
+            Intent i = new Intent( HomeActivity.this, ValidateUDetails.class );
+            i.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
+            startActivity( i );
+            DataBaseHelper dbHelper = new DataBaseHelper( HomeActivity.this );
+            dbHelper.open();
+            dbHelper.clearFormRights();
+            dbHelper.close();
+            mAppPreferences.setLoginState( 0 );
+            mAppPreferences.saveSyncState( 0 );
+            //mAppPreferences.setGCMRegistationId("");
+            finish();
+        }
+    }
+
+
+    public class LogoutTask1 extends AsyncTask<Void, Void, Void> {
+        ProgressDialog pd;
+        Context con;
+        String res;
+        ResponceLoginList response = null;
+
+        public LogoutTask1(Context con) {
+            this.con = con;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            pd = ProgressDialog.show( con, null, "Logging Out..." );
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>( 1 );
+                nameValuePairs.add( new BasicNameValuePair( "userId", mAppPreferences.getUserId() ) );
+                res = Utils.httpPostRequest( con, mAppPreferences.getConfigIP() + WebMethods.url_logout, nameValuePairs );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (pd != null && pd.isShowing()) {
+                pd.dismiss();
+            }
+            //Toast.makeText(getActivity(),"Successfully logout", Toast.LENGTH_SHORT).show();
+            stopLocationService();
+            stopPunchInnotificatioService();
+            Utils.toast( HomeActivity.this, "36" );
+            Intent i = new Intent( HomeActivity.this, ValidateUDetails.class );
             i.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
             startActivity( i );
             DataBaseHelper dbHelper = new DataBaseHelper( HomeActivity.this );
@@ -1179,7 +1253,7 @@ public class HomeActivity extends AppCompatActivity
             stopLocationService();
             stopPunchInnotificatioService();
             Utils.toast( HomeActivity.this, "36" );
-            Intent i = new Intent( HomeActivity.this, AuthenticateUser.class );
+            Intent i = new Intent( HomeActivity.this, ValidateUDetails.class );
             i.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
             startActivity( i );
             DataBaseHelper dbHelper = new DataBaseHelper( HomeActivity.this );
@@ -1424,7 +1498,7 @@ public class HomeActivity extends AppCompatActivity
         mAppPreferences.setLoginState( 0 );
         mAppPreferences.saveSyncState( 0 );
         //mAppPreferences.setGCMRegistationId("");
-        Intent i = new Intent( HomeActivity.this, AuthenticateUser.class );
+        Intent i = new Intent( HomeActivity.this, ValidateUDetails.class );
         i.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
         startActivity( i );
         finish();
@@ -1499,7 +1573,7 @@ public class HomeActivity extends AppCompatActivity
         stopLocationService();
         stopPunchInnotificatioService();
         Utils.toast( HomeActivity.this, "36" );
-        Intent i = new Intent( HomeActivity.this, AuthenticateUser.class );
+        Intent i = new Intent( HomeActivity.this, ValidateUDetails.class );
         i.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
         startActivity(i);
         DataBaseHelper dbHelper = new DataBaseHelper( HomeActivity.this );
@@ -1623,10 +1697,11 @@ public class HomeActivity extends AppCompatActivity
         ProgressDialog pd;
         Context con;
         AppPreferences mAppPref;
-        String res;
-        public LoginTask(Context con) {
+        String res,token; //108
+        public LoginTask(Context con,String token) {
             this.con = con;
             mAppPref = new AppPreferences(HomeActivity.this);
+            this.token = token; //108
 
         }
 
@@ -1655,7 +1730,7 @@ public class HomeActivity extends AppCompatActivity
                 nameValuePairs.add(new BasicNameValuePair("addParams",addParams));
                 nameValuePairs.add(new BasicNameValuePair("retryCnt", "0"));
                 nameValuePairs.add(new BasicNameValuePair("languageCode", "en"));
-                res = Utils.httpPostRequest(con,mAppPreferences.getConfigIP()+ WebMethods.url_Authenticate, nameValuePairs);
+                res = Utils.httpPostRequest1(con,mAppPreferences.getConfigIP()+ WebMethods.url_Authenticate, nameValuePairs,token); //108
                 response = new Gson().fromJson(res, ResponceLoginList.class);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1862,5 +1937,6 @@ public class HomeActivity extends AppCompatActivity
             ShortcutBadger.applyCount( HomeActivity.this, notification_list.size() );
         }
     }
+
 
 }

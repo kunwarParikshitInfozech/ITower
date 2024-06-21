@@ -55,6 +55,7 @@ import com.isl.modal.BeanSiteList;
 import com.isl.modal.Operator;
 import com.isl.notification.ShortcutBadger;
 import com.isl.sparepart.schedule.AdapterSchedule;
+import com.isl.util.NetworkManager;
 import com.isl.util.Utils;
 
 import org.apache.http.NameValuePair;
@@ -101,6 +102,7 @@ public class ScheduleFragement extends Fragment {
     View view;
     ArrayList<String> searchDDLlist;
     SwipeRefreshLayout pullToRefresh;
+    private NetworkManager networkManager;//108
 
     public ScheduleFragement() {
     }
@@ -113,6 +115,7 @@ public class ScheduleFragement extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.activity_site_list,container, false);
+        networkManager = new NetworkManager();//108
         RelativeLayout rl_header_ticket_list = (RelativeLayout) view.findViewById(R.id.rl_header_ticket_list);
         rl_header_ticket_list.setVisibility(View.GONE);
         txt_no_ticket = (TextView) view.findViewById(R.id.txt_no_ticket);
@@ -155,7 +158,20 @@ public class ScheduleFragement extends Fragment {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    new PMGridTask( getActivity() ).execute();
+                    //108
+                    networkManager.getToken(new NetworkManager.TokenCallback() {
+                        @Override
+                        public void onTokenReceived(String token) {
+                            new PMGridTask( getActivity(),token ).execute();
+                        }
+
+                        @Override
+                        public void onTokenError(String error) {
+                            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    //108
+                 //   new PMGridTask( getActivity() ).execute();
                 }
             },100);
 
@@ -177,7 +193,19 @@ public class ScheduleFragement extends Fragment {
         pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             public void onRefresh() {
                 if (Utils.isNetworkAvailable(getActivity())) {
-                    new PMGridTask( getActivity() ).execute();
+                    //108
+                    networkManager.getToken(new NetworkManager.TokenCallback() {
+                        @Override
+                        public void onTokenReceived(String token) {
+                            new PMGridTask( getActivity(),token ).execute();
+                        }
+
+                        @Override
+                        public void onTokenError(String error) {
+                            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                        }
+                    });//108
+                  //  new PMGridTask( getActivity() ).execute();
                     searchFunction();
                 } else {
                     Toast.makeText(getActivity(),"No internet connection,Try again.", Toast.LENGTH_SHORT).show();
@@ -364,7 +392,19 @@ public class ScheduleFragement extends Fragment {
             public void onClick(View arg0) {
                 actvity_dialog.cancel();
                 if (Utils.isNetworkAvailable(getActivity())) {
-                    new PMGridTask( getActivity() ).execute();
+                    //108
+                    networkManager.getToken(new NetworkManager.TokenCallback() {
+                        @Override
+                        public void onTokenReceived(String token) {
+                            new PMGridTask( getActivity(),token ).execute();
+                        }
+
+                        @Override
+                        public void onTokenError(String error) {
+                            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                        }
+                    });//108
+                  //  new PMGridTask( getActivity() ).execute();
                     searchFunction();
                 }
             }
@@ -488,7 +528,19 @@ public class ScheduleFragement extends Fragment {
             public void onClick(View arg0) {
                 actvity_dialog.cancel();
                 if (Utils.isNetworkAvailable(getActivity())) {
-                    new PMGridTask( getActivity() ).execute();
+                    //108
+                    networkManager.getToken(new NetworkManager.TokenCallback() {
+                        @Override
+                        public void onTokenReceived(String token) {
+                            new PMGridTask( getActivity(),token ).execute();
+                        }
+
+                        @Override
+                        public void onTokenError(String error) {
+                            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                        }
+                    });//108
+                  //  new PMGridTask( getActivity() ).execute();
                     searchFunction();
                 }
             }
@@ -553,7 +605,18 @@ public class ScheduleFragement extends Fragment {
                  if(flag==1){
                      actvity_dialog.cancel();
                      if (Utils.isNetworkAvailable(getActivity())) {
-                         new PMGridTask( getActivity() ).execute();
+                         networkManager.getToken(new NetworkManager.TokenCallback() {
+                             @Override
+                             public void onTokenReceived(String token) {
+                                 new PMGridTask( getActivity(),token ).execute();
+                             }
+
+                             @Override
+                             public void onTokenError(String error) {
+                                 Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                             }
+                         });
+                        // new PMGridTask( getActivity() ).execute();
                          searchFunction();
                      }
                      startActivity(i);
@@ -586,7 +649,19 @@ public class ScheduleFragement extends Fragment {
             public void onClick(View arg0) {
                 actvity_dialog.cancel();
                 if (Utils.isNetworkAvailable(getActivity())) {
-                    new PMGridTask(getActivity()).execute();
+                    //108
+                    networkManager.getToken(new NetworkManager.TokenCallback() {
+                        @Override
+                        public void onTokenReceived(String token) {
+                            new PMGridTask( getActivity(),token ).execute();
+                        }
+
+                        @Override
+                        public void onTokenError(String error) {
+                            Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                        }
+                    });//108
+                   // new PMGridTask(getActivity()).execute();
                     searchFunction();
                 }
             }
@@ -596,9 +671,11 @@ public class ScheduleFragement extends Fragment {
      public class PMGridTask extends AsyncTask<Void, Void, Void> {
         ProgressDialog pd;
         Context con;
+        String token;//108
 
-        public PMGridTask(Context con) {
+        public PMGridTask(Context con,String token) {
             this.con = con;
+            this.token = token;//108
         }
 
         @Override
@@ -621,7 +698,7 @@ public class ScheduleFragement extends Fragment {
                 }else{
                     url=moduleUrl+ WebMethods.url_getScheduled_Sites;
                 }
-                String response = Utils.httpPostRequest(con,url, nameValuePairs);
+                String response = Utils.httpPostRequest1(con,url, nameValuePairs,token);//108
                 Gson gson = new Gson();
                 response_ticket_list = gson.fromJson(response,BeanSiteList.class);
             } catch (Exception e) {

@@ -42,14 +42,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
+import com.isl.api.IApiRequest;
+import com.isl.api.RetrofitApiClient;
 import com.isl.dao.cache.AppPreferences;
 import com.isl.constant.AppConstants;
 import com.isl.constant.WebMethods;
 import com.isl.dao.DataBaseHelper;
-import com.isl.itower.AuthenticateUser;
+import com.isl.itower.ValidateUDetails;
 import com.isl.itower.HomeActivity;
 import com.isl.itower.Version;
 import com.isl.modal.ResponceLoginList;
+import com.isl.util.HttpUtils;
+import com.isl.util.NetworkManager;
 import com.isl.util.Utils;
 
 import net.openid.appauth.AppAuthConfiguration;
@@ -111,6 +115,8 @@ public class TokenActivity extends AppCompatActivity {
     private final AtomicReference<JSONObject> mUserInfoJson = new AtomicReference<>();
     private ExecutorService mExecutor;
     private Configuration mConfiguration;
+    String userPrincipalName = "",displayName = "",TokenID = "",ssoLoginId;
+    NetworkManager networkManager; //108
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +127,7 @@ public class TokenActivity extends AppCompatActivity {
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
+        networkManager = new NetworkManager(); //108
         mobileVersion = Build.VERSION.RELEASE;
 
 
@@ -300,7 +307,7 @@ public class TokenActivity extends AppCompatActivity {
             userInfoCard.setVisibility( View.GONE);
         } else {
             try {
-                String userPrincipalName = "",displayName = "",TokenID = "";
+
 
                 if(getApplicationContext().getPackageName().equalsIgnoreCase("infozech.tawal")){
                     if (userInfo.has("preferred_username")) {
@@ -353,7 +360,22 @@ public class TokenActivity extends AppCompatActivity {
                 }*/
                 iemi = "";
                 if (Utils.isNetworkAvailable(TokenActivity.this)) {
-                    new LoginTask(TokenActivity.this,0,userPrincipalName,displayName).execute();
+                    RetrofitApiClient.init(IApiRequest.class,getApplicationContext());
+                    //108
+                    networkManager.getToken(new NetworkManager.TokenCallback() {
+                        @Override
+                        public void onTokenReceived(String token) {
+                            new LoginTask(TokenActivity.this,0,userPrincipalName,displayName,token).execute();
+                        }
+
+                        @Override
+                        public void onTokenError(String error) {
+                            Toast.makeText(TokenActivity.this, error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    //108
+                   // getToken();
+                  //  new LoginTask(TokenActivity.this,0,userPrincipalName,displayName).execute();
                 }
 
 
@@ -514,7 +536,7 @@ public class TokenActivity extends AppCompatActivity {
         }
         mStateManager.replace(clearedState);
 
-        Intent mainIntent = new Intent(this, AuthenticateUser.class);
+        Intent mainIntent = new Intent(this, ValidateUDetails.class);
         mainIntent.setFlags( Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(mainIntent);
         finish();
@@ -526,13 +548,14 @@ public class TokenActivity extends AppCompatActivity {
         AppPreferences mAppPref;
         int login=0;
         String res;
-        String ssoLoginId,displayName;
-        public LoginTask(Context con,int login,String ssoLoginId,String displayName) {
+        String displayName,token; //108
+        public LoginTask(Context con,int login,String LoginId,String displayName,String token) {
             this.con = con;
             mAppPref = new AppPreferences(TokenActivity.this);
             this.login = login;
             this.displayName = displayName;
-            this.ssoLoginId = ssoLoginId;
+            ssoLoginId = LoginId;
+            this.token = token; //108
         }
 
         @Override
@@ -559,7 +582,7 @@ public class TokenActivity extends AppCompatActivity {
                 nameValuePairs.add(new BasicNameValuePair("addParams",addParams));
                 nameValuePairs.add(new BasicNameValuePair("retryCnt", "0"));
                 nameValuePairs.add(new BasicNameValuePair("languageCode", "en"));
-                res = Utils.httpPostRequest(con,mAppPreferences.getConfigIP()+ WebMethods.url_Authenticate, nameValuePairs);
+                res = Utils.httpPostRequest1(con,mAppPreferences.getConfigIP()+ WebMethods.url_Authenticate, nameValuePairs,token); //108
                 response = new Gson().fromJson(res, ResponceLoginList.class);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -590,11 +613,12 @@ public class TokenActivity extends AppCompatActivity {
                 setLoginResponce(response,ssoLoginId,displayName);
                 version();
             }else if (response != null	&& response.getDetails().get(0).getSuccess().equalsIgnoreCase("M")) {
-                //WorkFlowUtils.toastMsg(AuthenticateUser.this, response.getDetails().get(0).getMessage());
+                //WorkFlowUtils.toastMsg(ValidateUDetails.this, response.getDetails().get(0).getMessage());
                 alreadyLogin(response.getDetails().get(0).getMessage(),"M",ssoLoginId,displayName);
             }else if (response != null	&& response.getDetails().get(0).getSuccess().equalsIgnoreCase("N")) {
-                //WorkFlowUtils.toastMsg(AuthenticateUser.this, response.getDetails().get(0).getMessage());
-                alreadyLogin(response.getDetails().get(0).getMessage(),"N",ssoLoginId,displayName);
+                //WorkFlowUtils.toastMsg(ValidateUDetails.this, response.getDetails().get(0).getMessage());
+                alreadyLogin1(response.getDetails().get(0).getMessage(),"N",(response.getDetails().get(0).getuId()));
+             //   alreadyLogin(response.getDetails().get(0).getMessage(),"N",ssoLoginId,displayName);
             }
             else if (response != null	&& response.getDetails().get(0).getMessage().length()>0) {
                 Utils.toastMsg(TokenActivity.this, response.getDetails()
@@ -819,7 +843,8 @@ public class TokenActivity extends AppCompatActivity {
         }
     }
 
-    public void alreadyLogin(String msg,String flag,String loginId,String displayName) { // open pop up for passward expired
+    public void alreadyLogin(String msg,String flag,String loginId,String displayName) {
+        // open pop up for passward expired
         final Dialog actvity_dialog = new Dialog(TokenActivity.this, R.style.FullHeightDialog);
         actvity_dialog.requestWindowFeature( Window.FEATURE_NO_TITLE);
         actvity_dialog.getWindow().setBackgroundDrawableResource(R.color.nevermind_bg_color);
@@ -850,7 +875,22 @@ public class TokenActivity extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 actvity_dialog.cancel();
-                new LoginTask(TokenActivity.this,1,loginId,displayName).execute();
+                //108
+                RetrofitApiClient.init(IApiRequest.class,getApplicationContext());
+                networkManager.getToken(new NetworkManager.TokenCallback() {
+                    @Override
+                    public void onTokenReceived(String token) {
+
+                        new LoginTask(TokenActivity.this,0,userPrincipalName,displayName,token).execute();
+                    }
+
+                    @Override
+                    public void onTokenError(String error) {
+                        Toast.makeText(TokenActivity.this, error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+                //108
+             //   new LoginTask(TokenActivity.this,1,loginId,displayName).execute();
 
             }
         });
@@ -862,6 +902,151 @@ public class TokenActivity extends AppCompatActivity {
                 new LogoutTask(TokenActivity.this).execute();
             }
         });
+    }
+
+    public void alreadyLogin1(String msg,String flag,String userId) { // open pop up for passward expired
+        final Dialog actvity_dialog = new Dialog(TokenActivity.this, R.style.FullHeightDialog);
+        actvity_dialog.requestWindowFeature( Window.FEATURE_NO_TITLE);
+        actvity_dialog.getWindow().setBackgroundDrawableResource(R.color.nevermind_bg_color);
+        actvity_dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        actvity_dialog.setContentView(R.layout.back_confirmation_alert);
+        final Window window_SignIn = actvity_dialog.getWindow();
+        window_SignIn.setLayout(WindowManager.LayoutParams.MATCH_PARENT,WindowManager.LayoutParams.MATCH_PARENT);
+        window_SignIn.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        actvity_dialog.show();
+        Button positive = (Button) actvity_dialog.findViewById( R.id.bt_ok );
+        Button negative = (Button) actvity_dialog.findViewById( R.id.bt_cancel );
+        TextView title = (TextView) actvity_dialog.findViewById( R.id.tv_title );
+        TextView tv_header = (TextView) actvity_dialog.findViewById( R.id.tv_header );
+        tv_header.setTypeface( Utils.typeFace( TokenActivity.this ) );
+        positive.setTypeface( Utils.typeFace( TokenActivity.this ) );
+        negative.setTypeface( Utils.typeFace( TokenActivity.this ) );
+        title.setTypeface( Utils.typeFace( TokenActivity.this ) );
+        title.setText(msg);
+        positive.setText("YES");
+        negative.setText("NO");
+
+        positive.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                actvity_dialog.cancel();
+                new LogoutAuth2(TokenActivity.this,userId).execute();
+                //new LoginTask(ValidateUDetails.this, 0,token).execute();
+                //new LoginTask(ValidateUDetails.this,1).execute();
+
+            }
+        });
+
+        negative.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View arg0) {
+                actvity_dialog.cancel();
+
+            }
+        });
+    }
+
+    public class LogoutAuth2 extends AsyncTask<Void, Void, Void> {
+        ProgressDialog pd;
+        Context con;
+        String userId;
+        public LogoutAuth2(Context con,String userId) {
+            this.con = con;
+            this.userId = userId;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            pd = ProgressDialog.show(con, null, "Loading...");
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                String response = HttpUtils.httpGetRequest(WebMethods.url_logout_ad);
+            } catch (Exception e) {
+                e.printStackTrace();
+                //auditTrailList = null;
+            }
+            return null;
+        }
+
+        protected void onPostExecute(Void result) {
+            if (pd != null && pd.isShowing()) {
+                pd.dismiss();
+            }
+            //Toast.mak+eText(getActivity(),"Successfully logout", Toast.LENGTH_SHORT).show();
+            //  Utils.toast( HomeActivity.this, "36" );
+//            stopLocationService();
+//            stopPunchInnotificatioService();
+//            Intent i = new Intent( HomeActivity.this, ValidateUDetails.class );
+//            i.setFlags( Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
+//            startActivity( i );
+//            DataBaseHelper dbHelper = new DataBaseHelper( HomeActivity.this );
+//            dbHelper.open();
+//            dbHelper.clearFormRights();
+//            dbHelper.close();
+//            mAppPreferences.setLoginState( 0 );
+//            mAppPreferences.saveSyncState( 0 );
+//            //mAppPreferences.setGCMRegistationId("");
+//            finish();
+            new LogoutTask1(TokenActivity.this,userId).execute();
+        }
+    }
+
+    public class LogoutTask1 extends AsyncTask<Void, Void, Void> {
+        ProgressDialog pd;
+        Context con;
+        String res,userId;
+        ResponceLoginList response = null;
+
+
+        public LogoutTask1(Context con,String userId) {
+            this.con = con;
+            this.userId = userId;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            pd = ProgressDialog.show( con, null, "Logging Out..." );
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>( 1 );
+                nameValuePairs.add( new BasicNameValuePair( "userId",userId ) );
+                res = Utils.httpPostRequest( con, mAppPreferences.getConfigIP() + WebMethods.url_logout, nameValuePairs );
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if (pd != null && pd.isShowing()) {
+                pd.dismiss();
+            }
+            //Toast.makeText(getActivity(),"Successfully logout", Toast.LENGTH_SHORT).show();
+//			stopLocationService();
+//			stopPunchInnotificatioService();
+            Utils.toast( TokenActivity.this, "36" );
+//			Intent i = new Intent( ValidateUDetails.this, ValidateUDetails.class );
+//			i.setFlags( Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK );
+//			startActivity( i );
+//			DataBaseHelper dbHelper = new DataBaseHelper( HomeActivity.this );
+//			dbHelper.open();
+//			dbHelper.clearFormRights();
+//			dbHelper.close();
+//			mAppPreferences.setLoginState( 0 );
+//			mAppPreferences.saveSyncState( 0 );
+            //mAppPreferences.setGCMRegistationId("");
+            //	finish();
+        }
     }
 
     public void version() { // check app version
@@ -890,4 +1075,6 @@ public class TokenActivity extends AppCompatActivity {
         }
         return null;
     }
+
+
 }

@@ -18,6 +18,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -59,6 +60,7 @@ import com.isl.workflow.modal.responce.AccessTokenResponce;
 import com.isl.workflow.modal.responce.GetSerachKeyResponse;
 import com.isl.workflow.modal.responce.KeyDetailsResponce;
 import com.isl.workflow.tabs.RequestReport;
+import com.isl.workflow.utils.UIUtils;
 import com.isl.workflow.utils.WorkFlowUtils;
 
 import org.apache.http.NameValuePair;
@@ -287,6 +289,7 @@ public class WorkFlowForm extends Fragment implements View.OnClickListener {
 
 
         for (Fields field : component.getFields()) {
+
 
             FormCacheManager.getFormConfiguration().getFormFields().put(field.getKey(), field);
 
@@ -689,6 +692,21 @@ public class WorkFlowForm extends Fragment implements View.OnClickListener {
 
             }
 
+            String pmName = (String) FormCacheManager.getPrvFormData().get("pmname");
+            //109
+            UIUtils.key = false;
+            UIUtils.isMatch = false;
+
+            if(mAppPreferences.getUserId().equalsIgnoreCase(pmName))
+            {
+                UIUtils.isMatch = true;
+            }
+            else
+            {
+                UIUtils.isMatch = false;
+            }
+            //109
+
             System.out.println("Transaction Data - " + FormCacheManager.getPrvFormData());
 
             isDataFetched = true;
@@ -697,6 +715,7 @@ public class WorkFlowForm extends Fragment implements View.OnClickListener {
 
             String assignedUser = (String) FormCacheManager.getPrvFormData().get(Constants.ASSIGNED_USER);
             String assignedGroup = (String) FormCacheManager.getPrvFormData().get(Constants.ASSIGNED_GROUP);
+
 
             boolean isGroupExists = false;
             if (assignedGroup != null && assignedGroup.length() > 0) {
@@ -789,7 +808,20 @@ public class WorkFlowForm extends Fragment implements View.OnClickListener {
                     if (FormCacheManager.getPrvFormData().containsKey(Constants.EDIT_FORM_KEY) &&
                             FormCacheManager.getPrvFormData().get(Constants.EDIT_FORM_KEY) != null &&
                             ((String) FormCacheManager.getPrvFormData().get(Constants.EDIT_FORM_KEY)).length() > 0) {
-                        editForm = (String) FormCacheManager.getPrvFormData().get(Constants.EDIT_FORM_KEY);
+                        //109
+                        editForm = (String) FormCacheManager.getPrvFormData().get(Constants.FORM_KEY);
+                         if(UIUtils.isMatch && editForm.equalsIgnoreCase("AccessRequesttoc"))
+                         {
+                             UIUtils.key = true;
+                             editForm = (String) FormCacheManager.getPrvFormData().get(Constants.FORM_KEY);
+                         }
+                         else {
+                             UIUtils.key = false;
+                             editForm = (String) FormCacheManager.getPrvFormData().get(Constants.EDIT_FORM_KEY);
+                         }
+                         //109
+                      //  editForm = (String) FormCacheManager.getPrvFormData().get(Constants.EDIT_FORM_KEY);
+
                     } else {
                         editForm = (String) FormCacheManager.getPrvFormData().get(Constants.FORM_KEY);
                     }

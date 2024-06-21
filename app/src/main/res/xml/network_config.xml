@@ -6,7 +6,7 @@
             <certificates src="@raw/star_tawal_com_sa"/>
         </trust-anchors>
     </domain-config>
-    <base-config cleartextTrafficPermitted="true">
+    <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
             <certificates src="@raw/star_tawal_com_sa"/>
             <certificates src="system"/>

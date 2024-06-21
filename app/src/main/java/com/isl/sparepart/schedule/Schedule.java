@@ -7,6 +7,8 @@ import infozech.itower.R;
 import com.isl.modal.BeanSiteList;
 import com.isl.dao.cache.AppPreferences;
 import com.isl.dao.DataBaseHelper;
+import com.isl.preventive.ScheduleFragement;
+import com.isl.util.NetworkManager;
 import com.isl.util.Utils;
 import com.isl.modal.ResponseTechnician;
 import com.isl.itower.HomeActivity;
@@ -26,6 +28,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
@@ -52,6 +55,7 @@ public class Schedule extends Activity {
 	String moduleUrl = "";
 	String url = "";
 	DataBaseHelper db;
+	private NetworkManager networkManager;//108
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -315,8 +319,22 @@ public class Schedule extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
+		networkManager = new NetworkManager();//108
 		if (Utils.isNetworkAvailable(this)) {
-			new GetSchedules(this).execute();
+			//108
+			networkManager.getToken(new NetworkManager.TokenCallback() {
+				@Override
+				public void onTokenReceived(String token) {
+					new GetSchedules(Schedule.this,token).execute();
+				}
+
+				@Override
+				public void onTokenError(String error) {
+					Toast.makeText(Schedule.this, error, Toast.LENGTH_SHORT).show();
+				}
+			});
+			//108
+			//new GetSchedules(this).execute();
 			new GetFillingSchedules(this).execute();
 			if (!metaDataType().equalsIgnoreCase("")) {
 				new IncidentMetaDataTask(Schedule.this).execute();
@@ -429,9 +447,11 @@ public class Schedule extends Activity {
 	public class GetSchedules extends AsyncTask<Void, Void, Void> {
 		ProgressDialog pd;
 		Context con;
+		String token; //108
 
-		public GetSchedules(Context con) {
+		public GetSchedules(Context con,String token) {
 			this.con = con;
+			this.token = token; //108
 		}
 
 		@Override
@@ -442,7 +462,6 @@ public class Schedule extends Activity {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-
 				Gson gson = new Gson();
 				if(moduleUrl.equalsIgnoreCase("0")){
 					url=mAppPreferences.getConfigIP()+ WebMethods.url_getScheduled_Sites;
@@ -456,7 +475,7 @@ public class Schedule extends Activity {
 				nameValuePairs1.add(new BasicNameValuePair("type","NEXT_7_DAYS"));
 				nameValuePairs1.add(new BasicNameValuePair("siteID", ""));
 				nameValuePairs1.add(new BasicNameValuePair("activityTypeFlag","1"));
-				response1 = Utils.httpPostRequest(con,url, nameValuePairs1);
+				response1 = Utils.httpPostRequest1(con,url, nameValuePairs1,token);
 				scheduleCount = gson.fromJson(response1, BeanSiteList.class);
 			 } catch (Exception e) {
 				e.printStackTrace();
@@ -469,7 +488,7 @@ public class Schedule extends Activity {
 				nameValuePairs2.add(new BasicNameValuePair("type", "TILL_TODAY"));
 				nameValuePairs2.add(new BasicNameValuePair("siteID", ""));
 				nameValuePairs2.add(new BasicNameValuePair("activityTypeFlag","1"));
-				response2 = Utils.httpPostRequest(con,url, nameValuePairs2);
+				response2 = Utils.httpPostRequest1(con,url, nameValuePairs2,token);
 				doneCount = gson.fromJson(response2, BeanSiteList.class);
 		     } catch (Exception e) {
 			  e.printStackTrace();
@@ -482,7 +501,7 @@ public class Schedule extends Activity {
 				nameValuePairs3.add(new BasicNameValuePair("type","TILL_YESTERDAY"));
 				nameValuePairs3.add(new BasicNameValuePair("siteID", ""));
 				nameValuePairs3.add(new BasicNameValuePair("activityTypeFlag","1"));
-				response3 = Utils.httpPostRequest(con,url, nameValuePairs3);
+				response3 = Utils.httpPostRequest1(con,url, nameValuePairs3,token);
 				missCount = gson.fromJson(response3, BeanSiteList.class);
 	        } catch (Exception e) {
 		    e.printStackTrace();
@@ -495,7 +514,7 @@ public class Schedule extends Activity {
 				nameValuePairs4.add(new BasicNameValuePair("type","APPROVAL_PENDING"));
 				nameValuePairs4.add(new BasicNameValuePair("siteID", ""));
 				nameValuePairs4.add(new BasicNameValuePair("activityTypeFlag","1"));
-				response4 = Utils.httpPostRequest(con,url, nameValuePairs4);
+				response4 = Utils.httpPostRequest1(con,url, nameValuePairs4,token);
 				pendingCount = gson.fromJson(response4, BeanSiteList.class);
             } catch (Exception e) {
 		    e.printStackTrace();
@@ -508,7 +527,7 @@ public class Schedule extends Activity {
 				nameValuePairs5.add(new BasicNameValuePair("type","TILL_TODAY_APPROVED"));
 				nameValuePairs5.add(new BasicNameValuePair("siteID", ""));
 				nameValuePairs5.add(new BasicNameValuePair("activityTypeFlag","1"));
-				response5 = Utils.httpPostRequest(con,url, nameValuePairs5);
+				response5 = Utils.httpPostRequest1(con,url, nameValuePairs5,token);
 				reviewCount = gson.fromJson(response5, BeanSiteList.class);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -521,7 +540,7 @@ public class Schedule extends Activity {
 				nameValuePairs6.add(new BasicNameValuePair("type","REJECTED"));
 				nameValuePairs6.add(new BasicNameValuePair("siteID", ""));
 				nameValuePairs6.add(new BasicNameValuePair("activityTypeFlag","1"));
-				response6 = Utils.httpPostRequest(con,url, nameValuePairs6);
+				response6 = Utils.httpPostRequest1(con,url, nameValuePairs6,token);
 				rejectCount = gson.fromJson(response6, BeanSiteList.class);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -534,7 +553,7 @@ public class Schedule extends Activity {
 				nameValuePairs7.add(new BasicNameValuePair("type","RESUBMITTED"));
 				nameValuePairs7.add(new BasicNameValuePair("siteID", ""));
 				nameValuePairs7.add(new BasicNameValuePair("activityTypeFlag","1"));
-				response7 = Utils.httpPostRequest(con,url, nameValuePairs7);
+				response7 = Utils.httpPostRequest1(con,url, nameValuePairs7,token);
 				resubmitCount = gson.fromJson(response7, BeanSiteList.class);
 			} catch (Exception e) {
 				e.printStackTrace();

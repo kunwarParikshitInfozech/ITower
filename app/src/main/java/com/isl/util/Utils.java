@@ -30,9 +30,10 @@ import com.isl.constant.AppConstants;
 import com.isl.dao.DataBaseHelper;
 import com.isl.energy.EnergyManagement;
 import com.isl.hsse.Hsse;
-import com.isl.itower.AuthenticateUser;
+import com.isl.itower.ValidateUDetails;
 import com.isl.itower.GPSTracker;
 import infozech.itower.R;
+
 import com.isl.modal.BeanAddNotification;
 import com.isl.alarm.AlarmManagement;
 import com.isl.asset.SiteDetails;
@@ -592,6 +593,7 @@ public class Utils {
 		// System.out.println("url:: " + url);
 		String str = "";
 		InputStream is = null;
+		try {
 	//	HttpsTrustManager.allowAllSSL();
 		HttpClient httpclient = new DefaultHttpClient();
 		HttpPost httppost;
@@ -601,6 +603,51 @@ public class Utils {
 		}else{
 			httppost = new HttpPost("http://"+url);
 		}
+
+			httppost.setEntity(new UrlEncodedFormEntity(parameterList));
+			HttpResponse httpResponse = httpclient.execute(httppost);
+			HttpEntity httpEntity = httpResponse.getEntity();
+			is = httpEntity.getContent();
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(is));
+			StringBuilder sb = new StringBuilder();
+			String line = null;
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+			is.close();
+			str = sb.toString();
+			//System.out.println("response::" + str);
+		} catch (Exception e) {
+			//e.printStackTrace();
+			e.getMessage();
+			//e.getMessage();
+			//DataBaseHelper dbHelper = new DataBaseHelper(context);
+			//AppPreferences mAppPreferences = new AppPreferences(context);
+			//dbHelper.open();
+			//dbHelper.insertLog("errorlog="+e.getMessage()+"-date="+date()+"-userId="+mAppPreferences.getUserId());
+			//dbHelper.close();
+		}
+		return str;
+	}
+  // 108
+	public static String httpPostRequest1(Context context,String url,List<NameValuePair> parameterList,String header) {
+		// System.out.println("url:: " + url);
+		String str = "";
+		InputStream is = null;
+		//	HttpsTrustManager.allowAllSSL();
+		HttpClient httpclient = new DefaultHttpClient();
+		HttpPost httppost;
+
+		if(url.contains("https") || url.contains("http")){
+			httppost = new HttpPost(url);
+		}else{
+			httppost = new HttpPost("http://"+url);
+		}
+		String value = "Bearer "+ header;
+	//	httppost.addHeader("Content-Type", "application/json");
+		httppost.addHeader("Authorization",value);
+
 		try {
 			httppost.setEntity(new UrlEncodedFormEntity(parameterList));
 			HttpResponse httpResponse = httpclient.execute(httppost);
@@ -628,6 +675,7 @@ public class Utils {
 		}
 		return str;
 	}
+	//108
 
 	public static String httpMultipartBackground(String url,String module,String allImgs,String data,String preImgsInfo,String postImgsInfo,
 												 String addParam,String src,String userId,String taskState,String language,String opr,String flag) {
@@ -1275,7 +1323,7 @@ public class Utils {
 
 	public static void sendNotification(Context context) {
 		AppPreferences mAppPreferences = new AppPreferences(context);
-		Intent i = new Intent(context, AuthenticateUser.class);
+		Intent i = new Intent(context, ValidateUDetails.class);
 		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 		//DataBaseHelper dbHelper = new DataBaseHelper(context);
 		//dbHelper.open();

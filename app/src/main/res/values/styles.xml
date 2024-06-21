@@ -7,10 +7,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="LightTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
-        <!-- Customize the bottom navigation theme here -->
-    </style>
-
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
@@ -159,25 +155,6 @@
         <item name="android:layout_marginTop">10sp</item>
     </style>
 
-    <style name="LoginTextInputLayoutStyleUpdated" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="boxStrokeColor">#C0C0C0</item> <!--rectangle color changes-->
-        <item name="boxStrokeWidth">1dp</item> <!--rectangle line width-->
-        <item name="boxBackgroundColor">#FFF</item>
-        <item name="boxCornerRadiusBottomEnd">2sp</item>
-        <item name="boxCornerRadiusBottomStart">2sp</item>
-        <item name="boxCornerRadiusTopStart">2sp</item>
-        <item name="boxCornerRadiusTopEnd">2sp</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">60sp</item>
-        <item name="android:paddingLeft">2sp</item>
-        <item name="android:paddingRight">2sp</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:textColor">@color/black</item>
-        <item name="android:textColorHint">#C0C0C0</item> <!--hint text color changes-->
-        <item name="android:layout_marginTop">10sp</item>
-    </style>
-
     <style name="LoginInput">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">50sp</item>
@@ -303,18 +280,6 @@
         <item name="android:textStyle">normal</item>
         <item name="android:text">Server Configuration</item>
         <item name="android:gravity">left|center_vertical|center_horizontal</item>
-    </style>
-
-    <style name="TextConfigIpUpdated">
-        <item name="android:layout_width">0sp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1.10</item>
-        <item name="android:layout_marginLeft">0sp</item>
-        <item name="android:layout_marginBottom">0sp</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/link_textcolor</item>
-        <item name="android:textStyle">normal</item>
-        <item name="android:text">Server Configuration</item>
     </style>
 
     <style name="LoginButton">

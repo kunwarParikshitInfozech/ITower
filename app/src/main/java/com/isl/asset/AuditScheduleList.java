@@ -6,6 +6,8 @@ import com.isl.constant.WebMethods;
 import com.isl.modal.BeanSiteList;
 import com.isl.dao.cache.AppPreferences;
 import com.isl.dao.DataBaseHelper;
+import com.isl.preventive.ScheduleFragement;
+import com.isl.util.NetworkManager;
 import com.isl.util.Utils;
 import com.isl.modal.AssetMetaList;
 import com.isl.sparepart.schedule.AdapterSchedule;
@@ -40,10 +42,12 @@ public class AuditScheduleList extends Activity {
 	BeanSiteList response_ticket_list = null;
 	AssetMetaList resposnse_asset_meta = null; 
 	int a=0;
+	private NetworkManager networkManager;//108
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_audit_schedule_tab_list);
+		networkManager = new NetworkManager();//108
 		mAppPreferences = new AppPreferences(AuditScheduleList.this);
 		Button iv_back = (Button) findViewById(R.id.button_back);
 		RL = (RelativeLayout) findViewById(R.id.rl_textlayout);
@@ -57,7 +61,20 @@ public class AuditScheduleList extends Activity {
 		});
 		schedule_list = (ListView) findViewById(R.id.lv_schedule);
 		if (Utils.isNetworkAvailable(AuditScheduleList.this)) {
-		new ScheduleTask(AuditScheduleList.this).execute();
+			//108
+			networkManager.getToken(new NetworkManager.TokenCallback() {
+				@Override
+				public void onTokenReceived(String token) {
+					new ScheduleTask(AuditScheduleList.this,token).execute();
+				}
+
+				@Override
+				public void onTokenError(String error) {
+					Toast.makeText(AuditScheduleList.this, error, Toast.LENGTH_SHORT).show();
+				}
+			});
+			//108
+		//new ScheduleTask(AuditScheduleList.this).execute();
 		} else {
 		Toast.makeText(AuditScheduleList.this, "No Internet Connection",Toast.LENGTH_SHORT).show();
 		}
@@ -85,8 +102,10 @@ public class AuditScheduleList extends Activity {
 	    public class ScheduleTask extends AsyncTask<Void, Void, Void> {
 		ProgressDialog pd;
 		Context con;
-		public ScheduleTask(Context con) {
+		String token; //108
+		public ScheduleTask(Context con,String token) {
 			this.con = con;
+			this.token = token;//108
 		}
 		@Override
 		protected void onPreExecute() {
@@ -101,7 +120,7 @@ public class AuditScheduleList extends Activity {
 		nameValuePairs.add(new BasicNameValuePair("type",""));
 		nameValuePairs.add(new BasicNameValuePair("siteID",mAppPreferences.getSiteID()));
 		nameValuePairs.add(new BasicNameValuePair("activityTypeFlag","2"));
-		String response = Utils.httpPostRequest(con,mAppPreferences.getConfigIP()+ WebMethods.url_getScheduled_Sites,nameValuePairs);
+		String response = Utils.httpPostRequest1(con,mAppPreferences.getConfigIP()+ WebMethods.url_getScheduled_Sites,nameValuePairs,token);//108
 		Gson gson = new Gson();
 		response_ticket_list = gson.fromJson(response,BeanSiteList.class);
 		}catch (Exception e) {

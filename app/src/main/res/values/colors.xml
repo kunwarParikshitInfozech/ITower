@@ -41,17 +41,6 @@
  <color name="color_ff0000">#ff0000</color>
  <color name="gray_light">#50C8C8C8</color>
  <color name="liteColorAccent">#FC8065</color>
- <color name="color_001E60">#001E60</color>
- <color name="color_253746">#253746</color>
- <color name="color_4D4D56">#4D4D56</color>
- <color name="color_FF6522">#FF6522</color>
- <color name="color_606F8A">#606F8A</color>
- <color name="color_34C759">#34C759</color>
- <color name="color_B1B7C8">#B1B7C8</color>
- <color name="color_48484A">#48484A</color>
- <color name="color_f8fafb">#f8fafb</color>
- <color name="color_ff3B30">#FF3B30</color>
-
  <!--color for kenya/Manmar-->
 <!-- <color name="colorPrimary">#3F51B5</color>
  <color name="colorPrimaryDark">#303F9F</color>
@@ -91,5 +80,4 @@
  <color name="color_456ca4">#456ca4</color>
  <color name="color_ff0000">#ff0000</color>
  <color name="gray_light">#50C8C8C8</color>-->
-
 </resources>
