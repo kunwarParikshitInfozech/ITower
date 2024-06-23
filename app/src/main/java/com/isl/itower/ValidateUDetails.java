@@ -172,6 +172,9 @@ public class ValidateUDetails extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+
+
 		networkManager = new NetworkManager();//108
 		///108//
 
@@ -1676,9 +1679,9 @@ public class ValidateUDetails extends Activity {
 				et_username.setVisibility(View.VISIBLE);
 				et_password.setVisibility(View.VISIBLE);*/
 
-				Login.setVisibility(View.GONE);
-				et_username.setVisibility(View.GONE);
-				et_password.setVisibility(View.GONE);
+				Login.setVisibility(View.VISIBLE);
+				et_username.setVisibility(View.VISIBLE);
+				et_password.setVisibility(View.VISIBLE);
 
 				findViewById(R.id.start_auth).setVisibility(View.VISIBLE);
 				findViewById(R.id.tv_other).setVisibility(View.GONE);

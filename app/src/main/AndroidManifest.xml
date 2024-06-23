@@ -603,6 +603,23 @@
             android:theme="@style/AppTheme.NoActionBar1"
             android:windowSoftInputMode="stateHidden|adjustResize" />
 
+        <activity
+            android:name="com.isl.leaseManagement.activities.ShowLoaderActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
+            android:name="com.isl.leaseManagement.activities.TaskInProgressActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
+            android:name="com.isl.leaseManagement.base.BaseActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.isl.leaseManagement.activities.LsmHomeActivity"
+            android:exported="true"
+            android:theme="@style/LightTheme">
+        </activity>
+
         <!-- <receiver android:name="com.isl.audit.util.NetworkChangeReceiver">
              <intent-filter>
                  <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />

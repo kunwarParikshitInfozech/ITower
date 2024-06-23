@@ -2,4 +2,45 @@
 <resources>
     <string name="clear_pad">Reset</string>
     <string name="save_signature">Save</string>
+    <string name="enter_email_id_amp_password_to_access_your_account"><![CDATA[Enter Email ID & Password to access your account]]></string>
+    <string name="email_id">Email ID</string>
+    <string name="password">Password</string>
+    <string name="capital_login">Login</string>
+    <string name="login_with_ad">Login with AD</string>
+    <string name="sign_in">Sign In</string>
+    <string name="home">Home</string>
+    <string name="my_tasks">My Tasks</string>
+    <string name="notifications">Notifications</string>
+    <string name="my_profile">My profile</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="i_tower">I-Tower</string>
+    <string name="assign_task">Assign Task</string>
+    <string name="unassigned_task">Unassigned Task</string>
+    <string name="scheduled_text">Scheduled text :</string>
+    <string name="added_today">Added Today :</string>
+    <string name="task_details">Task Details</string>
+    <string name="close">Close</string>
+    <string name="forecast_start_date">Forecast Start Date</string>
+    <string name="forecast_end_date">Forecast End Date</string>
+    <string name="task_status">Task Status</string>
+    <string name="sla_status">SLA Status</string>
+    <string name="customer_site_id">Customer Site ID</string>
+    <string name="tawal_site_id">Tawal Site ID</string>
+    <string name="plan_start_date">Plan Start Date</string>
+    <string name="plan_end_date">Plan End Date</string>
+    <string name="actual_start_date">Actual Start Date</string>
+    <string name="actual_end_date">Actual End Date</string>
+    <string name="requester">Requester</string>
+    <string name="site_tower_type">Site Tower Type</string>
+    <string name="request_type">Request Type</string>
+    <string name="district">District</string>
+    <string name="city">City</string>
+    <string name="start_activity">Start Activity</string>
+    <string name="un_assign">Un-assign</string>
+    <string name="loading_your_content_this_may_take_a_few_seconds">Loading your content, this may take a few seconds…</string>
+    <string name="task_in_progress">Task In Progress</string>
+    <string name="due_by">Due by</string>
+    <string name="basic_details">Basic Details</string>
+    <string name="additional_documents">Additional Documents</string>
+
 </resources>
