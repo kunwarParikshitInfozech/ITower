@@ -22,6 +22,8 @@ import com.isl.workflow.FormActivity;
 import infozech.itower.R;
 
 public class UIUtils {
+    public static boolean isMatch = false; //109
+    public static boolean key = false;
 
     public static Switch toggleButtonUI(Context ctx, Switch swh){
         final float scale = ctx.getResources().getDisplayMetrics().density;

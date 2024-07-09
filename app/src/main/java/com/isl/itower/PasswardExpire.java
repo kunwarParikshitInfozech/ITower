@@ -209,7 +209,7 @@ public class PasswardExpire extends Activity {
 					mAppPreferences.setLoginState(0);
 					mAppPreferences.saveSyncState(0);
 					mAppPreferences.setGCMRegistationId("");
-			    	Intent i = new Intent(PasswardExpire.this, AuthenticateUser.class);
+			    	Intent i = new Intent(PasswardExpire.this, ValidateUDetails.class);
 					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 					startActivity(i);
 					finish();

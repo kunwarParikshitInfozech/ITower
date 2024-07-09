@@ -209,4 +209,9 @@ public interface IApiRequest {
 
     @POST("api/iMaintain/TTAckRejDGAssign")
     Call<ResponseBody> TTAckRejDGAssign(@Body JsonObject object);
+
+    @POST("api/Service/GetToken")
+    Call<ResponseBody> getToken(@Body JsonObject object);
+
+
 }

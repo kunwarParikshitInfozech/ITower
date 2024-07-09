@@ -468,11 +468,11 @@
 
 
         <LinearLayout
+            android:id="@+id/llStartActivity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="horizontal"
-            android:id="@+id/llStartActivity"
             android:paddingTop="@dimen/_16sdp"
             android:paddingBottom="@dimen/_16sdp"
             android:theme="@style/LightTheme"

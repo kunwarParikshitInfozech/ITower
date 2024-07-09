@@ -1,5 +1,7 @@
 package com.isl.leaseManagement.dataClass.responses
 
+import java.io.Serializable
+
 data class TaskResponse(
     val requestId: String?,
     val siteId: String? = null,
@@ -21,4 +23,4 @@ data class TaskResponse(
     val region: String?,
     val district: String?,
     val city: String?
-)
+):Serializable

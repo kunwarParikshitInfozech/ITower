@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.ImageView;
 
 import infozech.itower.R;
 
@@ -25,7 +24,7 @@ public class SplashScreen extends Activity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                Intent intent=new Intent(SplashScreen.this,AuthenticateUser.class);
+                Intent intent=new Intent(SplashScreen.this, ValidateUDetails.class);
                 startActivity(intent);
                 finish();
             }

@@ -1,6 +1,8 @@
 package com.isl.leaseManagement.fragments.tasks
 
+import android.app.Activity
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -8,20 +10,26 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.isl.leaseManagement.activities.ShowLoaderActivity
+import com.isl.leaseManagement.activities.filter.FilterTasksActivity
+import com.isl.leaseManagement.activities.loader.GetStartDataActivity
 import com.isl.leaseManagement.adapters.TasksAdapter
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.base.BaseFragment
 import com.isl.leaseManagement.dataClass.responses.TaskResponse
 import com.isl.leaseManagement.dataClass.responses.TasksSummaryResponse
+import com.isl.leaseManagement.utils.AppConstants
 import com.isl.leaseManagement.utils.ClickInterfaces
 import com.isl.leaseManagement.utils.Utilities.dpToPx
 import infozech.itower.R
 import infozech.itower.databinding.FragmentLsmTasksBinding
 import infozech.itower.databinding.TaskDetailsPopupBinding
+import okhttp3.MediaType
+import okhttp3.RequestBody
 
 class LsmTasksFragment : BaseFragment() {
 
@@ -29,6 +37,7 @@ class LsmTasksFragment : BaseFragment() {
     private lateinit var binding: FragmentLsmTasksBinding
     private val repository = TaskRepository()
     private val viewModel: TaskViewModel by viewModels { TaskViewModelFactory(repository) }
+    private lateinit var startActivityLauncher: ActivityResultLauncher<Intent>
 
 
     override fun onCreateView(
@@ -44,23 +53,108 @@ class LsmTasksFragment : BaseFragment() {
         init()
     }
 
+    override fun onResume() {
+        super.onResume()
+        callTasksSummaryApi()
+    }
+
     private fun init() {
         setClickListeners()
-        callTasksSummaryApi()
+     //   callTasksSummaryApi()
+        registerActivityLauncher()
+    }
+
+    private fun registerActivityLauncher() {
+        startActivityLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    var task =
+                        result.data?.getStringExtra(AppConstants.ActivityResultKeys.FilterActivity.task)
+                    var slaStatus =
+                        result.data?.getStringExtra(AppConstants.ActivityResultKeys.FilterActivity.slaStatus)
+                    var priority =
+                        result.data?.getStringExtra(AppConstants.ActivityResultKeys.FilterActivity.priority)
+                    if (task == "All Tasks") task = null
+                    if (task == "") task = null
+                    if (slaStatus == "") slaStatus = null
+                    if (priority == "") priority = null
+                    callTasksListApi(
+                        taskStatus = task,
+                        slaStatus = slaStatus,
+                        requestPriority = priority
+                    )
+                } else {   // cancelled case
+                }
+            }
     }
 
     private fun setClickListeners() {
         binding.assignedTask.root.setOnClickListener {
-            showTasksList()
+            callTasksListApi(taskStatus = "Assigned")
+        }
+        binding.unAssignedTask.root.setOnClickListener {
+            callTasksListApi(taskStatus = "Unassigned")
         }
         val toolbar: View = requireActivity().findViewById(R.id.leaseManagementToolbar)
         val toolbarBackIv = toolbar.findViewById<ImageView>(R.id.toolbarBackIv)
-        toolbarBackIv.setOnClickListener { reverseLayoutsVisibility() }
+        toolbarBackIv.setOnClickListener {
+            backClicked(toolbar)
+        }
+        val toolbarFilter = toolbar.findViewById<ImageView>(R.id.toolbarFilterIv)
+        toolbarFilter.setOnClickListener {
+            val intent =
+                Intent(context, FilterTasksActivity::class.java) // Replace with your activity class
+            startActivityLauncher.launch(intent)
+        }
+
     }
 
-    private fun showTasksList() {
-        reverseLayoutsVisibility()
-        callTasksApi()
+    private fun backClicked(toolbar: View) {
+        val profileLayoutToolbar = toolbar.findViewById<ConstraintLayout>(R.id.profileDutyCl)
+        val isProfileVisible = profileLayoutToolbar.visibility == View.VISIBLE
+        if (!isProfileVisible) {
+            reverseLayoutsVisibility()
+        } else {
+            baseActivity.finish()
+        }
+    }
+
+
+    private fun callTasksListApi(
+        requestStatus: String? = null,
+        taskStatus: String? = null,
+        slaStatus: String? = null,
+        requestPriority: String? = null
+    ) {
+        binding.progressBar.visibility = View.VISIBLE
+        viewModel.fetchTasks(
+            //       baseActivity.userId,
+            123,
+            { taskList ->
+                if (taskList != null) {
+                    binding.progressBar.visibility = View.GONE
+                    setTasksListAdapter(taskList)
+
+                    val toolbar: View = requireActivity().findViewById(R.id.leaseManagementToolbar)
+                    val profileLayoutToolbar =
+                        toolbar.findViewById<ConstraintLayout>(R.id.profileDutyCl)
+                    val isProfileVisible = profileLayoutToolbar.visibility == View.VISIBLE
+                //    if (isProfileVisible) {
+                        reverseLayoutsVisibility()
+                    //}
+                } else {
+                    baseActivity.showToastMessage("No task found!")
+                }
+            },
+            { errorMessage ->
+                baseActivity.showToastMessage(errorMessage.msg)
+                binding.progressBar.visibility = View.GONE
+            },
+            requestStatus = requestStatus,
+            taskStatus = taskStatus,
+            slaStatus = slaStatus,
+            requestPriority = requestPriority
+        )
     }
 
     private fun showTaskDetailsPopup(taskResponse: TaskResponse) {
@@ -103,11 +197,23 @@ class LsmTasksFragment : BaseFragment() {
         binding.districtValue.text = taskResponse.district ?: ""
         binding.cityValue.text = taskResponse.city ?: ""
 
+        taskResponse.taskStatus?.let {
+            if (it != "Assigned") {
+                binding.llStartActivity.visibility = View.GONE
+            }
+        }
         binding.closeTv.setOnClickListener {
             dialog.dismiss()
         }
         binding.startActivity.setOnClickListener {
-            baseActivity.launchActivity(ShowLoaderActivity::class.java)
+            val intent = Intent(requireActivity(), GetStartDataActivity::class.java)
+            intent.putExtra(AppConstants.IntentKeys.taskDetailIntentExtra, taskResponse)
+            baseActivity.launchActivityWithIntent(intent)
+        }
+        taskResponse.taskId?.let { taskId ->
+            binding.unAssign.setOnClickListener {
+                callUpdateTaskStatusApi(taskId, "unassign")
+            }
         }
     }
 
@@ -167,15 +273,34 @@ class LsmTasksFragment : BaseFragment() {
         )
     }
 
-    private fun callTasksApi() {
+    private fun callUpdateTaskStatusApi(taskId: Int, taskStatus: String) {
         binding.progressBar.visibility = View.VISIBLE
-        viewModel.fetchTasks()
-        viewModel.tasks.observe(viewLifecycleOwner) { tasks ->
-            tasks?.let {
+        // Creating a empty json body
+        val json = "{\"key\":\"value\"}"
+        val body: RequestBody = RequestBody.create(MediaType.parse("application/json"), json)
+
+        viewModel.updateTaskStatus(
+            { successResponse ->
+                successResponse?.let {
+                    binding.progressBar.visibility = View.GONE
+                    it.flag?.let { flag ->
+                        if (flag == "0") {
+                            baseActivity.showToastMessage("Status Updated Successfully")
+                        }
+                    }
+                }
+            },
+            { errorMessage ->
+                baseActivity.showToastMessage(errorMessage.msg)
                 binding.progressBar.visibility = View.GONE
-                setTasksListAdapter(tasks)
-            }
-        }
+            }, taskId,
+            taskStatus,
+            body
+        )
+    }
+
+    private fun showProgressBar() {
+
     }
 
     private fun setTasksListAdapter(taskResponses: List<TaskResponse>) {

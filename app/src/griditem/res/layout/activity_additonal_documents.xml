@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_sky_blue"
+        android:theme="@style/LightTheme"
+        tools:context="com.isl.leaseManagement.activities.taskInProgress.TaskInProgressActivity">
+
+        <ImageView
+            android:id="@+id/backIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:contentDescription="@string/image"
+            android:src="@drawable/back_icon_vector"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/additionalDocsTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:text="@string/additional_documents"
+            android:textColor="@color/color_001E60"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintStart_toStartOf="@id/backIv"
+            app:layout_constraintTop_toBottomOf="@id/backIv" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clBasicDetails"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_24sdp"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/additionalDocsTv">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/_12sdp"
+                android:background="@drawable/btn_light_grey_border_bg"
+                android:paddingVertical="@dimen/_8sdp"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/docImage"
+                    android:layout_width="@dimen/_36sdp"
+                    android:layout_height="@dimen/_36sdp"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:contentDescription="@string/image"
+                    android:src="@drawable/additional_doc_icon" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/docDetailsTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@id/docImage"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_toEndOf="@id/docImage"
+                    android:text="SADAD Document"
+                    android:textColor="@color/color_001E60"
+                    android:textSize="@dimen/_12ssp" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/docSizeTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/docImage"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_toEndOf="@id/docImage"
+                    android:text="24 KB .pdf"
+                    android:textColor="@color/color_A2A9C7"
+                    android:textSize="@dimen/_12ssp" />
+
+                <ImageView
+                    android:id="@+id/downloadIv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:contentDescription="@string/image"
+                    android:src="@drawable/download_icon" />
+
+                <ImageView
+                    android:id="@+id/iIconIv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/_12sdp"
+                    android:layout_toStartOf="@id/downloadIv"
+                    android:contentDescription="@string/image"
+                    android:src="@drawable/i_info_icon" />
+
+            </RelativeLayout>
+
+
+            <ImageView
+                android:id="@+id/actionsBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/image"
+                android:src="@drawable/lsm_actions_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.85" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

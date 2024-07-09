@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +15,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.isl.api.IApiRequest;
+import com.isl.api.RetrofitApiClient;
 import com.isl.dao.cache.AppPreferences;
 import com.isl.constant.WebMethods;
 import com.isl.dao.DataBaseHelper;
@@ -24,11 +30,19 @@ import com.isl.util.UtilsTask;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import infozech.itower.R;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.http.Header;
 
 /**
  * Created by dhakan on 7/2/2019.
@@ -167,4 +181,9 @@ public class FragAssignedTicket extends Fragment {
              super.onPostExecute(result);
         }
     }
-}
+
+
+
+
+
+    }

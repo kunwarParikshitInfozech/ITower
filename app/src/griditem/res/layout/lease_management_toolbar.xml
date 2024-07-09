@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:background="@color/white"
+    android:paddingBottom="@dimen/_8sdp"
     android:theme="@style/LightTheme"
-    android:paddingBottom="@dimen/_8sdp">
+    tools:background="@color/white">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/profileDutyCl"
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:visibility="gone">
+        tools:visibility="visible">
 
         <ImageView
             android:id="@+id/imagePlaceholder"
@@ -30,6 +30,7 @@
         <com.isl.leaseManagement.utils.CustomTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/onDutyTv"
             android:layout_marginStart="@dimen/_4sdp"
             android:text="On DUTY"
             android:textColor="@color/color_34C759"
@@ -63,19 +64,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8sdp"
-            android:contentDescription="@string/image"
             android:layout_marginEnd="@dimen/_16sdp"
+            android:contentDescription="@string/image"
             android:src="@drawable/search_icon_vect"
-            app:layout_constraintEnd_toStartOf="@id/filterIv"
+            app:layout_constraintEnd_toStartOf="@id/toolbarFilterIv"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
-            android:id="@+id/filterIv"
+            android:id="@+id/toolbarFilterIv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8sdp"
-            android:contentDescription="@string/image"
             android:layout_marginEnd="@dimen/_12sdp"
+            android:contentDescription="@string/image"
             android:src="@drawable/filter_icon_vect"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

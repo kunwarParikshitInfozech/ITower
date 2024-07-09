@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:theme="@style/LightTheme"
-        tools:context="com.isl.leaseManagement.activities.LsmHomeActivity">
+        tools:context="com.isl.leaseManagement.activities.home.LsmHomeActivity">
 
         <include
             android:id="@+id/leaseManagementToolbar"

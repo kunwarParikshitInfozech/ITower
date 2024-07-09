@@ -284,6 +284,18 @@ public class DataSubmitUtils {
                 auditJson = Constants.gson.toJson(auditTrailObjList);
 
             }
+            // 109
+             if(UIUtils.isMatch && UIUtils.key)
+             {
+                String activity_status =((CamundaVariable) data.get("aststxt")).getValue();
+                variable = new CamundaVariable();
+                variable.setValue(activity_status);
+                data.put("implementer",variable);
+                variable = new CamundaVariable();
+                variable.setValue("1");
+                data.put("isassigncng",variable);
+             }
+             //109
 
             if (serviceDetail.getAction() == ActionType.NEW || serviceDetail.getAction() == ActionType.NEWSUBMIT) {
                 CamundaInVariables inVariable = new CamundaInVariables();
@@ -296,6 +308,7 @@ public class DataSubmitUtils {
             } else {
                 jsonData = Constants.gson.toJson(data);
             }
+
 
             System.out.println("Form data - " + jsonData);
             System.out.println("Audit Trail - " + auditJson);
@@ -655,6 +668,13 @@ public class DataSubmitUtils {
                     try {
                         Object result = WorkFlowUtils.evaluateExpression(expression, true);
                         isValidationFailed = org.mozilla.javascript.Context.toBoolean(result);
+                        //109
+                        if(UIUtils.isMatch && UIUtils.key) {
+                            if (formField.getTitle().equalsIgnoreCase("Request Status")) {
+                                isValidationFailed = false;
+                            }
+                        }
+                        //109
                         //System.out.println("isValidationFailed===="+isValidationFailed);
                         if (isValidationFailed) {
 

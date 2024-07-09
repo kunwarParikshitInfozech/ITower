@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_sky_blue"
+        android:theme="@style/LightTheme"
+        tools:context="com.isl.leaseManagement.activities.taskInProgress.TaskInProgressActivity">
+
+        <ImageView
+            android:id="@+id/backIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:contentDescription="@string/image"
+            android:src="@drawable/back_icon_vector"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/filtersTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:text="@string/filters"
+            android:textColor="@color/color_001E60"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintStart_toStartOf="@id/backIv"
+            app:layout_constraintTop_toBottomOf="@id/backIv" />
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/clearAllTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_12sdp"
+            android:text="@string/clear_all"
+            android:textColor="@color/color_FF4D4F"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/filtersTv" />
+
+        <LinearLayout
+            android:id="@+id/llFiltersSelected"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@id/filtersTv">
+
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/taskSelectedTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rounded_bg_tv_blue"
+                android:drawableStart="@drawable/small_blue_tick"
+                android:drawablePadding="@dimen/_4sdp"
+                android:padding="@dimen/_4sdp"
+                android:textColor="@color/color_2850B9"
+                android:textSize="@dimen/_14ssp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/taskNumber"
+                tools:text="All tasks"
+                tools:visibility="visible" />
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/slaSelectedTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:background="@drawable/rounded_bg_tv_blue"
+                android:drawableStart="@drawable/small_blue_tick"
+                android:drawablePadding="@dimen/_4sdp"
+                android:padding="@dimen/_4sdp"
+                android:textColor="@color/color_2850B9"
+                android:textSize="@dimen/_14ssp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/taskNumber"
+                tools:text="Delayed"
+                tools:visibility="visible" />
+
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/taskPriorityTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:background="@drawable/rounded_bg_tv_blue"
+                android:drawableStart="@drawable/small_blue_tick"
+                android:drawablePadding="@dimen/_4sdp"
+                android:padding="@dimen/_4sdp"
+                android:textColor="@color/color_2850B9"
+                android:textSize="@dimen/_14ssp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/taskNumber"
+                tools:text="High"
+                tools:visibility="visible" />
+
+        </LinearLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clBasicDetails"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_24sdp"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/llFiltersSelected">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/_8sdp"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.isl.leaseManagement.utils.CustomTextView
+                        android:id="@+id/taskTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_32sdp"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/_8sdp"
+                        android:paddingEnd="@dimen/_8sdp"
+                        android:text="@string/task"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/color_001E60"
+                        android:textSize="@dimen/_14ssp"
+                        app:layout_constraintStart_toStartOf="@id/backIv"
+                        app:layout_constraintTop_toBottomOf="@id/backIv" />
+
+                    <com.isl.leaseManagement.utils.CustomTextView
+                        android:id="@+id/slaStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_32sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:background="@drawable/faded_rect_bg_tv"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/_8sdp"
+                        android:paddingEnd="@dimen/_8sdp"
+                        android:text="@string/sla_status"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/color_B1B7C8"
+                        android:textSize="@dimen/_14ssp"
+                        app:layout_constraintStart_toStartOf="@id/backIv"
+                        app:layout_constraintTop_toBottomOf="@id/backIv" />
+
+                    <com.isl.leaseManagement.utils.CustomTextView
+                        android:id="@+id/priority"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/_32sdp"
+                        android:layout_marginTop="@dimen/_4sdp"
+                        android:background="@drawable/faded_rect_bg_tv"
+                        android:gravity="center_vertical"
+                        android:paddingStart="@dimen/_8sdp"
+                        android:paddingEnd="@dimen/_8sdp"
+                        android:text="@string/priority"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/color_B1B7C8"
+                        android:textSize="@dimen/_14ssp"
+                        app:layout_constraintStart_toStartOf="@id/backIv"
+                        app:layout_constraintTop_toBottomOf="@id/backIv" />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:id="@+id/llTasksStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="visible"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.isl.leaseManagement.utils.CustomTextView
+                            android:id="@+id/allTaskTv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:drawableStart="@drawable/small_faded_black_tick"
+                            android:drawablePadding="@dimen/_8sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/all_task"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/color_B1B7C8"
+                            android:textSize="@dimen/_14ssp"
+                            android:visibility="visible"
+                            app:layout_constraintStart_toStartOf="@id/backIv"
+                            app:layout_constraintTop_toBottomOf="@id/backIv" />
+
+                        <com.isl.leaseManagement.utils.CustomTextView
+                            android:id="@+id/assignedTaskTv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:drawableStart="@drawable/small_faded_black_tick"
+                            android:drawablePadding="@dimen/_8sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/assigned_task"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/color_B1B7C8"
+                            android:textSize="@dimen/_14ssp"
+                            app:layout_constraintStart_toStartOf="@id/backIv"
+                            app:layout_constraintTop_toBottomOf="@id/backIv" />
+
+                        <com.isl.leaseManagement.utils.CustomTextView
+                            android:id="@+id/unassignedTaskTv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:drawableStart="@drawable/small_faded_black_tick"
+                            android:drawablePadding="@dimen/_8sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/unassigned_task"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/color_B1B7C8"
+                            android:textSize="@dimen/_14ssp"
+                            app:layout_constraintStart_toStartOf="@id/backIv"
+                            app:layout_constraintTop_toBottomOf="@id/backIv" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llSlaStatus"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.isl.leaseManagement.utils.CustomTextView
+                            android:id="@+id/delayedTv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:drawableStart="@drawable/small_faded_black_tick"
+                            android:drawablePadding="@dimen/_8sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/delayed"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/color_B1B7C8"
+                            android:textSize="@dimen/_14ssp"
+                            app:layout_constraintStart_toStartOf="@id/backIv"
+                            app:layout_constraintTop_toBottomOf="@id/backIv" />
+
+                        <com.isl.leaseManagement.utils.CustomTextView
+                            android:id="@+id/onTimeTv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:drawableStart="@drawable/small_faded_black_tick"
+                            android:drawablePadding="@dimen/_8sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/on_time"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/color_B1B7C8"
+                            android:textSize="@dimen/_14ssp"
+                            app:layout_constraintStart_toStartOf="@id/backIv"
+                            app:layout_constraintTop_toBottomOf="@id/backIv" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llPriority"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_8sdp"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <com.isl.leaseManagement.utils.CustomTextView
+                            android:id="@+id/highTv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:drawableStart="@drawable/small_faded_black_tick"
+                            android:drawablePadding="@dimen/_8sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/high"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/color_B1B7C8"
+                            android:textSize="@dimen/_14ssp"
+                            app:layout_constraintStart_toStartOf="@id/backIv"
+                            app:layout_constraintTop_toBottomOf="@id/backIv" />
+
+                        <com.isl.leaseManagement.utils.CustomTextView
+                            android:id="@+id/mediumTv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:drawableStart="@drawable/small_faded_black_tick"
+                            android:drawablePadding="@dimen/_8sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/medium"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/color_B1B7C8"
+                            android:textSize="@dimen/_14ssp"
+                            app:layout_constraintStart_toStartOf="@id/backIv"
+                            app:layout_constraintTop_toBottomOf="@id/backIv" />
+
+                        <com.isl.leaseManagement.utils.CustomTextView
+                            android:id="@+id/lowTv"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="@dimen/_8sdp"
+                            android:drawableStart="@drawable/small_faded_black_tick"
+                            android:drawablePadding="@dimen/_8sdp"
+                            android:gravity="center_vertical"
+                            android:text="@string/low"
+                            android:textAlignment="gravity"
+                            android:textColor="@color/color_B1B7C8"
+                            android:textSize="@dimen/_14ssp"
+                            app:layout_constraintStart_toStartOf="@id/backIv"
+                            app:layout_constraintTop_toBottomOf="@id/backIv" />
+
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llApplyFilter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:paddingTop="@dimen/_16sdp"
+                android:paddingBottom="@dimen/_16sdp"
+                android:theme="@style/LightTheme"
+                android:weightSum="2"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/applyBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_28sdp"
+                    android:layout_marginHorizontal="@dimen/_8sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_orange_rect_bg"
+                    android:gravity="center"
+                    android:text="@string/apply"
+                    android:textAlignment="gravity"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_12ssp" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/cancelBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_28sdp"
+                    android:layout_marginHorizontal="@dimen/_8sdp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_grey_border_bg"
+                    android:gravity="center"
+                    android:text="@string/cancel"
+                    android:textAlignment="gravity"
+                    android:textColor="@color/color_606F8A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintTop_toBottomOf="@id/login" />
+            </LinearLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -7,6 +7,8 @@ import android.content.IntentFilter;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.isl.leaseManagement.api.ApiClient;
+import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper;
+import com.isl.leaseManagement.utils.LocalTempVarStore;
 
 /**
  * Created by dhakan on 10/11/2018.
@@ -14,7 +16,9 @@ import com.isl.leaseManagement.api.ApiClient;
 
 public class MyApp extends Application {
 
+
     private static Context appContext;
+    public static LocalTempVarStore localTempVarStore = LocalTempVarStore.INSTANCE;
 
     @Override
     public void onCreate() {
@@ -28,6 +32,7 @@ public class MyApp extends Application {
         final DataSyncReceiver myReceiver = new DataSyncReceiver();
         registerReceiver(myReceiver, filter);
         ApiClient.INSTANCE.init();
+        KotlinPrefkeeper.init(this);
     }
 
     public static Context getAppContext() {

@@ -1,6 +1,8 @@
 package com.isl.leaseManagement.fragments.tasks
 
 import com.isl.leaseManagement.api.ApiClient
+import com.isl.leaseManagement.dataClass.responses.ApiSuccessFlagResponse
+import com.isl.leaseManagement.dataClass.responses.SingleMessageResponse
 import com.isl.leaseManagement.dataClass.responses.TaskResponse
 import com.isl.leaseManagement.dataClass.responses.TasksSummaryResponse
 import io.reactivex.Observable
@@ -8,13 +10,28 @@ import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import okhttp3.RequestBody
 
 
 class TaskRepository {
     private val api = ApiClient.request
 
-    fun getTasks(callback: (List<TaskResponse>?) -> Unit) {
-        val observable: Observable<List<TaskResponse>> = api!!.getTasks()
+    fun getTasks(
+        userId: Int,
+        callback: (List<TaskResponse>?) -> Unit,
+        errorCallBack: (SingleMessageResponse) -> Unit,
+        requestStatus: String?,
+        taskStatus: String?,
+        slaStatus: String?,
+        requestPriority: String?
+    ) {
+        val observable: Observable<List<TaskResponse>> = api!!.getTasks(
+            userId,
+            requestStatus = requestStatus,
+            taskStatus = taskStatus,
+            slaStatus = slaStatus,
+            requestPriority = requestPriority
+        )
         observable.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<List<TaskResponse>> {
@@ -29,7 +46,7 @@ class TaskRepository {
                 }
 
                 override fun onError(e: Throwable) {
-                    e.message
+                    errorCallBack(SingleMessageResponse(e.message))
                     // Handle errors
                 }
 
@@ -53,6 +70,34 @@ class TaskRepository {
 
                 override fun onError(e: Throwable) {
                     e.message
+                }
+
+                override fun onComplete() {
+                }
+            })
+    }
+
+    fun updateTaskStatus(
+        callback: (ApiSuccessFlagResponse) -> Unit,
+        errorCallBack: (SingleMessageResponse) -> Unit,
+        taskId: Int,
+        taskStatus: String,
+        body: RequestBody
+    ) {
+        val observable: Observable<ApiSuccessFlagResponse> =
+            api!!.updateTaskStatus(taskId, taskStatus, body)
+        observable.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<ApiSuccessFlagResponse> {
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onNext(t: ApiSuccessFlagResponse) {
+                    callback(t)
+                }
+
+                override fun onError(e: Throwable) {
+                    errorCallBack(SingleMessageResponse(e.message))
                 }
 
                 override fun onComplete() {

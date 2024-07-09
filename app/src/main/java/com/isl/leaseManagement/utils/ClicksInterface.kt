@@ -6,4 +6,5 @@ object ClickInterfaces {
     interface MyTasks {
         fun myTaskClicked(taskResponse: TaskResponse)
     }
+
 }

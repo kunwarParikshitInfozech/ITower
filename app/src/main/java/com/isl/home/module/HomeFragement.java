@@ -45,6 +45,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -65,10 +66,11 @@ import com.isl.constant.AppConstants;
 import com.isl.constant.WebMethods;
 import com.isl.dao.DataBaseHelper;
 import com.isl.dao.cache.AppPreferences;
-import com.isl.itower.AuthenticateUser;
 import com.isl.itower.CustomGrid;
 import com.isl.itower.ExpandableHeightGridView;
 import com.isl.itower.GPSTracker;
+import com.isl.itower.ValidateUDetails;
+import com.isl.leaseManagement.activities.home.LsmHomeActivity;
 import com.isl.modal.HomeModule;
 import com.isl.modal.ResponceLoginList;
 import com.isl.modal.ResponseGetUserInfo;
@@ -118,9 +120,10 @@ public class HomeFragement extends Fragment {
     //ArrayList<Class> klass = null;
     TTChecklist ttchecklist = null;
     Switch switchButton;
-    String moduleUrl = "", appBundleId = "", appLink = "", url = "", hsUrl = "",netType = "",autoTime = "";
+    String moduleUrl = "", appBundleId = "", appLink = "", url = "", hsUrl = "", netType = "", autoTime = "";
     ArrayList<String> notification_list, txnDate, rejectTxnDate, error_list;
     Button checkIn, checkOut;
+    ImageView iLeaseIv;
     private static final int REQUEST_CODE_Permission = 1020;
     private RelativeLayout checkInOut;
     private String UTRoleRights;
@@ -131,11 +134,12 @@ public class HomeFragement extends Fragment {
 
     LocationService mLocationService = new LocationService();
     Intent mServiceIntent;
-    private static final int  REQUEST_LOCATION_PERMISSION = 100;
+    private static final int REQUEST_LOCATION_PERMISSION = 100;
     LocationManager manager;
     private FusedLocationProviderClient fusedLocationClient;
     public int signalStrengthValue;
     ResponseGetUserInfo response;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.home_frag, container, false);
@@ -179,6 +183,18 @@ public class HomeFragement extends Fragment {
         checkInOut = view.findViewById(R.id.checkInOut);
         checkIn = view.findViewById(R.id.punch);
         checkOut = view.findViewById(R.id.punchout);
+        iLeaseIv = view.findViewById(R.id.iLeaseIv);
+
+        checkInOut.setVisibility(View.GONE);
+
+        iLeaseIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requireActivity(), LsmHomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
         if (mAppPreferences.getUserTracking() != null && mAppPreferences.getUserTracking().length() != 3) {
             String[] dataUserTrack = mAppPreferences.getUserTracking().split("\\~");
             if (dataUserTrack.length != 3) {
@@ -194,31 +210,28 @@ public class HomeFragement extends Fragment {
         UTRoleRights = dbHelper.getSubMenuRight("UserTrackOnOff", "UserTrackModule");
         if (mAppPreferences.getTrackingOnOff().equalsIgnoreCase("ON") &&
                 UTRoleRights.equalsIgnoreCase("1")) {
-            checkInOut.setVisibility(View.VISIBLE);
-            if(mAppPreferences.getCheckIn().equalsIgnoreCase("Y"))
-            {
+ //           checkInOut.setVisibility(View.VISIBLE);
+            if (mAppPreferences.getCheckIn().equalsIgnoreCase("Y")) {
 //                checkOut.setBackground(null);
 //                checkOut.setTextColor(getResources().getColor(R.color.black));
 //                checkIn.setBackground(getResources().getDrawable(R.drawable.button_orange));
 //                checkIn.setTextColor(getResources().getColor(R.color.white));
 
                 switchButton.setChecked(true);
-             //   checkIn.setVisibility(View.GONE);
-               // checkOut.setVisibility(View.VISIBLE);
-            }
-            else
-            {
+                //   checkIn.setVisibility(View.GONE);
+                // checkOut.setVisibility(View.VISIBLE);
+            } else {
 //                checkIn.setBackground(null);
 //                checkIn.setTextColor(getResources().getColor(R.color.black));
 //                checkOut.setBackground(getResources().getDrawable(R.drawable.button_orange));
 //                checkOut.setTextColor(getResources().getColor(R.color.white));
-                 switchButton.setChecked(false);
-               //  checkIn.setVisibility(View.VISIBLE);
-               //  checkOut.setVisibility(View.GONE);
+                switchButton.setChecked(false);
+                //  checkIn.setVisibility(View.VISIBLE);
+                //  checkOut.setVisibility(View.GONE);
             }
 
-        }
-        else {;
+        } else {
+            ;
             checkInOut.setVisibility(View.GONE);
         }
 
@@ -226,25 +239,20 @@ public class HomeFragement extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
 
-                if(compoundButton.isChecked())
-                {
+                if (compoundButton.isChecked()) {
                     switchButton.setChecked(false);
-                    if(areNotificationsEnabled(getContext())) {
+                    if (areNotificationsEnabled(getContext())) {
                         permission();
-                    }
-                    else
-                    {
+                    } else {
                         Intent settingsIntent = new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
                                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                .putExtra(Settings.EXTRA_APP_PACKAGE,getActivity().getPackageName());
-                               // .putExtra(Settings.EXTRA_CHANNEL_ID, MY_CHANNEL_ID);
+                                .putExtra(Settings.EXTRA_APP_PACKAGE, getActivity().getPackageName());
+                        // .putExtra(Settings.EXTRA_CHANNEL_ID, MY_CHANNEL_ID);
                         startActivity(settingsIntent);
-                     //   Toast.makeText(getContext(),"Please turn on notification!!",Toast.LENGTH_SHORT).show();
+                        //   Toast.makeText(getContext(),"Please turn on notification!!",Toast.LENGTH_SHORT).show();
                     }
-                }
-                else
-                {
-                    if(gpsProvider()) {
+                } else {
+                    if (gpsProvider()) {
                         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                                 || ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
@@ -264,32 +272,27 @@ public class HomeFragement extends Fragment {
 //                                checkIn.setTextColor(getResources().getColor(R.color.black));
 //                                checkOut.setBackground(getResources().getDrawable(R.drawable.button_orange));
 //                                checkOut.setTextColor(getResources().getColor(R.color.white));
-                                   // switchButton.setChecked(false);
-                                   // checkIn.setVisibility(View.VISIBLE);
-                                  //  checkOut.setVisibility(View.GONE);
-                                    Toast.makeText(getContext(),"CheckedOut successfully!!",Toast.LENGTH_SHORT).show();
+                                    // switchButton.setChecked(false);
+                                    // checkIn.setVisibility(View.VISIBLE);
+                                    //  checkOut.setVisibility(View.GONE);
+                                    Toast.makeText(getContext(), "CheckedOut successfully!!", Toast.LENGTH_SHORT).show();
                                     mAppPreferences.setCheckIn("N");
                                     progressDialog.dismiss();
                                 }
                             }, 4000);
 
 
-                        }
-
-                        else
-                        {
+                        } else {
                             switchButton.setChecked(true);
                             requestPermissions(new String[]{
-                                    Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},1001);
+                                    Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
 //                ActivityCompat.requestPermissions(getActivity(),
 //                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
 //                        REQUEST_LOCATION_PERMISSION);
                         }
 
 
-                    }
-                    else
-                    {
+                    } else {
                         switchButton.setChecked(true);
                     }
                 }
@@ -300,12 +303,10 @@ public class HomeFragement extends Fragment {
         checkIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(areNotificationsEnabled(getContext())) {
+                if (areNotificationsEnabled(getContext())) {
                     permission();
-                }
-                else
-                {
-                    Toast.makeText(getContext(),"Please turn on notification!!",Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Please turn on notification!!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -313,7 +314,7 @@ public class HomeFragement extends Fragment {
         checkOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(gpsProvider()) {
+                if (gpsProvider()) {
 
                     if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                             || ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -342,12 +343,9 @@ public class HomeFragement extends Fragment {
                         }, 4000);
 
 
-                    }
-
-                    else
-                    {
+                    } else {
                         requestPermissions(new String[]{
-                                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},1001);
+                                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, 1001);
 //                ActivityCompat.requestPermissions(getActivity(),
 //                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
 //                        REQUEST_LOCATION_PERMISSION);
@@ -378,13 +376,9 @@ public class HomeFragement extends Fragment {
                     } else {
                         appNotInstall(appLink);
                     }
-                }
+                } else if (module.getModuleId() == 654) {
 
-                else if(module.getModuleId() == 654)
-                {
-
-                    if(mAppPreferences.getCheckIn().equalsIgnoreCase("Y"))
-                    {
+                    if (mAppPreferences.getCheckIn().equalsIgnoreCase("Y")) {
                         Intent i = new Intent(getActivity(), module.getModuleClass());
                         mAppPreferences.setTTModuleSelection("" + module.getModuleId());
                         mAppPreferences.setModuleName(module.getModuleName());
@@ -396,9 +390,7 @@ public class HomeFragement extends Fragment {
                         i.putExtra("moduleId", module.getModuleId());
                         i.putExtra("moduleName", module.getModuleName());
                         startActivity(i);
-                    }
-                    else
-                    {
+                    } else {
                         AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                         alertDialog.setTitle("CheckIn");
                         alertDialog.setCancelable(false
@@ -412,10 +404,7 @@ public class HomeFragement extends Fragment {
                                 });
                         alertDialog.show();
                     }
-                }
-
-
-                else {
+                } else {
                     Intent i = new Intent(getActivity(), module.getModuleClass());
                     mAppPreferences.setTTModuleSelection("" + module.getModuleId());
                     mAppPreferences.setModuleName(module.getModuleName());
@@ -432,7 +421,6 @@ public class HomeFragement extends Fragment {
         });
         return view;
     }
-
 
 
     private void getAutoEnable(String msg) {
@@ -636,7 +624,7 @@ public class HomeFragement extends Fragment {
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
- //       int a = 1;
+        //       int a = 1;
 //        if (requestCode == REQUEST_CODE_Permission) {
 //            for (int i = 0; i < permissions.length; i++) {
 //                String permission = permissions[i];
@@ -662,27 +650,25 @@ public class HomeFragement extends Fragment {
 //                    Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_CODE_Permission);
 //        }
 
-       if (requestCode ==  REQUEST_LOCATION_PERMISSION) {
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     checkBackgroundPermission();
-                }
-                else
-                {
+                } else {
 
                     if (BatteryUtil.isBatteryOptimizationEnabled(getContext())) {
-                      //  BatteryUtil.requestBatteryOptimizationPermission(getActivity());
-                        BatteryUtil.getUnrestrictedBAttery(getContext(),"Please enable auto start functionality from app settings Change Battery setting of App to Unrestricted to get location updates in the background even when not using the app");
+                        //  BatteryUtil.requestBatteryOptimizationPermission(getActivity());
+                        BatteryUtil.getUnrestrictedBAttery(getContext(), "Please enable auto start functionality from app settings Change Battery setting of App to Unrestricted to get location updates in the background even when not using the app");
                     } else {
 
 //                        checkOut.setBackground(null);
 //                        checkOut.setTextColor(getResources().getColor(R.color.black));
 //                        checkIn.setBackground(getResources().getDrawable(R.drawable.button_orange));
 //                        checkIn.setTextColor(getResources().getColor(R.color.white));
-                        Toast.makeText(getContext(),"CheckedIn successfully!!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "CheckedIn successfully!!", Toast.LENGTH_SHORT).show();
                         switchButton.setChecked(true);
-                       // checkIn.setVisibility(View.GONE);
-                       // checkOut.setVisibility(View.VISIBLE);
+                        // checkIn.setVisibility(View.GONE);
+                        // checkOut.setVisibility(View.VISIBLE);
                         //for app restart
                         mAppPreferences.setCheckIn("Y");
                         //
@@ -693,7 +679,6 @@ public class HomeFragement extends Fragment {
 
             }
         }
-
 
 
     }
@@ -835,7 +820,7 @@ public class HomeFragement extends Fragment {
             Utils.toast(getActivity(), "36");
             stopLocationService();
             stopPunchNotification();
-            Intent i = new Intent(getActivity(), AuthenticateUser.class);
+            Intent i = new Intent(getActivity(), ValidateUDetails.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(i);
             try {
@@ -1291,9 +1276,8 @@ public class HomeFragement extends Fragment {
             }
     }
 
-    public void permission()
-    {
-        if(gpsProvider()) {
+    public void permission() {
+        if (gpsProvider()) {
 
             if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                     || ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -1301,23 +1285,21 @@ public class HomeFragement extends Fragment {
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     checkBackgroundPermission();
-                }
-                else
-                {
+                } else {
 
                     if (BatteryUtil.isBatteryOptimizationEnabled(getContext())) {
-                      //  BatteryUtil.requestBatteryOptimizationPermission(getActivity());
-                        BatteryUtil.getUnrestrictedBAttery(getContext(),"Please enable auto start functionality from app settings Change Battery setting of App to Unrestricted to get location updates in the background even when not using the app");
+                        //  BatteryUtil.requestBatteryOptimizationPermission(getActivity());
+                        BatteryUtil.getUnrestrictedBAttery(getContext(), "Please enable auto start functionality from app settings Change Battery setting of App to Unrestricted to get location updates in the background even when not using the app");
 
                     } else {
 //                        checkOut.setBackground(null);
 //                        checkOut.setTextColor(getResources().getColor(R.color.black));
 //                        checkIn.setBackground(getResources().getDrawable(R.drawable.button_orange));
 //                        checkIn.setTextColor(getResources().getColor(R.color.white));
-                        Toast.makeText(getContext(),"CheckedIn successfully!!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "CheckedIn successfully!!", Toast.LENGTH_SHORT).show();
                         switchButton.setChecked(true);
-                      //  checkIn.setVisibility(View.GONE);
-                      //  checkOut.setVisibility(View.VISIBLE);
+                        //  checkIn.setVisibility(View.GONE);
+                        //  checkOut.setVisibility(View.VISIBLE);
                         //for app restart
                         mAppPreferences.setCheckIn("Y");
                         //
@@ -1327,12 +1309,9 @@ public class HomeFragement extends Fragment {
 
                 }
 
-            }
-
-            else
-            {
+            } else {
                 requestPermissions(new String[]{
-                        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},REQUEST_LOCATION_PERMISSION);
+                        Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, REQUEST_LOCATION_PERMISSION);
 //                ActivityCompat.requestPermissions(getActivity(),
 //                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
 //                        REQUEST_LOCATION_PERMISSION);
@@ -1344,49 +1323,41 @@ public class HomeFragement extends Fragment {
     }
 
 
-
-    public boolean gpsProvider()
-    {
+    public boolean gpsProvider() {
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             // Location services are disabled, prompt the user to enable them
             Toast.makeText(getContext(), "Please enable location services", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
             startActivity(intent);
             return false;
-        }
-
-        else {
+        } else {
             return true;
         }
     }
 
-    public void checkBackgroundPermission()
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)  {
-          //  boolean value = shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
-            if(ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED)
-            {
+    public void checkBackgroundPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            //  boolean value = shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_BACKGROUND_LOCATION);
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
                 if (BatteryUtil.isBatteryOptimizationEnabled(getContext())) {
-                  //  BatteryUtil.requestBatteryOptimizationPermission(getActivity());
-                    BatteryUtil.getUnrestrictedBAttery(getContext(),"Please enable auto start functionality from app settings Change Battery setting of App to Unrestricted to get location updates in the background even when not using the app");
+                    //  BatteryUtil.requestBatteryOptimizationPermission(getActivity());
+                    BatteryUtil.getUnrestrictedBAttery(getContext(), "Please enable auto start functionality from app settings Change Battery setting of App to Unrestricted to get location updates in the background even when not using the app");
 
                 } else {
 //                    checkOut.setBackground(null);
 //                    checkOut.setTextColor(getResources().getColor(R.color.black));
 //                    checkIn.setBackground(getResources().getDrawable(R.drawable.button_orange));
 //                    checkIn.setTextColor(getResources().getColor(R.color.white));
-                    Toast.makeText(getContext(),"CheckedIn successfully!!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "CheckedIn successfully!!", Toast.LENGTH_SHORT).show();
                     switchButton.setChecked(true);
-                   // checkIn.setVisibility(View.GONE);
-                   // checkOut.setVisibility(View.VISIBLE);
+                    // checkIn.setVisibility(View.GONE);
+                    // checkOut.setVisibility(View.VISIBLE);
                     mAppPreferences.setCheckIn("Y");
                     mAppPreferences.setCheckInStatus("First Time");
                     startService();
                 }
-            }
-            else
-            {
+            } else {
                 AlertDialog alertDialog = new AlertDialog.Builder(getContext()).create();
                 alertDialog.setTitle("Background permission");
                 alertDialog.setMessage(getString(R.string.background_location_permission_message));
@@ -1407,15 +1378,13 @@ public class HomeFragement extends Fragment {
 
     }
 
-    public void startService()
-    {
+    public void startService() {
         Intent intent = new Intent(getContext(), UserTrackingService.class);
-        getActivity(). startService(intent);
+        getActivity().startService(intent);
     }
 
-    public void stopService()
-    {
-        Intent intent = new Intent(getContext(),UserTrackingService.class);
+    public void stopService() {
+        Intent intent = new Intent(getContext(), UserTrackingService.class);
         getActivity().stopService(intent);
     }
 
@@ -1431,9 +1400,9 @@ public class HomeFragement extends Fragment {
         fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                if(location!=null) {
+                if (location != null) {
 
-                    saveData(location.getLatitude(),location.getLongitude());
+                    saveData(location.getLatitude(), location.getLongitude());
                     //  Toast.makeText(UserTrackingService.this,"Location Update: " + location.getLatitude() + ", " + location.getLongitude(),Toast.LENGTH_SHORT).show();
                     Log.e("TAG", "Location Update: " + location.getLatitude() + ", " + location.getLongitude());
                 }
@@ -1444,7 +1413,7 @@ public class HomeFragement extends Fragment {
         fusedLocationClient.getLastLocation().addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(),"Fused Location Failure!!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Fused Location Failure!!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -1471,10 +1440,10 @@ public class HomeFragement extends Fragment {
         }
     }
 
-    public void saveData(double latitude,double longitude) {
+    public void saveData(double latitude, double longitude) {
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         String date = df.format(Calendar.getInstance().getTime());
-        ConnectivityManager cm = (ConnectivityManager)getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) getContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo Info = cm.getActiveNetworkInfo();
         if (Info == null || !Info.isConnectedOrConnecting()) {
             netType = "No Connection";
@@ -1520,7 +1489,6 @@ public class HomeFragement extends Fragment {
         response.setGps(String.valueOf(1));
         response.setMock("" + "~" + true);
         response.setCheckInStatus("OUT");
-
 
 
         //Insert to database
@@ -1574,7 +1542,7 @@ public class HomeFragement extends Fragment {
         okclient.connectTimeout(120, TimeUnit.SECONDS);
         okclient.readTimeout(120, TimeUnit.SECONDS);
         okclient.writeTimeout(120, TimeUnit.SECONDS);
-        String BaseUrl=Utils.msg(getContext(), "831");
+        String BaseUrl = Utils.msg(getContext(), "831");
 
         Retrofit builder = new Retrofit.Builder().baseUrl(BaseUrl).
                 addConverterFactory(GsonConverterFactory.create()).client(okclient.build()).build();

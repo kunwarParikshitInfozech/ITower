@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8sdp"
-            android:drawableStart="@drawable/calendar_small_icon"
+            android:drawableStart="@drawable/calendar_small_icon_orange"
             android:drawablePadding="@dimen/_4sdp"
             tools:text="2 Days"
             android:textColor="@color/color_ff3B30"

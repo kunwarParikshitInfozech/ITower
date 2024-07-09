@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/bg_color_home">
+    android:background="@color/bg_color_home"
+    android:orientation="vertical">
 
     <LinearLayout style="@style/homeGridLayout">
 
@@ -14,26 +15,24 @@
             android:layout_height="match_parent">
 
             <Switch
-                android:switchPadding="10dp"
                 android:id="@+id/switch_button"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:switchMinWidth="50dp"
-                app:switchPadding="20dp"
-                android:textStyle="bold"
-                android:drawableLeft="@drawable/ic_location"
-                android:textSize="15sp"
                 android:checked="true"
-                android:text="CheckedIn"/>
-
+                android:drawableLeft="@drawable/ic_location"
+                android:switchMinWidth="50dp"
+                android:switchPadding="10dp"
+                android:text="CheckedIn"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:switchPadding="20dp" />
 
 
             <Button
-                android:layout_below="@id/switch_button"
-                android:visibility="gone"
                 android:id="@+id/punch"
                 android:layout_width="@dimen/_70sdp"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/switch_button"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="@dimen/_10sdp"
                 android:background="@drawable/button_9_blue"
@@ -41,7 +40,7 @@
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_12ssp"
-                />
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/punchout"
@@ -64,4 +63,25 @@
             style="@style/homeGrid"
             android:layout_marginTop="@dimen/_10sdp" />
     </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/iLeaseIv"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="@dimen/_6sdp"
+            android:background="@drawable/white_rounded_rect_bg"
+            android:contentDescription="@string/image"
+            android:padding="@dimen/_16sdp"
+            android:src="@drawable/ilease_icon_image"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth_percent="0.305" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 </LinearLayout>

@@ -74,28 +74,28 @@
         android:requestLegacyExternalStorage="true"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.NoTitleBar"
-        android:usesCleartextTraffic="true">
-        <activity
-            android:name="com.isl.leaseManagement.activities.ShowLoaderActivity"
-            android:exported="false"
-            android:theme="@style/LightTheme" />
-        <activity
-            android:name="com.isl.leaseManagement.activities.TaskInProgressActivity"
-            android:exported="false"
-            android:theme="@style/LightTheme" />
-        <activity
-            android:name="com.isl.leaseManagement.base.BaseActivity"
-            android:exported="false" />
-        <activity
-            android:name="com.isl.leaseManagement.activities.LsmHomeActivity"
-            android:exported="true"
-            android:theme="@style/LightTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        android:usesCleartextTraffic="false">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity
+            android:name="com.isl.leaseManagement.activities.filter.FilterTasksActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
+            android:name="com.isl.leaseManagement.activities.requestDetails.RequestDetailsActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
+            android:name="com.isl.leaseManagement.activities.basicDetails.BasicDetailsActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
+            android:name="com.isl.leaseManagement.activities.addAdditionalDoc.AddAdditionalDocumentActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
+            android:name="com.isl.leaseManagement.activities.addtionalDocs.AdditionalDocumentsActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -111,6 +111,18 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="tawal.com.sa.fileprovider.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
@@ -125,19 +137,17 @@
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
         <activity
-            android:name="com.isl.itower.AuthenticateUser"
+            android:name="com.isl.itower.ValidateUDetails"
             android:exported="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.LoginPageTheme"
             android:windowSoftInputMode="adjustPan">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.isl.app.auth.TokenActivity"
@@ -550,12 +560,28 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar1"
             android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name="com.isl.leaseManagement.activities.loader.GetStartDataActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
+            android:name="com.isl.leaseManagement.activities.taskInProgress.TaskInProgressActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
+            android:name="com.isl.leaseManagement.base.BaseActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateVisible" />
+        <activity
+            android:name="com.isl.leaseManagement.activities.home.LsmHomeActivity"
+            android:exported="true"
+            android:theme="@style/LightTheme" />
         <!--
  <receiver android:name="com.isl.audit.util.NetworkChangeReceiver">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-            </intent-filter>
-        </receiver>
+             <intent-filter>
+                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+             </intent-filter>
+         </receiver>
         -->
         <service
             android:name="com.isl.userTracking.UserTrackingService"

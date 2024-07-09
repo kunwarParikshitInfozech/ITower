@@ -8,6 +8,8 @@ import com.isl.dao.cache.AppPreferences;
 import com.isl.dao.DataBaseHelper;
 import com.isl.modal.Operator;
 import com.isl.preventive.PMChecklistApproval;
+import com.isl.preventive.ScheduleFragement;
+import com.isl.util.NetworkManager;
 import com.isl.util.Utils;
 import com.isl.preventive.PMChecklist;
 import com.isl.preventive.ViewPMCheckList;
@@ -81,10 +83,12 @@ public class PMSchedules extends Activity {
 	JSONObject savedDataJsonObjRemarks = null;
 	JSONObject savedDataJsonObj = null;
 	int temp_flag=0;
+	private NetworkManager networkManager;//108
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_site_list);
+		networkManager = new NetworkManager();//108
 		searchDDLlist = new ArrayList<String>();
 		searchDDLlist.add("Site Id");
 		searchDDLlist.add("Activity Type");
@@ -155,7 +159,20 @@ public class PMSchedules extends Activity {
 		pullToRefresh.setOnRefreshListener( new SwipeRefreshLayout.OnRefreshListener() {
 			public void onRefresh() {
 				if (Utils.isNetworkAvailable( PMSchedules.this )) {
-					new GetSchedules( PMSchedules.this ).execute();
+					//108
+					networkManager.getToken(new NetworkManager.TokenCallback() {
+						@Override
+						public void onTokenReceived(String token) {
+							new GetSchedules( PMSchedules.this,token).execute();
+						}
+
+						@Override
+						public void onTokenError(String error) {
+							Toast.makeText(PMSchedules.this, error, Toast.LENGTH_SHORT).show();
+						}
+					});
+					//108
+				//	new GetSchedules( PMSchedules.this ).execute();
 					searchFunction();
 				} else {
 					Toast.makeText( PMSchedules.this, "No internet connection,Try again.", Toast.LENGTH_SHORT ).show();
@@ -582,7 +599,20 @@ public class PMSchedules extends Activity {
 			public void onClick(View arg0) {
 				actvity_dialog.cancel();
 				if (Utils.isNetworkAvailable(PMSchedules.this)) {
-					new GetSchedules( PMSchedules.this ).execute();
+					//108
+					networkManager.getToken(new NetworkManager.TokenCallback() {
+						@Override
+						public void onTokenReceived(String token) {
+							new GetSchedules( PMSchedules.this,token).execute();
+						}
+
+						@Override
+						public void onTokenError(String error) {
+							Toast.makeText(PMSchedules.this, error, Toast.LENGTH_SHORT).show();
+						}
+					});
+					//108
+					//new GetSchedules( PMSchedules.this ).execute();
 					searchFunction();
 
 				}
@@ -707,7 +737,20 @@ public class PMSchedules extends Activity {
 			public void onClick(View arg0) {
 				actvity_dialog.cancel();
 				if (Utils.isNetworkAvailable(PMSchedules.this)) {
-					new GetSchedules( PMSchedules.this ).execute();
+					//108
+					networkManager.getToken(new NetworkManager.TokenCallback() {
+						@Override
+						public void onTokenReceived(String token) {
+							new GetSchedules( PMSchedules.this,token).execute();
+						}
+
+						@Override
+						public void onTokenError(String error) {
+							Toast.makeText(PMSchedules.this, error, Toast.LENGTH_SHORT).show();
+						}
+					});
+					//108
+				//	new GetSchedules( PMSchedules.this ).execute();
 					searchFunction();
 				}
 			}
@@ -772,7 +815,20 @@ public class PMSchedules extends Activity {
 				if(flag==1){
 					actvity_dialog.cancel();
 					if (Utils.isNetworkAvailable(PMSchedules.this)) {
-						new GetSchedules( PMSchedules.this ).execute();
+						//108
+						networkManager.getToken(new NetworkManager.TokenCallback() {
+							@Override
+							public void onTokenReceived(String token) {
+								new GetSchedules( PMSchedules.this,token).execute();
+							}
+
+							@Override
+							public void onTokenError(String error) {
+								Toast.makeText(PMSchedules.this, error, Toast.LENGTH_SHORT).show();
+							}
+						});
+						//108
+						//new GetSchedules( PMSchedules.this ).execute();
 						searchFunction();
 					}
 					startActivity(i);
@@ -805,7 +861,20 @@ public class PMSchedules extends Activity {
 			public void onClick(View arg0) {
 				actvity_dialog.cancel();
 				if (Utils.isNetworkAvailable(PMSchedules.this)) {
-					new GetSchedules( PMSchedules.this ).execute();
+					//108
+					networkManager.getToken(new NetworkManager.TokenCallback() {
+						@Override
+						public void onTokenReceived(String token) {
+							new GetSchedules( PMSchedules.this,token).execute();
+						}
+
+						@Override
+						public void onTokenError(String error) {
+							Toast.makeText(PMSchedules.this, error, Toast.LENGTH_SHORT).show();
+						}
+					});
+					//108
+				//	new GetSchedules( PMSchedules.this ).execute();
 					searchFunction();
 				}
 			}
@@ -1179,9 +1248,10 @@ public class PMSchedules extends Activity {
 	public class GetSchedules extends AsyncTask<Void, Void, Void> {
 		ProgressDialog pd;
 		Context con;
-		String response;
-		public GetSchedules(Context con) {
+		String response,token; //108
+		public GetSchedules(Context con,String token) {
 			this.con = con;
+			this.token = token; //108
 		}
 
 		@Override
@@ -1205,7 +1275,7 @@ public class PMSchedules extends Activity {
 				nameValuePairs1.add(new BasicNameValuePair("type",type));
 				nameValuePairs1.add(new BasicNameValuePair("siteID", ""));
 				nameValuePairs1.add(new BasicNameValuePair("activityTypeFlag","1"));
-				response = Utils.httpPostRequest(con,url, nameValuePairs1);
+				response = Utils.httpPostRequest1(con,url, nameValuePairs1,token); //108
 				response_site_list = gson.fromJson(response, BeanSiteList.class);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -1290,7 +1360,20 @@ public class PMSchedules extends Activity {
 			handler.postDelayed(new Runnable() {
 				@Override
 				public void run() {
-					new GetSchedules( PMSchedules.this ).execute();
+					//108
+					networkManager.getToken(new NetworkManager.TokenCallback() {
+						@Override
+						public void onTokenReceived(String token) {
+							new GetSchedules( PMSchedules.this,token).execute();
+						}
+
+						@Override
+						public void onTokenError(String error) {
+							Toast.makeText(PMSchedules.this, error, Toast.LENGTH_SHORT).show();
+						}
+					});
+					//108
+					//new GetSchedules( PMSchedules.this ).execute();
 				}
 			},100);
 		}

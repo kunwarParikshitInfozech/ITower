@@ -42,6 +42,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="nt_site_id"><b>Site ID -</b></string>
     <string name="country_prompt">Select</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_assets">iTower</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>

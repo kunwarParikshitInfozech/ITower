@@ -1080,6 +1080,13 @@ public class WorkFlowUtils {
         String editRights = (String)FormCacheManager.getPrvFormData().get(Constants.EDIT_RIGHTS);
         FormFieldControl formControl = FormCacheManager.getFormControls().get(field.getId());
         boolean isHidden = field.isHidden();
+        //109
+        if(UIUtils.isMatch && UIUtils.key) {
+            if (field.getTitle().equalsIgnoreCase("Request Status")) {
+                isHidden = true;
+            }
+        }
+     //109
 
         if(field.getRule()!=null){
             Object output;
