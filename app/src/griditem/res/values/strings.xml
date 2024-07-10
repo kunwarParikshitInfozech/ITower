@@ -85,5 +85,7 @@
     <string name="apply">Apply</string>
     <string name="enter_alphanumeric">Enter alphanumeric</string>
     <string name="dd_mm_yyyy">dd.mm.yyyy</string>
+    <string name="off_duty">Off Duty</string>
+    <string name="on_duty">On Duty</string>
 
 </resources>

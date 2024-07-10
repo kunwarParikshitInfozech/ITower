@@ -71,6 +71,7 @@ import com.isl.itower.ExpandableHeightGridView;
 import com.isl.itower.GPSTracker;
 import com.isl.itower.ValidateUDetails;
 import com.isl.leaseManagement.activities.home.LsmHomeActivity;
+import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper;
 import com.isl.modal.HomeModule;
 import com.isl.modal.ResponceLoginList;
 import com.isl.modal.ResponseGetUserInfo;
@@ -185,11 +186,12 @@ public class HomeFragement extends Fragment {
         checkOut = view.findViewById(R.id.punchout);
         iLeaseIv = view.findViewById(R.id.iLeaseIv);
 
-        checkInOut.setVisibility(View.GONE);
+        //   checkInOut.setVisibility(View.GONE);
 
         iLeaseIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                KotlinPrefkeeper.INSTANCE.setOnDuty(switchButton.isChecked());
                 Intent intent = new Intent(requireActivity(), LsmHomeActivity.class);
                 startActivity(intent);
             }
@@ -210,7 +212,7 @@ public class HomeFragement extends Fragment {
         UTRoleRights = dbHelper.getSubMenuRight("UserTrackOnOff", "UserTrackModule");
         if (mAppPreferences.getTrackingOnOff().equalsIgnoreCase("ON") &&
                 UTRoleRights.equalsIgnoreCase("1")) {
- //           checkInOut.setVisibility(View.VISIBLE);
+            //           checkInOut.setVisibility(View.VISIBLE);
             if (mAppPreferences.getCheckIn().equalsIgnoreCase("Y")) {
 //                checkOut.setBackground(null);
 //                checkOut.setTextColor(getResources().getColor(R.color.black));

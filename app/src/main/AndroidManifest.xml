@@ -90,8 +90,14 @@
             android:theme="@style/LightTheme" />
         <activity
             android:name="com.isl.leaseManagement.activities.addAdditionalDoc.AddAdditionalDocumentActivity"
-            android:exported="false"
-            android:theme="@style/LightTheme" />
+            android:exported="true"
+            android:theme="@style/LightTheme" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.isl.leaseManagement.activities.addtionalDocs.AdditionalDocumentsActivity"
             android:exported="false"
@@ -143,11 +149,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.LoginPageTheme"
             android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.isl.app.auth.TokenActivity"

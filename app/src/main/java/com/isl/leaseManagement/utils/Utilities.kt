@@ -1,5 +1,6 @@
 package com.isl.leaseManagement.utils
 
+import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.content.Context
 import java.math.BigInteger
@@ -101,5 +102,32 @@ object Utilities {
         }
     }
 
+    fun showYesNoDialog(
+        firstOptionName: String,
+        secondOptionName: String,
+        context: Context,
+        title: String,
+        message: String,
+        firstOptionClicked: () -> Unit,
+        secondOptionClicked: () -> Unit
+    ) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle(title)
+        builder.setMessage(message)
+
+        // Set positive (Yes) button
+        builder.setPositiveButton(firstOptionName) { dialog, which ->
+            firstOptionClicked()
+            dialog.dismiss()
+        }
+
+        // Set negative (No) button
+        builder.setNegativeButton(secondOptionName) { dialog, which ->
+            secondOptionClicked()
+            dialog.dismiss()
+        }
+
+        builder.create().show()
+    }
 
 }

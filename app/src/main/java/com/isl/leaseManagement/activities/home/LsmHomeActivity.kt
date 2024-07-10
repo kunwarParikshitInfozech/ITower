@@ -34,10 +34,11 @@ class LsmHomeActivity : BaseActivity() {
     private fun updateOnOffDutyStatus() {
         val onDutyTv = binding.leaseManagementToolbar.findViewById<TextView>(R.id.onDutyTv)
         if (!KotlinPrefkeeper.isOnDuty) {
-            onDutyTv.setText("Off Duty")
-        }
-        else{
-            onDutyTv.setText("On Duty")
+            onDutyTv.setText(getString(R.string.off_duty))
+            onDutyTv.setTextColor(getColor(R.color.orange))
+        } else {
+            onDutyTv.setText(getString(R.string.on_duty))
+            onDutyTv.setTextColor(getColor(R.color.color_34C759))
         }
     }
 

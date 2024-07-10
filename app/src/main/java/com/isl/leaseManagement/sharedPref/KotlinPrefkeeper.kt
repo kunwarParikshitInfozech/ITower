@@ -20,6 +20,8 @@ object KotlinPrefkeeper {
         set(isOnDuty) = prefs!!.edit().putBoolean(AppConstants.PrefsName.isOnDuty, isOnDuty)
             .apply()
 
+
+
     fun clear() = prefs?.edit()?.clear()?.apply()
 
 
