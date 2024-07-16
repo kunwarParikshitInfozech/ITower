@@ -32,14 +32,17 @@ class LsmHomeActivity : BaseActivity() {
     }
 
     private fun updateOnOffDutyStatus() {
-        val onDutyTv = binding.leaseManagementToolbar.findViewById<TextView>(R.id.onDutyTv)
-        if (!KotlinPrefkeeper.isOnDuty) {
-            onDutyTv.setText(getString(R.string.off_duty))
-            onDutyTv.setTextColor(getColor(R.color.orange))
-        } else {
-            onDutyTv.setText(getString(R.string.on_duty))
-            onDutyTv.setTextColor(getColor(R.color.color_34C759))
-        }
+  try {
+      val onDutyTv = binding.leaseManagementToolbar.findViewById<TextView>(R.id.onDutyTv)
+      if (!KotlinPrefkeeper.isOnDuty) {
+          onDutyTv.text = getString(R.string.off_duty)
+          onDutyTv.setTextColor(getColor(R.color.orange))
+      } else {
+          onDutyTv.text = getString(R.string.on_duty)
+          onDutyTv.setTextColor(getColor(R.color.color_34C759))
+      }
+  }catch (e:Exception){// no need
+  }
     }
 
     private fun setClickListeners() {

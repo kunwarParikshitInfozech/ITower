@@ -9,7 +9,7 @@
     <string name="login_with_ad">Login with AD</string>
     <string name="sign_in">Sign In</string>
     <string name="home">Home</string>
-    <string name="my_tasks">My Tasks</string>
+    <string name="my_tasks">My Task</string>
     <string name="notifications">Notifications</string>
     <string name="my_profile">My profile</string>
     <!-- TODO: Remove or change this placeholder text -->
@@ -85,7 +85,9 @@
     <string name="apply">Apply</string>
     <string name="enter_alphanumeric">Enter alphanumeric</string>
     <string name="dd_mm_yyyy">dd.mm.yyyy</string>
-    <string name="off_duty">Off Duty</string>
-    <string name="on_duty">On Duty</string>
+    <string name="off_duty">OFF Duty</string>
+    <string name="on_duty">ON Duty</string>
+    <string name="actions">Actions</string>
+    <string name="field_work">Field Work</string>
 
 </resources>

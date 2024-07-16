@@ -24,7 +24,9 @@ import com.isl.leaseManagement.dataClass.responses.TaskResponse
 import com.isl.leaseManagement.dataClass.responses.TasksSummaryResponse
 import com.isl.leaseManagement.utils.AppConstants
 import com.isl.leaseManagement.utils.ClickInterfaces
+import com.isl.leaseManagement.utils.Utilities
 import com.isl.leaseManagement.utils.Utilities.dpToPx
+import com.isl.leaseManagement.utils.Utilities.formatSingleDigitNumber
 import infozech.itower.R
 import infozech.itower.databinding.FragmentLsmTasksBinding
 import infozech.itower.databinding.TaskDetailsPopupBinding
@@ -60,7 +62,7 @@ class LsmTasksFragment : BaseFragment() {
 
     private fun init() {
         setClickListeners()
-     //   callTasksSummaryApi()
+        //   callTasksSummaryApi()
         registerActivityLauncher()
     }
 
@@ -139,8 +141,8 @@ class LsmTasksFragment : BaseFragment() {
                     val profileLayoutToolbar =
                         toolbar.findViewById<ConstraintLayout>(R.id.profileDutyCl)
                     val isProfileVisible = profileLayoutToolbar.visibility == View.VISIBLE
-                //    if (isProfileVisible) {
-                        reverseLayoutsVisibility()
+                    //    if (isProfileVisible) {
+                    reverseLayoutsVisibility()
                     //}
                 } else {
                     baseActivity.showToastMessage("No task found!")
@@ -179,20 +181,24 @@ class LsmTasksFragment : BaseFragment() {
         binding: TaskDetailsPopupBinding,
         dialog: Dialog
     ) {
-        binding.taskNumber.text = taskResponse.requestId ?: ""
+        binding.taskNumber.text = (taskResponse.taskId ?: "").toString()
         binding.taskName.text = taskResponse.taskName ?: ""
-        binding.forecastStartDateValue.text = taskResponse.forecastStartDate ?: ""
+        binding.forecastStartDateValue.text =
+            taskResponse.forecastStartDate?.let { Utilities.getDateFromISO8601(it) }
         binding.taskPriority.text =
             taskResponse.requestPriority ?: "".also { binding.taskPriority.visibility = View.GONE }
-        binding.forecastEndDateValue.text = taskResponse.forecastEndDate ?: ""
+        binding.forecastEndDateValue.text =
+            taskResponse.forecastEndDate?.let { Utilities.getDateFromISO8601(it) }
         binding.taskStatusValue.text = taskResponse.taskStatus ?: ""
         binding.slaStatusValue.text = taskResponse.slaStatus ?: ""
         binding.customerSiteIdValue.text = taskResponse.customerSiteId ?: ""
         binding.tawalSiteIdValue.text = taskResponse.siteId ?: ""
-        binding.planStartDateValue.text = taskResponse.forecastStartDate ?: ""
-        binding.planEndDateValue.text = taskResponse.forecastEndDate ?: ""
+        binding.planStartDateValue.text =
+            taskResponse.forecastStartDate?.let { Utilities.getDateFromISO8601(it) }
+        binding.planEndDateValue.text =
+            taskResponse.forecastStartDate?.let { Utilities.getDateFromISO8601(it) }
 
-        binding.requester.text = taskResponse.requester ?: ""
+        binding.requesterValue.text = taskResponse.requester ?: ""
         binding.regionTypeValue.text = taskResponse.region ?: ""
         binding.districtValue.text = taskResponse.district ?: ""
         binding.cityValue.text = taskResponse.city ?: ""
@@ -227,6 +233,7 @@ class LsmTasksFragment : BaseFragment() {
         searchSortLayoutToolbar.visibility = if (isProfileVisible) View.VISIBLE else View.GONE
         binding.assignedUnassignedRl.visibility = if (isProfileVisible) View.GONE else View.VISIBLE
         binding.tasksRv.visibility = if (isProfileVisible) View.VISIBLE else View.GONE
+        binding.fieldWorkText.visibility = if (isProfileVisible) View.VISIBLE else View.GONE
     }
 
     private fun callTasksSummaryApi() {
@@ -237,14 +244,15 @@ class LsmTasksFragment : BaseFragment() {
             tasksSummary?.let {
                 binding.progressBar.visibility = View.GONE
                 val taskSummary = calculateTaskSummary(tasksSummary)
-                binding.assignedTask.scheduledValue.text = taskSummary.totalAssignedTotal.toString()
+                binding.assignedTask.scheduledValue.text =
+                    formatSingleDigitNumber(taskSummary.totalAssignedTotal.toString())
                 binding.assignedTask.addedTodayValue.text =
-                    taskSummary.totalAssignedToday.toString()
+                    formatSingleDigitNumber(taskSummary.totalAssignedToday.toString())
 
                 binding.unAssignedTask.scheduledValue.text =
-                    taskSummary.totalUnassignedNum.toString()
+                    formatSingleDigitNumber(taskSummary.totalUnassignedNum.toString())
                 binding.unAssignedTask.addedTodayValue.text =
-                    taskSummary.totalUnassignedToday.toString()
+                    formatSingleDigitNumber(taskSummary.totalUnassignedToday.toString())
             }
         }
     }

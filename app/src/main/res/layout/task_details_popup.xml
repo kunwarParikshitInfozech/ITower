@@ -13,7 +13,7 @@
             android:id="@+id/rlClose"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/light_white_top_rounded_rect_bg"
+            android:background="@drawable/light_sky_top_rounded_rect_bg"
             android:paddingBottom="@dimen/_8sdp"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -47,7 +47,7 @@
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/light_sky_blue"
+            android:background="@color/white"
             android:fillViewport="true"
             app:layout_constraintBottom_toTopOf="@id/llStartActivity"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -354,7 +354,7 @@
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="@id/taskPriority"
                     app:layout_constraintTop_toTopOf="@id/requester"
-                    tools:text="-" />
+                    android:text="-" />
 
                 <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/siteTowerType"

@@ -20,7 +20,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.isl.itower.MyApp
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocument
+import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocumentsArray
 import com.isl.leaseManagement.dataClass.requests.UploadDocumentRequest
+import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
 import com.isl.leaseManagement.utils.AppConstants
 import com.isl.leaseManagement.utils.Utilities.showYesNoDialog
 import infozech.itower.R
@@ -34,7 +36,7 @@ class AddAdditionalDocumentActivity : BaseActivity() {
     private val REQUEST_CODE_CAMERA = 2;
     private lateinit var viewModel: AddAdditionalDocumentViewModel
     private var stringBase64: String? = null
-    private val docList = ArrayList<SaveAdditionalDocument>()
+    private val docList = ArrayList<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,31 +53,41 @@ class AddAdditionalDocumentActivity : BaseActivity() {
     private fun setClickListeners() {
         binding.backIv.setOnClickListener { finish() }
         binding.addAttachmentIv.setOnClickListener {
-            if (docList.size < 5) {
-                val firstOptionText = "Camera" // Change this to your desired text
-                val secondOptionText = "Document" // Change this to your desired text
-                showYesNoDialog(
-                    firstOptionName = firstOptionText,
-                    secondOptionName = secondOptionText,
-                    context = this, // Assuming you're calling from an activity, use 'this'
-                    title = "Choose Camera or file",
-                    message = "Select",
-                    firstOptionClicked = {
-                        openCameraAndGetBase64String()
-                    },
-                    secondOptionClicked = {
-                        pickDocument()
-                    }
-                )
-            } else {
-                showToastMessage("5 Documents are already selected")
-            }
+            openCameraDocPopup()
         }
-        binding.saveBtn.setOnClickListener { uploadDocument() }
+        binding.saveBtn.setOnClickListener {
+            KotlinPrefkeeper.additionalDocIdsForSubmitApi = docList.toIntArray()
+            KotlinPrefkeeper.additionalDocDataArray =
+                SaveAdditionalDocumentsArray(saveAdditionalDocumentArray)
+            finish()
+        }
+    }
+
+    private fun openCameraDocPopup() {
+        if (docList.size < 5) {
+            val firstOptionText = "Camera" // Change this to your desired text
+            val secondOptionText = "Document" // Change this to your desired text
+            showYesNoDialog(
+                firstOptionName = firstOptionText,
+                secondOptionName = secondOptionText,
+                context = this, // Assuming you're calling from an activity, use 'this'
+                title = "Choose Camera or file",
+                message = "Select",
+                firstOptionClicked = {
+                    openCameraAndGetBase64String()
+                },
+                secondOptionClicked = {
+                    pickDocument()
+                }
+            )
+        } else {
+            showToastMessage("5 Documents are already selected")
+        }
     }
 
     private fun uploadDocument() {
         val taskId = MyApp.localTempVarStore.taskId
+        //    val taskId = 3220  // for testing
         if (stringBase64 == null) {
             showToastMessage("Please select document before uploading!")
             return
@@ -95,12 +107,12 @@ class AddAdditionalDocumentActivity : BaseActivity() {
         showProgressBar()
         viewModel.uploadDocument(
             { successResponse ->
-                successResponse?.let {
+                successResponse?.let { response ->
                     hideProgressBar()
-                    it.docId?.let {
-                        //got success
+                    response.docId?.let {
                         showToastMessage("Document Uploaded Successfully!")
-                        finish()
+                        docList.add(it.toInt())
+
                     }
                 }
             },
@@ -162,16 +174,16 @@ class AddAdditionalDocumentActivity : BaseActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == pickDocumentCode && resultCode == RESULT_OK) {
             val uri = data?.data ?: return
-            processDocData(uri)
+            processDocDataAndGetBase64(uri)
         }
         if (requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
             val capturedImage = data?.extras?.get("data") as Bitmap
-            val base64Image = getBase64StringFromBitmap(capturedImage)
-            storeBase64AndShowDeleteUI(base64 = base64Image, name = null, size = null)
+            val base64Image = getBase64StringFromBitmapForCamera(capturedImage)
+            storeBase64AndShowDeleteUI(base64 = base64Image, name = "Camera", size = "Unknown")
         }
     }
 
-    private fun getBase64StringFromBitmap(bitmap: Bitmap): String? {
+    private fun getBase64StringFromBitmapForCamera(bitmap: Bitmap): String? {
         val outputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
         val byteArray = outputStream.toByteArray()
@@ -179,7 +191,7 @@ class AddAdditionalDocumentActivity : BaseActivity() {
         return stringBase64
     }
 
-    private fun processDocData(uri: Uri) {
+    private fun processDocDataAndGetBase64(uri: Uri) {
         try {
             var fileName: String? = null
             var fileSize: Long = 0
@@ -222,6 +234,7 @@ class AddAdditionalDocumentActivity : BaseActivity() {
         }
     }
 
+    private val saveAdditionalDocumentArray = arrayListOf<SaveAdditionalDocument>()
 
     private fun storeBase64AndShowDeleteUI(name: String?, size: String?, base64: String?) {
         if (base64 == null) {
@@ -232,16 +245,18 @@ class AddAdditionalDocumentActivity : BaseActivity() {
             docName = name, docSize = size, docContentString64 = base64
         )
 
+        saveAdditionalDocumentArray.add(saveAdditionalDocument)
+
         val inflater = LayoutInflater.from(this)  // Assuming you're in an activity
-        val customLayout = inflater.inflate(
+        val linearLayout = inflater.inflate(
             R.layout.delete_document_layout,
             binding.llDeleteDocUI,
             false
         ) as LinearLayout
-        binding.llDeleteDocUI.addView(customLayout)
-        val docName = customLayout.findViewById<TextView>(R.id.docName)
-        val docSize = customLayout.findViewById<TextView>(R.id.docSize)
-        val docDelete = customLayout.findViewById<TextView>(R.id.deleteDoc)
+        binding.llDeleteDocUI.addView(linearLayout)
+        val docName = linearLayout.findViewById<TextView>(R.id.docName)
+        val docSize = linearLayout.findViewById<TextView>(R.id.docSize)
+        val docDelete = linearLayout.findViewById<TextView>(R.id.deleteDoc)
 
         saveAdditionalDocument.docName?.let {
             docName.text = getLastChars(it, 16)
@@ -249,7 +264,16 @@ class AddAdditionalDocumentActivity : BaseActivity() {
         size?.let {
             docSize.text = getLastChars(it, 10)
         }
-        docDelete.setOnClickListener { binding.llDeleteDocUI.removeView(customLayout) }
+        uploadDocument()
+        docDelete.setOnClickListener {
+            binding.llDeleteDocUI.removeView(linearLayout)
+            if (docList.isNotEmpty()) {
+                docList.removeLast()
+            }
+            if (saveAdditionalDocumentArray.isNotEmpty()) {
+                saveAdditionalDocumentArray.removeLast()
+            }
+        }
     }
 
     private fun getLastChars(str: String, maxLength: Int): String {

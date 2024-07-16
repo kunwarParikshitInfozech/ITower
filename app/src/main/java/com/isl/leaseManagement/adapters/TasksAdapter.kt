@@ -48,7 +48,7 @@ class TasksAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bindItems(item: TaskResponse?, taskSelectedPosition: Int) {
             item ?: return
-            item.requestId?.let { binding.taskNumber.text = it }
+            item.taskId?.let { binding.taskNumber.text = it.toString() }
             item.taskName?.let { binding.taskName.text = it }
             item.taskStatus?.let { binding.assigned.text = it }
             var slaDuration = ""

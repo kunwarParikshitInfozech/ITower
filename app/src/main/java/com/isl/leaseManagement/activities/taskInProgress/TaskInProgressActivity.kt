@@ -35,9 +35,11 @@ class TaskInProgressActivity : BaseActivity() {
 
     private fun fillTaskDetailsData(taskResponse: TaskResponse) {
         taskResponse.taskStatus
-        binding.taskRequestId.text = taskResponse.requestId ?: ""
+        binding.taskId.text = (taskResponse.taskId ?: "").toString()
         binding.taskName.text = taskResponse.taskName ?: ""
-        binding.dueByValue.text = taskResponse.forecastEndDate ?: ""
+        taskResponse.forecastEndDate?.let {
+            binding.dueByValue.text = Utilities.getDateFromISO8601(it)
+        }
     }
 
     private fun setCLickListeners() {

@@ -1,170 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/light_sky_blue"
-        android:theme="@style/LightTheme"
-        tools:context="com.isl.leaseManagement.activities.taskInProgress.TaskInProgressActivity">
+        android:fillViewport="true">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.35" />
-
-        <ImageView
-            android:id="@+id/backIv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_12sdp"
-            android:layout_marginTop="@dimen/_12sdp"
-            android:contentDescription="@string/image"
-            android:src="@drawable/back_icon_vector"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.isl.leaseManagement.utils.CustomTextView
-            android:id="@+id/additionalDocsTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_16sdp"
-            android:text="@string/add_additional_document"
-            android:textColor="@color/color_001E60"
-            android:textSize="@dimen/_14ssp"
-            app:layout_constraintStart_toStartOf="@id/backIv"
-            app:layout_constraintTop_toBottomOf="@id/backIv" />
-
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clBasicDetails"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginTop="@dimen/_24sdp"
+        <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@color/light_sky_blue"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/additionalDocsTv">
+            android:theme="@style/LightTheme"
+            tools:context="com.isl.leaseManagement.activities.taskInProgress.TaskInProgressActivity">
+
+            <ImageView
+                android:id="@+id/backIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:contentDescription="@string/image"
+                android:src="@drawable/back_icon_vector"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/additionalDocsTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_24sdp"
+                android:text="@string/add_additional_document"
+                android:textColor="@color/color_001E60"
+                android:textSize="@dimen/_14ssp"
+                app:layout_constraintStart_toStartOf="@id/backIv"
+                app:layout_constraintTop_toBottomOf="@id/backIv" />
 
 
-            <androidx.core.widget.NestedScrollView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fillViewport="true"
-                app:layout_constraintBottom_toTopOf="@id/llSave"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                android:layout_marginTop="@dimen/_24sdp"
+                android:background="@color/white"
+                app:layout_constraintTop_toBottomOf="@id/additionalDocsTv">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/docTypeTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:text="@string/document_type"
+                    android:textColor="@color/color_606F8A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/docDetailsSelection"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:background="@drawable/btn_light_grey_border_bg"
+                    android:drawableEnd="@drawable/drop_down_arrow"
+                    android:paddingVertical="@dimen/_14sdp"
+                    android:paddingStart="@dimen/_8sdp"
+                    android:paddingEnd="@dimen/_8sdp"
+                    android:text="@string/select"
+                    android:textColor="@color/color_B1B7C8"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/docTypeTv"
+                    app:layout_constraintTop_toBottomOf="@id/docTypeTv" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/docDescTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:text="@string/document_description"
+                    android:textColor="@color/color_606F8A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/docTypeTv"
+                    app:layout_constraintTop_toBottomOf="@id/docDetailsSelection" />
+
+                <EditText
+                    android:id="@+id/docDescValue"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/_108sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginEnd="@dimen/_16sdp"
+                    android:background="@drawable/btn_light_grey_border_bg"
+                    android:gravity="top"
+                    android:hint="@string/text"
+                    android:paddingVertical="@dimen/_14sdp"
+                    android:paddingStart="@dimen/_8sdp"
+                    android:paddingEnd="@dimen/_8sdp"
+                    android:textAlignment="gravity"
+                    android:textColorHint="@color/color_B1B7C8"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/docTypeTv"
+                    app:layout_constraintTop_toBottomOf="@id/docDescTv" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/addAttachmentTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:text="@string/add_attachments"
+                    android:textColor="@color/color_606F8A"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="@id/docTypeTv"
+                    app:layout_constraintTop_toBottomOf="@id/docDescValue" />
+
+
+                <ImageView
+                    android:id="@+id/addAttachmentIv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:contentDescription="@string/image"
+                    android:src="@drawable/add_attachment_image"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/addAttachmentTv" />
+
+                <LinearLayout
+                    android:id="@+id/llDeleteDocUI"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:paddingBottom="@dimen/_16sdp">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_16sdp"
+                    android:orientation="vertical"
+                    app:layout_constraintTop_toBottomOf="@id/addAttachmentIv">
 
-                    <com.isl.leaseManagement.utils.CustomTextView
-                        android:id="@+id/docTypeTv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/_16sdp"
-                        android:layout_marginTop="@dimen/_12sdp"
-                        android:text="@string/document_type"
-                        android:textColor="@color/color_606F8A"
-                        android:textSize="@dimen/_12ssp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-
-                    <com.isl.leaseManagement.utils.CustomTextView
-                        android:id="@+id/docDetailsSelection"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:layout_marginEnd="@dimen/_16sdp"
-                        android:background="@drawable/btn_light_grey_border_bg"
-                        android:drawableEnd="@drawable/drop_down_arrow"
-                        android:paddingVertical="@dimen/_14sdp"
-                        android:paddingStart="@dimen/_8sdp"
-                        android:paddingEnd="@dimen/_8sdp"
-                        android:text="@string/select"
-                        android:textColor="@color/color_B1B7C8"
-                        android:textSize="@dimen/_12ssp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@id/docTypeTv"
-                        app:layout_constraintTop_toBottomOf="@id/docTypeTv" />
-
-                    <com.isl.leaseManagement.utils.CustomTextView
-                        android:id="@+id/docDescTv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp"
-                        android:text="@string/document_description"
-                        android:textColor="@color/color_606F8A"
-                        android:textSize="@dimen/_12ssp"
-                        app:layout_constraintStart_toStartOf="@id/docTypeTv"
-                        app:layout_constraintTop_toBottomOf="@id/docDetailsSelection" />
-
-                    <EditText
-                        android:id="@+id/docDescValue"
-                        android:layout_width="0dp"
-                        android:layout_height="@dimen/_108sdp"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:layout_marginEnd="@dimen/_16sdp"
-                        android:background="@drawable/btn_light_grey_border_bg"
-                        android:gravity="top"
-                        android:hint="@string/text"
-                        android:paddingVertical="@dimen/_14sdp"
-                        android:paddingStart="@dimen/_8sdp"
-                        android:paddingEnd="@dimen/_8sdp"
-                        android:textAlignment="gravity"
-                        android:textColorHint="@color/color_B1B7C8"
-                        android:textSize="@dimen/_12ssp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@id/docTypeTv"
-                        app:layout_constraintTop_toBottomOf="@id/docDescTv" />
-
-                    <com.isl.leaseManagement.utils.CustomTextView
-                        android:id="@+id/addAttachmentTv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_12sdp"
-                        android:text="@string/add_attachments"
-                        android:textColor="@color/color_606F8A"
-                        android:textSize="@dimen/_12ssp"
-                        app:layout_constraintStart_toStartOf="@id/docTypeTv"
-                        app:layout_constraintTop_toBottomOf="@id/docDescValue" />
+                </LinearLayout>
 
 
-                    <ImageView
-                        android:id="@+id/addAttachmentIv"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_8sdp"
-                        android:contentDescription="@string/image"
-                        android:src="@drawable/add_attachment_image"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/addAttachmentTv" />
-
-                    <LinearLayout
-                        android:id="@+id/llDeleteDocUI"
-                        app:layout_constraintTop_toBottomOf="@id/addAttachmentIv"
-                        android:orientation="vertical"
-                        android:layout_marginTop="@dimen/_16sdp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                    </LinearLayout>
-
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </androidx.core.widget.NestedScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <RelativeLayout
                 android:id="@+id/llSave"
@@ -194,8 +169,19 @@
 
             </RelativeLayout>
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+
+
 </layout>

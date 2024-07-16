@@ -1,23 +1,34 @@
 package com.isl.leaseManagement.activities.basicDetails
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.provider.OpenableColumns
 import android.util.Base64
 import android.view.View
 import android.widget.TextView
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.isl.itower.MyApp
 import com.isl.leaseManagement.activities.home.LsmHomeActivity
 import com.isl.leaseManagement.base.BaseActivity
+import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocument
 import com.isl.leaseManagement.dataClass.requests.SubmitTaskRequest
 import com.isl.leaseManagement.dataClass.requests.UploadDocumentRequest
+import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
 import com.isl.leaseManagement.utils.AppConstants
 import com.isl.leaseManagement.utils.Utilities
 import com.isl.leaseManagement.utils.Utilities.showDatePickerFromCurrentDate
 import com.isl.leaseManagement.utils.Utilities.toIsoString
 import infozech.itower.R
 import infozech.itower.databinding.ActivityBasicDetailsBinding
+import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.util.Calendar
 
@@ -27,11 +38,12 @@ class BasicDetailsActivity : BaseActivity() {
     private lateinit var viewModel: BasicDetailsViewModel
     private var paymentMethod: String? = null
     private var stringBase64: String? = null
-    private val pickDocumentCode = 1;
     private var docId = ""
     private var processId = 0
     private var taskId = 0
     private var tagName = ""
+    private val pickDocumentCode = 1;
+    private val REQUEST_CODE_CAMERA = 2;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,14 +58,87 @@ class BasicDetailsActivity : BaseActivity() {
     }
 
     private fun setClickListeners() {
-        binding.backIv.setOnClickListener { launchNewActivityCloseAllOther(LsmHomeActivity::class.java) }
+        binding.backIv.setOnClickListener { finish() }
         binding.submitBtn.setOnClickListener { submitData() }
         binding.sadadDocExpiryValue.setOnClickListener { showDatePickerAndFillDate(it as TextView) }
         binding.leaseRentExpiryValue.setOnClickListener { showDatePickerAndFillDate(it as TextView) }
-        binding.attachSadadDocIv.setOnClickListener { pickDocument() }
-        binding.attachLeaseRentVatIv.setOnClickListener { pickDocument() }
+        binding.attachSadadDocIv.setOnClickListener { openCameraDocPopup() }
+        binding.attachLeaseRentVatIv.setOnClickListener { openCameraDocPopup() }
         fillStartDataDetailsAndApplyValidations()
     }
+
+    private fun openCameraDocPopup() {
+        if (docId == "") {
+            val firstOptionText = "Camera" // Change this to your desired text
+            val secondOptionText = "Document" // Change this to your desired text
+            Utilities.showYesNoDialog(
+                firstOptionName = firstOptionText,
+                secondOptionName = secondOptionText,
+                context = this, // Assuming you're calling from an activity, use 'this'
+                title = "Choose Camera or file",
+                message = "Select",
+                firstOptionClicked = {
+                    openCameraAndGetBase64String()
+                },
+                secondOptionClicked = {
+                    pickDocumentAndGetBase64()
+                }
+            )
+        } else {
+            showToastMessage("Documents is already selected")
+        }
+    }
+
+    private fun openCameraAndGetBase64String() {
+        if (checkCameraPermission()) {
+            openCamera()
+        } else {
+            requestCameraPermission()
+        }
+
+    }
+
+    private fun checkCameraPermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun requestCameraPermission() {
+        ActivityCompat.requestPermissions(
+            this,
+            arrayOf(Manifest.permission.CAMERA),
+            REQUEST_CODE_CAMERA
+        )
+    }
+
+    private fun openCamera() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        startActivityForResult(intent, REQUEST_CODE_CAMERA)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == pickDocumentCode && resultCode == RESULT_OK) {
+            val uri = data?.data ?: return
+            processDocData(uri)
+        }
+        if (requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
+            val capturedImage = data?.extras?.get("data") as Bitmap
+            val base64Image = getBase64StringFromBitmap(capturedImage)
+            storeBase64AndShowDeleteUI(base64 = base64Image, name = "Camera", size = "Unknown")
+        }
+    }
+
+    private fun getBase64StringFromBitmap(bitmap: Bitmap): String? {
+        val outputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 10, outputStream)
+        val byteArray = outputStream.toByteArray()
+        stringBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT)
+        return stringBase64
+    }
+
 
     private fun showDatePickerAndFillDate(view: TextView) {
         showDatePickerFromCurrentDate(this@BasicDetailsActivity) { selectedDate ->
@@ -124,12 +209,9 @@ class BasicDetailsActivity : BaseActivity() {
 
                 }
             }
+        } else {
+            showToastMessage("No Payment Method Available!")
         }
-    }
-
-    override fun onBackPressed() {
-        super.onBackPressed()
-        launchNewActivityCloseAllOther(LsmHomeActivity::class.java)
     }
 
     private fun submitInCheckCase() {
@@ -166,14 +248,24 @@ class BasicDetailsActivity : BaseActivity() {
         if (sadadExpiryDate == null) {
             showToastMessage("Select SADAD Expiry Date")
         }
+        //for doc
         var docList = ArrayList<SubmitTaskRequest.SubmitTaskData.Document>()
-        var additionalDocList = ArrayList<SubmitTaskRequest.SubmitTaskData.Document>()
-
         val document = SubmitTaskRequest.SubmitTaskData.Document(docId)
-
         if (docId != "") {
             docList = arrayListOf()
             docList.add(document)
+        } else {
+            showToastMessage("Select Document to proceed!")
+            return
+        }
+
+        //for additional doc
+        val additionalDocList = ArrayList<SubmitTaskRequest.SubmitTaskData.Document>()
+        val additionalDocIdList = KotlinPrefkeeper.additionalDocIdsForSubmitApi
+        additionalDocIdList?.let {
+            for (id in it) {
+                additionalDocList.add(SubmitTaskRequest.SubmitTaskData.Document(id.toString()))
+            }
         }
 
         val submitTaskData = SubmitTaskRequest.SubmitTaskData(
@@ -197,11 +289,23 @@ class BasicDetailsActivity : BaseActivity() {
         val accountNumber = binding.accountNumberEt.text.toString()
         val document = SubmitTaskRequest.SubmitTaskData.Document(docId)
         var docList = ArrayList<SubmitTaskRequest.SubmitTaskData.Document>()
-        var additionalDocList = ArrayList<SubmitTaskRequest.SubmitTaskData.Document>()
         if (docId != "") {
             docList = arrayListOf()
             docList.add(document)
+        } else {
+            showToastMessage("Select Document to proceed!")
+            return
         }
+
+        //for additional doc
+        val additionalDocList = ArrayList<SubmitTaskRequest.SubmitTaskData.Document>()
+        val additionalDocIdList = KotlinPrefkeeper.additionalDocIdsForSubmitApi
+        additionalDocIdList?.let {
+            for (id in it) {
+                additionalDocList.add(SubmitTaskRequest.SubmitTaskData.Document(id.toString()))
+            }
+        }
+
         if (binding.leaseRentExpiryValue.text == null || binding.leaseRentExpiryValue.text.toString()
                 .isEmpty()
         ) {
@@ -224,7 +328,7 @@ class BasicDetailsActivity : BaseActivity() {
     }
 
 
-    private fun pickDocument() {
+    private fun pickDocumentAndGetBase64() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
             type = "*/*" // Accepts various document types (adjust as needed)
@@ -232,30 +336,92 @@ class BasicDetailsActivity : BaseActivity() {
         startActivityForResult(intent, pickDocumentCode)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == pickDocumentCode && resultCode == RESULT_OK) {
-            val uri = data?.data ?: return
-            // Request temporary read access using takePersistableUriPermission with the appropriate flag
-            contentResolver.takePersistableUriPermission(
-                uri,
-                Intent.FLAG_GRANT_READ_URI_PERMISSION
-            ) // This is the correct flag
-            var inputStream: InputStream? = null
-            try {
-                inputStream = contentResolver.openInputStream(uri) ?: return
-                val bytes = inputStream.readBytes()
-                stringBase64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
-                uploadDocument()
-            } catch (e: Exception) {       //   exception case
-            } finally {
-                inputStream?.close()
+    private fun processDocData(uri: Uri) {
+        try {
+            var fileName: String? = null
+            var fileSize: Long = 0
+
+            contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    fileSize = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE)) ?: 0L
+
+                }
             }
+
+            // Check if file name and size are retrieved
+            if (fileName != null && fileSize > 0) {
+                contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
+
+                var inputStream: InputStream? = null
+                try {
+                    inputStream = contentResolver.openInputStream(uri) ?: return
+                    val bytes = inputStream.readBytes()
+                    stringBase64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+                    storeBase64AndShowDeleteUI(
+                        base64 = stringBase64,
+                        name = fileName,
+                        size = ((fileSize / 1024.0).toString() + " KB")
+                    )
+                } catch (e: Exception) {
+                    // Handle exception
+                } finally {
+                    inputStream?.close()
+                }
+            } else {
+                // Handle case where file name or size couldn't be retrieved
+            }
+        } catch (e: Exception) {
+            showToastMessage("Error in parsing document!")
         }
+    }
+
+
+    private fun storeBase64AndShowDeleteUI(name: String?, size: String?, base64: String?) {
+        if (base64 == null) {
+            showToastMessage("Unable to get content string")
+            return
+        }
+        val saveAdditionalDocument = SaveAdditionalDocument(
+            docName = name, docSize = size, docContentString64 = base64
+        )
+
+        var deleteView = binding.deleteSadadDoc
+
+        if (paymentMethod == AppConstants.KeyWords.iban) {
+            deleteView = binding.deleteLeaseRentDoc
+        }
+
+        deleteView.visibility = View.VISIBLE
+
+        val docName: TextView = deleteView.findViewById(R.id.docName)
+        val docSize: TextView = deleteView.findViewById(R.id.docSize)
+        val docDelete: TextView = deleteView.findViewById(R.id.deleteDoc)
+
+        saveAdditionalDocument.docName?.let {
+            docName.text = getLastChars(it, 16)
+        }
+        size?.let {
+            docSize.text = getLastChars(it, 10)
+        }
+        uploadDocument()
+        docDelete.setOnClickListener {
+            deleteView.visibility = View.GONE
+            docId = ""
+        }
+    }
+
+    private fun getLastChars(str: String, maxLength: Int): String {
+        val length = str.length
+        return if (length <= maxLength) str else str.substring(length - maxLength)
     }
 
     private fun uploadDocument() {
         val taskId = MyApp.localTempVarStore.taskId
+        //     val taskId = 3263  // for testing
         if (stringBase64 == null) {
             showToastMessage("Please select document before uploading!")
             return
@@ -268,6 +434,7 @@ class BasicDetailsActivity : BaseActivity() {
                 longitude = 0,
                 requestId = MyApp.localTempVarStore.taskResponse?.requestId,
                 tagName = tagName,
+                //       tagName = AppConstants.KeyWords.leaseRentDocTagName,    //for testing
                 timeStamp = "",
                 userId = 123
             )
@@ -275,9 +442,9 @@ class BasicDetailsActivity : BaseActivity() {
         showProgressBar()
         viewModel.uploadDocument(
             { successResponse ->
-                successResponse?.let {
+                successResponse?.let { response ->
                     hideProgressBar()
-                    it.docId?.let {
+                    response.docId?.let {
                         docId = it
                         showToastMessage("Document Uploaded Successfully!")
                     }
@@ -285,6 +452,7 @@ class BasicDetailsActivity : BaseActivity() {
             },
             { errorMessage ->
                 hideProgressBar()
+                showToastMessage("Unable to upload Document!")
             }, taskId = taskId,
             body =
             uploadDocumentRequest

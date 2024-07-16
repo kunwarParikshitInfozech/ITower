@@ -3,11 +3,17 @@ package com.isl.leaseManagement.activities.addtionalDocs
 import android.app.Dialog
 import android.os.Bundle
 import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.WindowManager
+import android.widget.ImageView
+import android.widget.RelativeLayout
 import androidx.databinding.DataBindingUtil
 import com.isl.leaseManagement.activities.addAdditionalDoc.AddAdditionalDocumentActivity
 import com.isl.leaseManagement.activities.requestDetails.RequestDetailsActivity
 import com.isl.leaseManagement.base.BaseActivity
+import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocument
+import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
+import com.isl.leaseManagement.utils.CustomTextView
 import com.isl.leaseManagement.utils.Utilities
 import infozech.itower.R
 import infozech.itower.databinding.ActionsPopupBinding
@@ -24,7 +30,39 @@ class AdditionalDocumentsActivity : BaseActivity() {
 
     private fun init() {
         setClickListeners()
+        KotlinPrefkeeper.additionalDocDataArray?.arrayOfSaveAdditionalDocument?.let {
+            addDocumentItems(
+                it
+            )
+        }
     }
+
+
+    private fun addDocumentItems(documents: List<SaveAdditionalDocument>) {
+        for (document in documents) {
+            val inflater = LayoutInflater.from(this)
+            val documentItemLayout = inflater.inflate(
+                R.layout.additional_document_item,
+                binding.documentContainer,
+                false
+            ) as RelativeLayout
+
+            // Set data for views based on your document object
+            val docImage = documentItemLayout.findViewById<ImageView>(R.id.docImage)
+            // You might need to set a default image here if the document doesn't have a specific type
+
+            val docDetailsTxt = documentItemLayout.findViewById<CustomTextView>(R.id.docDetailsTxt)
+            docDetailsTxt.text = document.docName
+
+            val docSizeTxt = documentItemLayout.findViewById<CustomTextView>(R.id.docSizeTxt)
+            docSizeTxt.text = document.docSize
+
+            // Similar logic for downloadIv and iIconIv if needed
+
+            binding.documentContainer.addView(documentItemLayout)
+        }
+    }
+
 
     private fun setClickListeners() {
         binding.backIv.setOnClickListener { finish() }

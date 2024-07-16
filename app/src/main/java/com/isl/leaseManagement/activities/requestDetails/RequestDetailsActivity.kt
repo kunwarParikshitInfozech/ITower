@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import com.isl.itower.MyApp
 import com.isl.leaseManagement.base.BaseActivity
 import infozech.itower.R
 import infozech.itower.databinding.ActivityRequestDetailsBinding
@@ -23,12 +24,25 @@ class RequestDetailsActivity : BaseActivity() {
         val factory = RequestDetailsViewModelFactory(RequestDetailsRepository())
         viewModel = ViewModelProvider(this, factory).get(RequestDetailsViewModel::class.java)
         setClickListeners()
+        getRequestDetailsData()
     }
+
+    private fun getRequestDetailsData() {
+        MyApp.localTempVarStore?.let { tempVarStorage ->
+            tempVarStorage.taskResponse?.let { taskResponse ->
+                taskResponse.requestId?.let {
+                    callRequestDetails(it)
+                }
+            }
+        }
+    }
+
 
     private fun setClickListeners() {
         binding.backIv.setOnClickListener { finish() }
-        callRequestDetails("SP-00131")
+
     }
+
 
     private fun callRequestDetails(requestId: String) {
         showProgressBar()

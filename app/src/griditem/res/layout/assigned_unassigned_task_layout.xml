@@ -6,14 +6,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
-        android:paddingBottom="@dimen/_8sdp"
+        android:paddingTop="@dimen/_8sdp"
+        android:paddingBottom="@dimen/_10sdp"
         android:theme="@style/LightTheme">
 
         <ImageView
             android:id="@+id/tasksParentIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_4sdp"
             android:contentDescription="@string/image"
             android:padding="@dimen/_12sdp"
             android:src="@drawable/parent_tasks_icon"
@@ -24,6 +25,7 @@
             android:id="@+id/taskStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
             android:text="@string/assign_task"
             android:textAlignment="center"
             android:textColor="@color/black"
@@ -35,7 +37,6 @@
             android:id="@+id/scheduledText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_4sdp"
             android:text="@string/scheduled"
             android:textAlignment="center"
             android:textColor="@color/color_48484A"
@@ -47,19 +48,18 @@
             android:id="@+id/scheduledValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="17"
             android:layout_marginStart="@dimen/_4sdp"
             android:textAlignment="center"
             android:textColor="@color/color_48484A"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintStart_toEndOf="@id/scheduledText"
-            app:layout_constraintTop_toTopOf="@id/scheduledText" />
+            app:layout_constraintTop_toTopOf="@id/scheduledText"
+            tools:text="17" />
 
         <com.isl.leaseManagement.utils.CustomTextView
             android:id="@+id/addedTodayText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_4sdp"
             android:text="@string/added_today"
             android:textAlignment="center"
             android:textColor="@color/color_48484A"
@@ -71,13 +71,13 @@
             android:id="@+id/addedTodayValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="03"
             android:layout_marginStart="@dimen/_4sdp"
             android:textAlignment="center"
             android:textColor="@color/color_48484A"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintStart_toEndOf="@id/addedTodayText"
-            app:layout_constraintTop_toTopOf="@id/addedTodayText" />
+            app:layout_constraintTop_toTopOf="@id/addedTodayText"
+            tools:text="03" />
 
         <ImageView
             android:id="@+id/clickTasksiconIv"

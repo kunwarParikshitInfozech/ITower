@@ -452,6 +452,16 @@ public class ValidateUDetails extends Activity {
             Login.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View arg0) {
+                    EditText email = findViewById(R.id.username);
+                    EditText password = findViewById(R.id.password);
+                    if (email.getText().toString().length() < 4) {
+                        Toast.makeText(ValidateUDetails.this, "Please Enter Email", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if (password.getText().toString().length() < 1) {
+                        Toast.makeText(ValidateUDetails.this, "Please Enter Password", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
                     showOnOffDutyPopup();
                 }
             });
@@ -597,7 +607,7 @@ public class ValidateUDetails extends Activity {
                             // switchButton.setChecked(false);
                             // checkIn.setVisibility(View.VISIBLE);
                             //  checkOut.setVisibility(View.GONE);
-                            Toast.makeText(ValidateUDetails.this, "CheckedOut successfully!!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ValidateUDetails.this, "Checked Out successfully!!", Toast.LENGTH_SHORT).show();
                             KotlinPrefkeeper.INSTANCE.setOnDuty(false);
                             mAppPreferences.setCheckIn("N");
                             progressDialog.dismiss();
@@ -850,7 +860,7 @@ public class ValidateUDetails extends Activity {
 //                        checkOut.setTextColor(getResources().getColor(R.color.black));
 //                        checkIn.setBackground(getResources().getDrawable(R.drawable.button_orange));
 //                        checkIn.setTextColor(getResources().getColor(R.color.white));
-                        Toast.makeText(ValidateUDetails.this, "CheckedIn successfully!!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ValidateUDetails.this, "Checked In successfully!!", Toast.LENGTH_SHORT).show();
                         KotlinPrefkeeper.INSTANCE.setOnDuty(true);
                         switchButton.setImageDrawable(getDrawable(R.drawable.on_duty_image));
                         //  checkIn.setVisibility(View.GONE);
@@ -923,7 +933,7 @@ public class ValidateUDetails extends Activity {
 //                        checkOut.setTextColor(getResources().getColor(R.color.black));
 //                        checkIn.setBackground(getResources().getDrawable(R.drawable.button_orange));
 //                        checkIn.setTextColor(getResources().getColor(R.color.white));
-                        Toast.makeText(ValidateUDetails.this, "CheckedIn successfully!!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ValidateUDetails.this, "Checked In successfully!!", Toast.LENGTH_SHORT).show();
                         KotlinPrefkeeper.INSTANCE.setOnDuty(true);
                         switchButton.setImageDrawable(getDrawable(R.drawable.on_duty_image));
                         // checkIn.setVisibility(View.GONE);
@@ -966,7 +976,7 @@ public class ValidateUDetails extends Activity {
 //                    checkOut.setTextColor(getResources().getColor(R.color.black));
 //                    checkIn.setBackground(getResources().getDrawable(R.drawable.button_orange));
 //                    checkIn.setTextColor(getResources().getColor(R.color.white));
-                    Toast.makeText(ValidateUDetails.this, "CheckedIn successfully!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ValidateUDetails.this, "Checked In successfully!!", Toast.LENGTH_SHORT).show();
                     KotlinPrefkeeper.INSTANCE.setOnDuty(true);
                     switchButton.setImageDrawable(getDrawable(R.drawable.on_duty_image));
                     // checkIn.setVisibility(View.GONE);

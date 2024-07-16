@@ -126,7 +126,7 @@ public class HomeActivity extends AppCompatActivity
         super.onStart();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("iTower");
-        registerReceiver(broadcastReceiver, intentFilter);
+        registerReceiver(broadcastReceiver, intentFilter, Context.RECEIVER_NOT_EXPORTED);
     }
 
     @Override

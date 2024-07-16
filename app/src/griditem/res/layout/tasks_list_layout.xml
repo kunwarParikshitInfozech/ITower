@@ -7,7 +7,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_4sdp"
         android:id="@+id/clTasks"
-        android:layout_marginTop="@dimen/_6sdp"
+        android:layout_marginTop="@dimen/_16sdp"
         android:background="@color/white"
         android:paddingBottom="@dimen/_8sdp"
         android:theme="@style/LightTheme">
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_8sdp"
             tools:text="Assigned"
-            android:textColor="@color/color_48484A"
+            android:textColor="@color/color_606F8A"
             android:textSize="@dimen/_12ssp"
             app:layout_constraintStart_toStartOf="@id/taskNumber"
             app:layout_constraintTop_toBottomOf="@id/taskName" />

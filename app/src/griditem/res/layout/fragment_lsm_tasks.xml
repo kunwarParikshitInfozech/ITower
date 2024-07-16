@@ -19,16 +19,31 @@
             android:textColor="@color/black"
             android:textSize="@dimen/_20ssp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/fieldWorkText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:text="@string/field_work"
+            android:textColor="@color/color_505F6B"
+            android:textSize="@dimen/_12ssp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/myTasksText"
+            tools:visibility="visible" />
+
 
         <RelativeLayout
             android:id="@+id/assignedUnassignedRl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_12sdp"
-            app:layout_constraintTop_toBottomOf="@id/myTasksText">
+            android:layout_marginHorizontal="@dimen/_12sdp"
+            android:layout_marginTop="@dimen/_18sdp"
+            app:layout_constraintTop_toBottomOf="@id/fieldWorkText">
 
             <include
                 android:id="@+id/assignedTask"
@@ -42,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/assignedTask"
-                android:layout_marginTop="@dimen/_8sdp" />
+                android:layout_marginTop="@dimen/_16sdp" />
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -51,8 +66,9 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_4sdp"
             android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginBottom="@dimen/_24sdp"
             android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/myTasksText"
+            app:layout_constraintTop_toBottomOf="@id/fieldWorkText"
             tools:visibility="visible" />
 
         <ProgressBar

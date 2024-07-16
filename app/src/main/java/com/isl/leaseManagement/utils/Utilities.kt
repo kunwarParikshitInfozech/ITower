@@ -130,4 +130,13 @@ object Utilities {
         builder.create().show()
     }
 
+    fun formatSingleDigitNumber(numberString: String?): String {
+        if (numberString == null) return ""
+        return if (numberString.length == 1) {
+            "0$numberString" // Add leading zero for single digit
+        } else {
+            numberString // Leave double digits as is
+        }
+    }
+
 }

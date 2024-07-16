@@ -109,13 +109,13 @@
                     android:id="@+id/name_text_input1"
                     style="@style/LoginTextInputLayoutStyleUpdated"
                     app:passwordToggleEnabled="true"
-
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/passwordTxt">
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/password"
                         style="@style/LoginInput"
+                        android:inputType="textPassword"
                         android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.@_-" />
                 </com.google.android.material.textfield.TextInputLayout>
 

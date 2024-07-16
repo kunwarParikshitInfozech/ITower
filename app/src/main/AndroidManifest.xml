@@ -86,12 +86,14 @@
             android:theme="@style/LightTheme" />
         <activity
             android:name="com.isl.leaseManagement.activities.basicDetails.BasicDetailsActivity"
-            android:exported="false"
-            android:theme="@style/LightTheme" />
+            android:exported="true"
+            android:theme="@style/LightTheme">
+        </activity>
         <activity
             android:name="com.isl.leaseManagement.activities.addAdditionalDoc.AddAdditionalDocumentActivity"
             android:exported="true"
-            android:theme="@style/LightTheme" >
+            android:theme="@style/LightTheme">
+
         </activity>
         <activity
             android:name="com.isl.leaseManagement.activities.addtionalDocs.AdditionalDocumentsActivity"
@@ -146,7 +148,6 @@
             android:windowSoftInputMode="adjustPan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
