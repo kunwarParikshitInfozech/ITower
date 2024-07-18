@@ -5,20 +5,28 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import com.google.gson.Gson
 import com.isl.itower.MyApp
 import com.isl.leaseManagement.activities.home.LsmHomeActivity
 import com.isl.leaseManagement.activities.taskInProgress.TaskInProgressActivity
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.dataClass.requests.StartTaskRequest
+import com.isl.leaseManagement.dataClass.responses.StartTaskResponse
 import com.isl.leaseManagement.dataClass.responses.TaskResponse
+import com.isl.leaseManagement.room.db.MyDatabase
+import com.isl.leaseManagement.room.entity.StartTaskResponsePOJO
 import com.isl.leaseManagement.utils.AppConstants
 import infozech.itower.R
 import infozech.itower.databinding.ActivityGetStartDataBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class StartTaskActivity : BaseActivity() {
     private lateinit var binding: ActivityGetStartDataBinding
     private lateinit var viewModel: StartTaskViewModel
     private var taskResponse: TaskResponse? = null
+    var db: MyDatabase? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,6 +35,7 @@ class StartTaskActivity : BaseActivity() {
     }
 
     private fun init() {
+        db = MyApp.getMyDatabase()
         val factory = StartTaskViewModelFactory(StartTaskRepository())
         viewModel = ViewModelProvider(this, factory).get(StartTaskViewModel::class.java)
         taskResponse =
@@ -74,6 +83,11 @@ class StartTaskActivity : BaseActivity() {
                                 return@startTask
                             }
                         }
+                        val startTaskPojo = convertToStartTaskResponse(response)
+                        val startTaskDao = db?.startTaskDao()
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            startTaskDao?.insertStartTask(startTaskPojo)
+                        }
                         finish()
                         launchActivityWithIntent(intent)
                     }
@@ -87,6 +101,18 @@ class StartTaskActivity : BaseActivity() {
             body =
             startTaskRequest
         )
+    }
+
+    fun convertToStartTaskResponse(startTaskResponse: StartTaskResponse): StartTaskResponsePOJO {
+        val gson = Gson()
+        val dataJson = gson.toJson(startTaskResponse.data)
+        val startResponsePojo =
+            StartTaskResponsePOJO(
+                0, // Provide an appropriate taskId
+                dataJson,
+                startTaskResponse.processId
+            )
+        return startResponsePojo
     }
 
     private fun showProgressBar() {

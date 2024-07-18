@@ -61,7 +61,7 @@
         </RelativeLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tasksRv"
+            android:id="@+id/savedTasksRv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_4sdp"
@@ -69,6 +69,17 @@
             android:layout_marginBottom="@dimen/_24sdp"
             android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/fieldWorkText"
+            tools:visibility="visible" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/tasksRv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/_4sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:layout_marginBottom="@dimen/_24sdp"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/savedTasksRv"
             tools:visibility="visible" />
 
         <ProgressBar

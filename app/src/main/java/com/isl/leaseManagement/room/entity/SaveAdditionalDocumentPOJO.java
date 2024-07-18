@@ -5,7 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "additional_document_table")
-public class SaveAdditionalDocument {
+public class SaveAdditionalDocumentPOJO {
 
     @PrimaryKey
     @NonNull
@@ -16,7 +16,7 @@ public class SaveAdditionalDocument {
     private final String docUploadTime;
     private final Integer taskId; // Use Integer for nullable int
 
-    public SaveAdditionalDocument(String docContentString64, String docName, String docSize, String docUploadTime, Integer taskId) {
+    public SaveAdditionalDocumentPOJO(String docContentString64, String docName, String docSize, String docUploadTime, Integer taskId) {
         this.docContentString64 = docContentString64;
         this.docName = docName;
         this.docSize = docSize;

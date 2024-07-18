@@ -7,7 +7,7 @@ import androidx.room.TypeConverter;
 import com.google.gson.Gson; // Import Gson from Gson library
 
 @Entity(tableName = "start_task_table")
-public class StartTaskResponse {
+public class StartTaskResponsePOJO {
 
     @PrimaryKey
     private final int taskId;
@@ -15,7 +15,7 @@ public class StartTaskResponse {
     private final String dataJson; // Store data as JSON string
     private final Integer processId; // Use Integer for nullable int
 
-    public StartTaskResponse(int taskId, String dataJson, Integer processId) {
+    public StartTaskResponsePOJO(int taskId, String dataJson, Integer processId) {
         this.taskId = taskId;
         this.dataJson = dataJson;
         this.processId = processId;

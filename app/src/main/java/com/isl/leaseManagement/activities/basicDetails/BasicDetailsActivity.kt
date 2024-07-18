@@ -392,7 +392,7 @@ class BasicDetailsActivity : BaseActivity() {
         var deleteView = binding.deleteSadadDoc
 
         if (paymentMethod == AppConstants.KeyWords.iban) {
-            deleteView = binding.deleteLeaseRentDoc
+            deleteView = binding.deleteLeaseRentDoc    //checking which delete should work
         }
 
         deleteView.visibility = View.VISIBLE

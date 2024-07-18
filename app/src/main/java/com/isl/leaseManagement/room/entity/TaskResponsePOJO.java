@@ -4,7 +4,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "task_response_table")
-public class TaskResponse {
+public class TaskResponsePOJO {
 
     @PrimaryKey
     private final int taskId;
@@ -29,10 +29,10 @@ public class TaskResponse {
     private final String district;
     private final String city;
 
-    public TaskResponse(int taskId, String requestId, String siteId, String customerSiteId, String taskName,
-                        String taskStatus, String requestPriority, String forecastStartDate, String forecastEndDate,
-                        String actualStartDate, Integer slaDuration, String slaUnit, String processName, Integer processId,
-                        String requestStatus, String slaStatus, String requester, String region, String district, String city) {
+    public TaskResponsePOJO(int taskId, String requestId, String siteId, String customerSiteId, String taskName,
+                            String taskStatus, String requestPriority, String forecastStartDate, String forecastEndDate,
+                            String actualStartDate, Integer slaDuration, String slaUnit, String processName, Integer processId,
+                            String requestStatus, String slaStatus, String requester, String region, String district, String city) {
         this.taskId = taskId;
         this.requestId = requestId;
         this.siteId = siteId;

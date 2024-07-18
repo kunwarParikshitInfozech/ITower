@@ -12,8 +12,8 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity(tableName = "submit_task_table")
-@TypeConverters({SubmitTaskRequest.SubmitTaskDataConverter.class, SubmitTaskRequest.DocumentListConverter.class})
-public class SubmitTaskRequest {
+@TypeConverters({SubmitTaskRequestPOJO.SubmitTaskDataConverter.class, SubmitTaskRequestPOJO.DocumentListConverter.class})
+public class SubmitTaskRequestPOJO {
 
     @PrimaryKey
     private final int taskId;
@@ -21,7 +21,7 @@ public class SubmitTaskRequest {
     private final SubmitTaskData data;
     private final Integer processId; // Use Integer for nullable int
 
-    public SubmitTaskRequest(int taskId, SubmitTaskData data, Integer processId) {
+    public SubmitTaskRequestPOJO(int taskId, SubmitTaskData data, Integer processId) {
         this.taskId = taskId;
         this.data = data;
         this.processId = processId;

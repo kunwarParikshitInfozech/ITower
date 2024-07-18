@@ -18,11 +18,15 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.isl.itower.MyApp
 import com.isl.leaseManagement.activities.filter.FilterTasksActivity
+import com.isl.leaseManagement.activities.startTask.StartTaskActivity
+import com.isl.leaseManagement.adapters.SavedTasksAdapter
 import com.isl.leaseManagement.adapters.TasksAdapter
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.base.BaseFragment
 import com.isl.leaseManagement.dataClass.responses.TaskResponse
 import com.isl.leaseManagement.dataClass.responses.TasksSummaryResponse
+import com.isl.leaseManagement.room.db.MyDatabase
+import com.isl.leaseManagement.room.entity.TaskResponsePOJO
 import com.isl.leaseManagement.utils.AppConstants
 import com.isl.leaseManagement.utils.ClickInterfaces
 import com.isl.leaseManagement.utils.Utilities
@@ -39,11 +43,12 @@ import okhttp3.RequestBody
 class LsmTasksFragment : BaseFragment() {
 
     private var tasksAdapter: TasksAdapter? = null
+    private var savedTasksAdapter: SavedTasksAdapter? = null
     private lateinit var binding: FragmentLsmTasksBinding
     private val repository = TaskRepository()
     private val viewModel: TaskViewModel by viewModels { TaskViewModelFactory(repository) }
     private lateinit var startActivityLauncher: ActivityResultLauncher<Intent>
-
+    var db: MyDatabase? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -65,8 +70,22 @@ class LsmTasksFragment : BaseFragment() {
 
     private fun init() {
         setClickListeners()
-        //   callTasksSummaryApi()
+        db = MyApp.getMyDatabase()
         registerActivityLauncher()
+        getSavedTaskList()
+    }
+
+    private fun getSavedTaskList() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            db?.taskResponseDao()?.allTaskResponse?.let { savedTaskList ->
+                val taskResponseList = mutableListOf<TaskResponse>()
+                for (taskResponsePojo in savedTaskList) {
+                    val taskResponse = createTaskResponseDataClass(taskResponsePojo)
+                    taskResponseList.add(taskResponse)
+                    setSavedTasksListAdapter(taskResponseList.toList())
+                }
+            }
+        }
     }
 
     private fun registerActivityLauncher() {
@@ -215,37 +234,12 @@ class LsmTasksFragment : BaseFragment() {
             dialog.dismiss()
         }
         binding.startActivity.setOnClickListener {
-//            val intent = Intent(requireActivity(), GetStartDataActivity::class.java)
-//            intent.putExtra(AppConstants.IntentKeys.taskDetailIntentExtra, taskResponse)
-//            baseActivity.launchActivityWithIntent(intent)
-            val db = MyApp.getMyDatabase()
-
-            val taskResponsePojo = com.isl.leaseManagement.room.entity.TaskResponse(
-                taskResponse.taskId ?: 0,
-                taskResponse.requestId,
-                taskResponse.siteId,
-                taskResponse.customerSiteId,
-                taskResponse.taskName,
-                taskResponse.taskStatus,
-                taskResponse.requestPriority,
-                taskResponse.forecastStartDate,
-                taskResponse.forecastEndDate,
-                taskResponse.actualStartDate,
-                taskResponse.slaDuration,
-                taskResponse.slaUnit,
-                taskResponse.processName,
-                taskResponse.processId,
-                taskResponse.requestStatus,
-                taskResponse.slaStatus,
-                taskResponse.requester,
-                taskResponse.region,
-                taskResponse.district,
-                taskResponse.city
-            )
-
-            val taskResponseDao = db.taskResponseDao()
+            val intent = Intent(requireActivity(), StartTaskActivity::class.java)
+            intent.putExtra(AppConstants.IntentKeys.taskDetailIntentExtra, taskResponse)
+            baseActivity.launchActivityWithIntent(intent)
+            val taskResponseDao = db?.taskResponseDao()
             lifecycleScope.launch(Dispatchers.IO) {
-                taskResponseDao.insertTaskResponse(taskResponsePojo)
+                taskResponseDao?.insertTaskResponse(createTaskResponsePojo(taskResponse))
             }
 
         }
@@ -255,6 +249,57 @@ class LsmTasksFragment : BaseFragment() {
             }
         }
     }
+
+    private fun createTaskResponseDataClass(taskResponsePOJO: TaskResponsePOJO): TaskResponse {
+        return TaskResponse(
+            taskId = taskResponsePOJO.taskId,
+            requestId = taskResponsePOJO.requestId,
+            siteId = taskResponsePOJO.siteId,
+            customerSiteId = taskResponsePOJO.customerSiteId,
+            taskName = taskResponsePOJO.taskName,
+            taskStatus = taskResponsePOJO.taskStatus,
+            requestPriority = taskResponsePOJO.requestPriority,
+            forecastStartDate = taskResponsePOJO.forecastStartDate,
+            forecastEndDate = taskResponsePOJO.forecastEndDate,
+            actualStartDate = taskResponsePOJO.actualStartDate,
+            slaDuration = taskResponsePOJO.slaDuration,
+            slaUnit = taskResponsePOJO.slaUnit,
+            processName = taskResponsePOJO.processName,
+            processId = taskResponsePOJO.processId,
+            requestStatus = taskResponsePOJO.requestStatus,
+            slaStatus = taskResponsePOJO.slaStatus,
+            requester = taskResponsePOJO.requester,
+            region = taskResponsePOJO.region,
+            district = taskResponsePOJO.district,
+            city = taskResponsePOJO.city
+        )
+    }
+
+    fun createTaskResponsePojo(taskResponse: TaskResponse): TaskResponsePOJO {
+        return TaskResponsePOJO(
+            taskResponse.taskId ?: 0,
+            taskResponse.requestId,
+            taskResponse.siteId,
+            taskResponse.customerSiteId,
+            taskResponse.taskName,
+            taskResponse.taskStatus,
+            taskResponse.requestPriority,
+            taskResponse.forecastStartDate,
+            taskResponse.forecastEndDate,
+            taskResponse.actualStartDate,
+            taskResponse.slaDuration,
+            taskResponse.slaUnit,
+            taskResponse.processName,
+            taskResponse.processId,
+            taskResponse.requestStatus,
+            taskResponse.slaStatus,
+            taskResponse.requester,
+            taskResponse.region,
+            taskResponse.district,
+            taskResponse.city
+        )
+    }
+
 
     private fun reverseLayoutsVisibility() {
         val toolbar: View = requireActivity().findViewById(R.id.leaseManagementToolbar)
@@ -266,6 +311,7 @@ class LsmTasksFragment : BaseFragment() {
         searchSortLayoutToolbar.visibility = if (isProfileVisible) View.VISIBLE else View.GONE
         binding.assignedUnassignedRl.visibility = if (isProfileVisible) View.GONE else View.VISIBLE
         binding.tasksRv.visibility = if (isProfileVisible) View.VISIBLE else View.GONE
+        binding.savedTasksRv.visibility = if (isProfileVisible) View.VISIBLE else View.GONE
         binding.fieldWorkText.visibility = if (isProfileVisible) View.VISIBLE else View.GONE
     }
 
@@ -355,6 +401,17 @@ class LsmTasksFragment : BaseFragment() {
             })
         binding.tasksRv.layoutManager = LinearLayoutManager(activity)
         binding.tasksRv.adapter = tasksAdapter
+    }
+
+    private fun setSavedTasksListAdapter(taskResponse: List<TaskResponse>) {
+        savedTasksAdapter = SavedTasksAdapter(taskResponse, activity as BaseActivity,
+            object : ClickInterfaces.MyTasks {
+                override fun myTaskClicked(taskResponse: TaskResponse) {
+                    baseActivity.showToastMessage("Saved List")
+                }
+            })
+        binding.savedTasksRv.layoutManager = LinearLayoutManager(activity)
+        binding.savedTasksRv.adapter = savedTasksAdapter
     }
 
 }

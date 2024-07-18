@@ -7,21 +7,21 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.isl.leaseManagement.room.entity.SubmitTaskRequest;
+import com.isl.leaseManagement.room.entity.SubmitTaskRequestPOJO;
 
 
 @Dao
 public interface SubmitTaskDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insertSubmitTask(SubmitTaskRequest submitTask);
+    long insertSubmitTask(SubmitTaskRequestPOJO submitTask);
 
     @Update
-    void updateSubmitTask(SubmitTaskRequest submitTask);
+    void updateSubmitTask(SubmitTaskRequestPOJO submitTask);
 
     @Delete
-    void deleteSubmitTask(SubmitTaskRequest submitTask);
+    void deleteSubmitTask(SubmitTaskRequestPOJO submitTask);
 
-    @Query("SELECT * FROM submit_task_table WHERE taskId = :taskId")
-    SubmitTaskRequest getSubmitTaskById(int taskId);
+    @Query("SELECT * FROM SubmitTaskRequestPOJO WHERE taskId = :taskId")
+    SubmitTaskRequestPOJO getSubmitTaskById(int taskId);
 }

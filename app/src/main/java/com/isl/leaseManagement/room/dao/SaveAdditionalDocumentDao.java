@@ -6,18 +6,18 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import com.isl.leaseManagement.room.entity.SaveAdditionalDocument;
+import com.isl.leaseManagement.room.entity.SaveAdditionalDocumentPOJO;
 
 
 @Dao
 public interface SaveAdditionalDocumentDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insertDocument(SaveAdditionalDocument document);
+    long insertDocument(SaveAdditionalDocumentPOJO document);
 
     @Delete
-    void deleteDocument(SaveAdditionalDocument document);
+    void deleteDocument(SaveAdditionalDocumentPOJO document);
 
-    @Query("SELECT * FROM additional_document_table WHERE docContentString64 = :docContentString64")
-    SaveAdditionalDocument getDocumentByContentString(String docContentString64);
+    @Query("SELECT * FROM SaveAdditionalDocumentPOJO WHERE docContentString64 = :docContentString64")
+    SaveAdditionalDocumentPOJO getDocumentByContentString(String docContentString64);
 }

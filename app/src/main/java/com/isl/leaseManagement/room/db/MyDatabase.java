@@ -11,13 +11,13 @@ import com.isl.leaseManagement.room.dao.SaveAdditionalDocumentDao;
 import com.isl.leaseManagement.room.dao.StartTaskDao;
 import com.isl.leaseManagement.room.dao.SubmitTaskDao;
 import com.isl.leaseManagement.room.dao.TaskResponseDao;
-import com.isl.leaseManagement.room.entity.SaveAdditionalDocument;
-import com.isl.leaseManagement.room.entity.StartTaskResponse;
-import com.isl.leaseManagement.room.entity.SubmitTaskRequest;
-import com.isl.leaseManagement.room.entity.TaskResponse;
+import com.isl.leaseManagement.room.entity.SaveAdditionalDocumentPOJO;
+import com.isl.leaseManagement.room.entity.StartTaskResponsePOJO;
+import com.isl.leaseManagement.room.entity.SubmitTaskRequestPOJO;
+import com.isl.leaseManagement.room.entity.TaskResponsePOJO;
 
 @Database(
-        entities = {TaskResponse.class, StartTaskResponse.class, SaveAdditionalDocument.class, SubmitTaskRequest.class},
+        entities = {TaskResponsePOJO.class, StartTaskResponsePOJO.class, SaveAdditionalDocumentPOJO.class, SubmitTaskRequestPOJO.class},
         version = 1,
         exportSchema = false
 )

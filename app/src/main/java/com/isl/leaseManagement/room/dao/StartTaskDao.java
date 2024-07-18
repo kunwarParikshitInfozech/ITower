@@ -7,21 +7,21 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.isl.leaseManagement.room.entity.StartTaskResponse;
+import com.isl.leaseManagement.room.entity.StartTaskResponsePOJO;
 
 
 @Dao
 public interface StartTaskDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    long insertStartTask(StartTaskResponse startTask);
+    long insertStartTask(StartTaskResponsePOJO startTask);
 
     @Update
-    void updateStartTask(StartTaskResponse startTask);
+    void updateStartTask(StartTaskResponsePOJO startTask);
 
     @Delete
-    void deleteStartTask(StartTaskResponse startTask);
+    void deleteStartTask(StartTaskResponsePOJO startTask);
 
-    @Query("SELECT * FROM start_task_table WHERE taskId = :taskId")
-    StartTaskResponse getStartTaskById(int taskId);
+    @Query("SELECT * FROM StartTaskResponsePOJO WHERE taskId = :taskId")
+    StartTaskResponsePOJO getStartTaskById(int taskId);
 }
