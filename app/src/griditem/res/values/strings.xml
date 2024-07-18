@@ -89,5 +89,6 @@
     <string name="on_duty">ON Duty</string>
     <string name="actions">Actions</string>
     <string name="field_work">Field Work</string>
+    <string name="na">NA</string>
 
 </resources>

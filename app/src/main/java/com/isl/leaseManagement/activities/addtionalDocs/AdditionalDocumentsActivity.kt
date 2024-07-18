@@ -6,7 +6,7 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.WindowManager
 import android.widget.ImageView
-import android.widget.RelativeLayout
+import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
 import com.isl.leaseManagement.activities.addAdditionalDoc.AddAdditionalDocumentActivity
 import com.isl.leaseManagement.activities.requestDetails.RequestDetailsActivity
@@ -15,6 +15,7 @@ import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocument
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
 import com.isl.leaseManagement.utils.CustomTextView
 import com.isl.leaseManagement.utils.Utilities
+import com.isl.leaseManagement.utils.Utilities.getLastChars
 import infozech.itower.R
 import infozech.itower.databinding.ActionsPopupBinding
 import infozech.itower.databinding.ActivityAdditonalDocumentsBinding
@@ -30,11 +31,11 @@ class AdditionalDocumentsActivity : BaseActivity() {
 
     private fun init() {
         setClickListeners()
-        KotlinPrefkeeper.additionalDocDataArray?.arrayOfSaveAdditionalDocument?.let {
-            addDocumentItems(
-                it
-            )
-        }
+//        KotlinPrefkeeper.additionalDocDataArray?.arrayOfSaveAdditionalDocument?.let {
+//            addDocumentItems(
+//                it
+//            )
+//        }
     }
 
 
@@ -45,17 +46,21 @@ class AdditionalDocumentsActivity : BaseActivity() {
                 R.layout.additional_document_item,
                 binding.documentContainer,
                 false
-            ) as RelativeLayout
+            ) as LinearLayout
 
             // Set data for views based on your document object
             val docImage = documentItemLayout.findViewById<ImageView>(R.id.docImage)
             // You might need to set a default image here if the document doesn't have a specific type
 
             val docDetailsTxt = documentItemLayout.findViewById<CustomTextView>(R.id.docDetailsTxt)
-            docDetailsTxt.text = document.docName
+            document.docName?.let {
+                docDetailsTxt.text = getLastChars(it, 24)
+            }
 
             val docSizeTxt = documentItemLayout.findViewById<CustomTextView>(R.id.docSizeTxt)
-            docSizeTxt.text = document.docSize
+            document.docSize?.let {
+                docSizeTxt.text = getLastChars(it, 18)
+            }
 
             // Similar logic for downloadIv and iIconIv if needed
 

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/white"
-    android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,6 +28,7 @@
             android:layout_alignTop="@id/docImage"
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_toEndOf="@id/docImage"
+            android:maxLength="24"
             android:text="SADAD Document"
             android:textColor="@color/color_001E60"
             android:textSize="@dimen/_12ssp" />
@@ -38,6 +40,7 @@
             android:layout_alignBottom="@id/docImage"
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_toEndOf="@id/docImage"
+            android:maxLength="18"
             android:text="24 KB .pdf"
             android:textColor="@color/color_A2A9C7"
             android:textSize="@dimen/_12ssp" />

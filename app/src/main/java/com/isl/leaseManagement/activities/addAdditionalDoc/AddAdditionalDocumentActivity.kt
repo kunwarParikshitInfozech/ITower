@@ -20,10 +20,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.isl.itower.MyApp
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocument
-import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocumentsArray
 import com.isl.leaseManagement.dataClass.requests.UploadDocumentRequest
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
 import com.isl.leaseManagement.utils.AppConstants
+import com.isl.leaseManagement.utils.Utilities.getLastChars
 import com.isl.leaseManagement.utils.Utilities.showYesNoDialog
 import infozech.itower.R
 import infozech.itower.databinding.ActivityAddAdditionalDocumentBinding
@@ -57,8 +57,8 @@ class AddAdditionalDocumentActivity : BaseActivity() {
         }
         binding.saveBtn.setOnClickListener {
             KotlinPrefkeeper.additionalDocIdsForSubmitApi = docList.toIntArray()
-            KotlinPrefkeeper.additionalDocDataArray =
-                SaveAdditionalDocumentsArray(saveAdditionalDocumentArray)
+//            KotlinPrefkeeper.additionalDocDataArray =
+//                SaveAdditionalDocumentsArray(saveAdditionalDocumentArray)
             finish()
         }
     }
@@ -276,9 +276,6 @@ class AddAdditionalDocumentActivity : BaseActivity() {
         }
     }
 
-    private fun getLastChars(str: String, maxLength: Int): String {
-        val length = str.length
-        return if (length <= maxLength) str else str.substring(length - maxLength)
-    }
+
 
 }

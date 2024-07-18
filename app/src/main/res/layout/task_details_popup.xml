@@ -118,7 +118,7 @@
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="@id/taskPriority"
                     app:layout_constraintTop_toTopOf="@id/forecastStartDate"
-                    tools:text="22.05.2023" />
+                    android:text="@string/na" />
 
                 <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/forecastEndDate"
@@ -139,7 +139,7 @@
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="@id/taskPriority"
                     app:layout_constraintTop_toTopOf="@id/forecastEndDate"
-                    tools:text="22.05.2023" />
+                    android:text="@string/na" />
 
                 <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/taskStatus"
@@ -261,7 +261,7 @@
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="@id/taskPriority"
                     app:layout_constraintTop_toTopOf="@id/planStartDate"
-                    tools:text="22.05.2023" />
+                    android:text="@string/na" />
 
                 <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/planEndDate"
@@ -282,7 +282,7 @@
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="@id/taskPriority"
                     app:layout_constraintTop_toTopOf="@id/planEndDate"
-                    tools:text="22.05.2023" />
+                    android:text="@string/na" />
 
                 <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/actualStartDate"
@@ -303,7 +303,7 @@
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="@id/taskPriority"
                     app:layout_constraintTop_toTopOf="@id/actualStartDate"
-                    tools:text="22.05.2023" />
+                    android:text="@string/na" />
 
                 <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/actualEndDate"
@@ -324,7 +324,7 @@
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="@id/taskPriority"
                     app:layout_constraintTop_toTopOf="@id/actualEndDate"
-                    tools:text="22.05.2023" />
+                    android:text="@string/na" />
 
                 <View
                     android:id="@+id/line3"

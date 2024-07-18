@@ -139,4 +139,9 @@ object Utilities {
         }
     }
 
+     fun getLastChars(str: String, maxLength: Int): String {
+        val length = str.length
+        return if (length <= maxLength) str else str.substring(length - maxLength)
+    }
+
 }

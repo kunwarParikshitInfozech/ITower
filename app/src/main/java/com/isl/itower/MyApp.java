@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.isl.leaseManagement.api.ApiClient;
+import com.isl.leaseManagement.room.db.MyDatabase;
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper;
 import com.isl.leaseManagement.utils.LocalTempVarStore;
 
@@ -19,6 +20,7 @@ public class MyApp extends Application {
 
     private static Context appContext;
     public static LocalTempVarStore localTempVarStore = LocalTempVarStore.INSTANCE;
+    private static MyDatabase myDatabase;
 
     @Override
     public void onCreate() {
@@ -33,11 +35,15 @@ public class MyApp extends Application {
         registerReceiver(myReceiver, filter);
         ApiClient.INSTANCE.init();
         KotlinPrefkeeper.init(this);
+        myDatabase = MyDatabase.getInstance(this.getApplicationContext());
+
     }
 
     public static Context getAppContext() {
         return appContext;
     }
 
-
+    public static MyDatabase  getMyDatabase() {
+        return myDatabase;
+    }
 }

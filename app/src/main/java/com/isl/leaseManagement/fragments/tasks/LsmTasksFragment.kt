@@ -14,9 +14,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.isl.itower.MyApp
 import com.isl.leaseManagement.activities.filter.FilterTasksActivity
-import com.isl.leaseManagement.activities.loader.GetStartDataActivity
 import com.isl.leaseManagement.adapters.TasksAdapter
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.base.BaseFragment
@@ -30,6 +31,8 @@ import com.isl.leaseManagement.utils.Utilities.formatSingleDigitNumber
 import infozech.itower.R
 import infozech.itower.databinding.FragmentLsmTasksBinding
 import infozech.itower.databinding.TaskDetailsPopupBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.MediaType
 import okhttp3.RequestBody
 
@@ -212,9 +215,39 @@ class LsmTasksFragment : BaseFragment() {
             dialog.dismiss()
         }
         binding.startActivity.setOnClickListener {
-            val intent = Intent(requireActivity(), GetStartDataActivity::class.java)
-            intent.putExtra(AppConstants.IntentKeys.taskDetailIntentExtra, taskResponse)
-            baseActivity.launchActivityWithIntent(intent)
+//            val intent = Intent(requireActivity(), GetStartDataActivity::class.java)
+//            intent.putExtra(AppConstants.IntentKeys.taskDetailIntentExtra, taskResponse)
+//            baseActivity.launchActivityWithIntent(intent)
+            val db = MyApp.getMyDatabase()
+
+            val taskResponsePojo = com.isl.leaseManagement.room.entity.TaskResponse(
+                taskResponse.taskId ?: 0,
+                taskResponse.requestId,
+                taskResponse.siteId,
+                taskResponse.customerSiteId,
+                taskResponse.taskName,
+                taskResponse.taskStatus,
+                taskResponse.requestPriority,
+                taskResponse.forecastStartDate,
+                taskResponse.forecastEndDate,
+                taskResponse.actualStartDate,
+                taskResponse.slaDuration,
+                taskResponse.slaUnit,
+                taskResponse.processName,
+                taskResponse.processId,
+                taskResponse.requestStatus,
+                taskResponse.slaStatus,
+                taskResponse.requester,
+                taskResponse.region,
+                taskResponse.district,
+                taskResponse.city
+            )
+
+            val taskResponseDao = db.taskResponseDao()
+            lifecycleScope.launch(Dispatchers.IO) {
+                taskResponseDao.insertTaskResponse(taskResponsePojo)
+            }
+
         }
         taskResponse.taskId?.let { taskId ->
             binding.unAssign.setOnClickListener {

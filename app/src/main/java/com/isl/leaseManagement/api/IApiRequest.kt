@@ -1,3 +1,4 @@
+import com.isl.leaseManagement.dataClass.requests.FetchDeviceIDRequest
 import com.isl.leaseManagement.dataClass.requests.StartTaskRequest
 import com.isl.leaseManagement.dataClass.requests.SubmitTaskRequest
 import com.isl.leaseManagement.dataClass.requests.UploadDocumentRequest
@@ -55,5 +56,10 @@ interface IApiRequest {
         @Path("taskId") taskId: Int,
         @Body body: UploadDocumentRequest
     ): Observable<UploadDocumentResponse>
+
+    @POST("usertracking/1/users/deviceID")
+    fun fetchDeviceID(
+        @Body body: FetchDeviceIDRequest
+    ): Observable<FetchDeviceIDRequest>   //response is also same
 
 }
