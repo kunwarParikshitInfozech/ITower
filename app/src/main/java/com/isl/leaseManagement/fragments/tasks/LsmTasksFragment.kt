@@ -290,6 +290,7 @@ class LsmTasksFragment : BaseFragment() {
         }
     }
 
+
     data class TaskSummary(
         val totalAssignedTotal: Int,
         val totalAssignedToday: Int,
