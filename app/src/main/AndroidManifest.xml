@@ -563,7 +563,7 @@
             android:theme="@style/AppTheme.NoActionBar1"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name="com.isl.leaseManagement.activities.loader.GetStartDataActivity"
+            android:name="com.isl.leaseManagement.activities.startTask.StartTaskActivity"
             android:exported="false"
             android:theme="@style/LightTheme" />
         <activity

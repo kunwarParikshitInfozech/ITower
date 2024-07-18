@@ -1,4 +1,4 @@
-package com.isl.leaseManagement.activities.loader
+package com.isl.leaseManagement.activities.startTask
 
 import android.content.Intent
 import android.os.Bundle
@@ -15,9 +15,9 @@ import com.isl.leaseManagement.utils.AppConstants
 import infozech.itower.R
 import infozech.itower.databinding.ActivityGetStartDataBinding
 
-class GetStartDataActivity : BaseActivity() {
+class StartTaskActivity : BaseActivity() {
     private lateinit var binding: ActivityGetStartDataBinding
-    private lateinit var viewModel: StartDataViewModel
+    private lateinit var viewModel: StartTaskViewModel
     private var taskResponse: TaskResponse? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,8 +27,8 @@ class GetStartDataActivity : BaseActivity() {
     }
 
     private fun init() {
-        val factory = StartDataViewModelFactory(StartDataRepository())
-        viewModel = ViewModelProvider(this, factory).get(StartDataViewModel::class.java)
+        val factory = StartTaskViewModelFactory(StartTaskRepository())
+        viewModel = ViewModelProvider(this, factory).get(StartTaskViewModel::class.java)
         taskResponse =
             intent.getSerializableExtra(AppConstants.IntentKeys.taskDetailIntentExtra) as TaskResponse?
         val taskId = taskResponse?.taskId
@@ -60,7 +60,7 @@ class GetStartDataActivity : BaseActivity() {
                     response.data?.let {
                         //got success
                         val intent = Intent(
-                            this@GetStartDataActivity,
+                            this@StartTaskActivity,
                             TaskInProgressActivity::class.java
                         )
                         intent.putExtra(

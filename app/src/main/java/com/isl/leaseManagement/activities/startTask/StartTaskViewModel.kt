@@ -1,4 +1,4 @@
-package com.isl.leaseManagement.activities.loader
+package com.isl.leaseManagement.activities.startTask
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -7,7 +7,7 @@ import com.isl.leaseManagement.dataClass.responses.SingleMessageResponse
 import com.isl.leaseManagement.dataClass.responses.StartTaskResponse
 import kotlinx.coroutines.launch
 
-class StartDataViewModel(private val repository: StartDataRepository) : ViewModel() {
+class StartTaskViewModel(private val repository: StartTaskRepository) : ViewModel() {
 
     fun startTask(
         successCallback: (StartTaskResponse?) -> Unit,
