@@ -192,14 +192,14 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/sadadDocumentTv" />
 
-                <include
-                    android:id="@+id/deleteSadadDoc"
-                    layout="@layout/delete_document_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_16sdp"
-                    android:visibility="gone"
-                    app:layout_constraintTop_toBottomOf="@id/attachSadadDocIv" />
+                <!--                <include-->
+                <!--                    android:id="@+id/deleteSadadDoc"-->
+                <!--                    layout="@layout/delete_document_layout"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_marginTop="@dimen/_16sdp"-->
+                <!--                    android:visibility="gone"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@id/attachSadadDocIv" />-->
 
                 <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/leaseRentVatDocTv"
@@ -210,7 +210,7 @@
                     android:textColor="@color/color_606F8A"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintStart_toStartOf="@id/sadadBillerCodeTv"
-                    app:layout_constraintTop_toBottomOf="@id/deleteSadadDoc" />
+                    app:layout_constraintTop_toBottomOf="@id/attachSadadDocIv" />
 
                 <ImageView
                     android:id="@+id/attachLeaseRentVatIv"
@@ -223,14 +223,14 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/leaseRentVatDocTv" />
 
-                <include
-                    android:id="@+id/deleteLeaseRentDoc"
-                    layout="@layout/delete_document_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_16sdp"
-                    android:visibility="gone"
-                    app:layout_constraintTop_toBottomOf="@id/attachLeaseRentVatIv" />
+                <!--                <include-->
+                <!--                    android:id="@+id/deleteLeaseRentDoc"-->
+                <!--                    layout="@layout/delete_document_layout"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    android:layout_marginTop="@dimen/_16sdp"-->
+                <!--                    android:visibility="gone"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@id/attachLeaseRentVatIv" />-->
 
                 <LinearLayout
                     android:id="@+id/llStartActivity"
@@ -243,7 +243,7 @@
                     android:paddingBottom="@dimen/_16sdp"
                     android:theme="@style/LightTheme"
                     android:weightSum="2"
-                    app:layout_constraintTop_toBottomOf="@id/deleteLeaseRentDoc">
+                    app:layout_constraintTop_toBottomOf="@id/attachLeaseRentVatIv">
 
                     <com.isl.leaseManagement.utils.CustomTextView
                         android:id="@+id/submitBtn"

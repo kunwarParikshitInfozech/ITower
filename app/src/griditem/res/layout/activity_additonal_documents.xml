@@ -45,12 +45,12 @@
             app:layout_constraintTop_toBottomOf="@id/additionalDocsTv">
 
 
-            <LinearLayout
-                android:id="@+id/documentContainer"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvDocumentList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:orientation="vertical"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_8sdp"
                 app:layout_constraintTop_toTopOf="parent" />
 
 

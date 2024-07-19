@@ -22,6 +22,6 @@ public interface SubmitTaskDao {
     @Delete
     void deleteSubmitTask(SubmitTaskRequestPOJO submitTask);
 
-    @Query("SELECT * FROM SubmitTaskRequestPOJO WHERE taskId = :taskId")
+    @Query("SELECT * FROM submit_task_table WHERE taskId = :taskId")
     SubmitTaskRequestPOJO getSubmitTaskById(int taskId);
 }

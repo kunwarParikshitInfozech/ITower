@@ -15,12 +15,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.isl.itower.MyApp
 import com.isl.leaseManagement.activities.home.LsmHomeActivity
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocument
 import com.isl.leaseManagement.dataClass.requests.SubmitTaskRequest
 import com.isl.leaseManagement.dataClass.requests.UploadDocumentRequest
+import com.isl.leaseManagement.room.entity.SaveAdditionalDocumentPOJO
+import com.isl.leaseManagement.room.entity.SubmitTaskRequestPOJO
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
 import com.isl.leaseManagement.utils.AppConstants
 import com.isl.leaseManagement.utils.Utilities
@@ -28,6 +31,8 @@ import com.isl.leaseManagement.utils.Utilities.showDatePickerFromCurrentDate
 import com.isl.leaseManagement.utils.Utilities.toIsoString
 import infozech.itower.R
 import infozech.itower.databinding.ActivityBasicDetailsBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.util.Calendar
@@ -44,6 +49,8 @@ class BasicDetailsActivity : BaseActivity() {
     private var tagName = ""
     private val pickDocumentCode = 1;
     private val REQUEST_CODE_CAMERA = 2;
+    private var saveAdditionalDocumentList = ArrayList<SaveAdditionalDocument>()
+    private var currentTaskId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,19 +59,84 @@ class BasicDetailsActivity : BaseActivity() {
     }
 
     private fun init() {
+        currentTaskId = MyApp.localTempVarStore.taskId
         val factory = BasicDetailsViewModelFactory(BasicDetailsRepository())
-        viewModel = ViewModelProvider(this, factory).get(BasicDetailsViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory)[BasicDetailsViewModel::class.java]
         setClickListeners()
+        getAdditionalDocListOfThisTask()
+    }
+
+    private fun getAdditionalDocListOfThisTask() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val documentsList =
+                MyApp.getMyDatabase().saveAdditionalDocumentDao()
+                    .getAllSavedDocumentsOfATask(currentTaskId.toString()) as ArrayList<SaveAdditionalDocumentPOJO>
+            saveAdditionalDocumentList = convertPOJOListToDocumentList(documentsList)
+        }
+    }
+
+    private fun convertPOJOListToDocumentList(pojoList: ArrayList<SaveAdditionalDocumentPOJO>): ArrayList<SaveAdditionalDocument> {
+        val documentList = ArrayList<SaveAdditionalDocument>()
+        for (pojo in pojoList) {
+            val document = SaveAdditionalDocument(
+                taskId = pojo.taskId ?: 0,
+                fileName = pojo.docName,
+                docSize = pojo.docSize,
+                docContentString64 = pojo.docContentString64
+            )
+            documentList.add(document)
+        }
+        return documentList
     }
 
     private fun setClickListeners() {
         binding.backIv.setOnClickListener { finish() }
         binding.submitBtn.setOnClickListener { submitData() }
+        binding.saveBtn.setOnClickListener { saveSubmitDetails() }
         binding.sadadDocExpiryValue.setOnClickListener { showDatePickerAndFillDate(it as TextView) }
         binding.leaseRentExpiryValue.setOnClickListener { showDatePickerAndFillDate(it as TextView) }
         binding.attachSadadDocIv.setOnClickListener { openCameraDocPopup() }
         binding.attachLeaseRentVatIv.setOnClickListener { openCameraDocPopup() }
-        fillStartDataDetailsAndApplyValidations()
+        fillDataOfStartApiAndApplyValidations()
+    }
+
+    private fun saveSubmitDetails() {
+        val taskId = currentTaskId
+        var sadadBillerInt = 0
+        if (binding.billerCodeEt.text.toString() != "") {
+            sadadBillerInt = binding.billerCodeEt.text.toString().toInt()
+        }
+        val accountNumber = binding.accountNumberEt.text.toString()
+        val sadadExpiryDate = binding.sadadDocExpiryValue.text.toString()
+        val rentVATExpiryDate = binding.leaseRentExpiryValue.text.toString()
+
+        val additionalDocuments = listOf(
+            SubmitTaskRequestPOJO.Document("doc1"),
+            SubmitTaskRequestPOJO.Document("doc2")
+        )
+        val documents = listOf(
+            SubmitTaskRequestPOJO.Document("doc3"),
+            SubmitTaskRequestPOJO.Document("doc4")
+        )
+        val paymentMethod = paymentMethod
+
+        val submitTaskData = SubmitTaskRequestPOJO.SubmitTaskData(
+            accountNumber,
+            additionalDocuments,
+            documents,
+            paymentMethod,
+            rentVATExpiryDate,
+            sadadBillerInt.toInt(),
+            sadadExpiryDate
+        )
+
+        val submitTaskRequestPOJO =
+            SubmitTaskRequestPOJO(taskId, submitTaskData, null) // processId can be null
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            MyApp.getMyDatabase().submitTaskDao().insertSubmitTask(submitTaskRequestPOJO)
+        }
+        showToastMessage("Submit Data Saved!")
     }
 
     private fun openCameraDocPopup() {
@@ -150,7 +222,7 @@ class BasicDetailsActivity : BaseActivity() {
         }
     }
 
-    private fun fillStartDataDetailsAndApplyValidations() {
+    private fun fillDataOfStartApiAndApplyValidations() {
         MyApp.localTempVarStore?.let { tempVarStorage ->
             tempVarStorage.startTaskResponse?.let { response ->
                 response.data?.let { responseData ->
@@ -158,8 +230,8 @@ class BasicDetailsActivity : BaseActivity() {
                     responseData.accountNumber?.let { binding.accountNumberEt.setText(it) }
                     responseData.sadadBillerCode?.let { binding.billerCodeEt.setText(it) }
                     when (responseData.paymentMethod) {
-                        AppConstants.KeyWords.check -> {
-                            paymentMethod = AppConstants.KeyWords.check
+                        AppConstants.KeyWords.paymentTypeCheck -> {
+                            paymentMethod = AppConstants.KeyWords.paymentTypeCheck
                             binding.billerCodeEt.isEnabled = false
                             binding.accountNumberEt.isEnabled = false
                             binding.sadadDocExpiryValue.setOnClickListener(null)
@@ -168,15 +240,15 @@ class BasicDetailsActivity : BaseActivity() {
                             binding.attachLeaseRentVatIv.setOnClickListener(null)
                         }
 
-                        AppConstants.KeyWords.sadad -> {
-                            paymentMethod = AppConstants.KeyWords.sadad
+                        AppConstants.KeyWords.paymentTypeSadad -> {
+                            paymentMethod = AppConstants.KeyWords.paymentTypeSadad
                             binding.leaseRentExpiryValue.setOnClickListener(null)
                             binding.attachLeaseRentVatIv.setOnClickListener(null)
                             tagName = AppConstants.KeyWords.sadadDocumentTagName
                         }
 
-                        AppConstants.KeyWords.iban -> {
-                            paymentMethod = AppConstants.KeyWords.iban
+                        AppConstants.KeyWords.paymentTypeIban -> {
+                            paymentMethod = AppConstants.KeyWords.paymentTypeIban
                             binding.billerCodeEt.isEnabled = false
                             binding.sadadDocExpiryValue.setOnClickListener(null)
                             binding.attachSadadDocIv.setOnClickListener(null)
@@ -191,20 +263,58 @@ class BasicDetailsActivity : BaseActivity() {
             }
             taskId = tempVarStorage.taskId
         }
+        fetchSubmitData()
     }
+
+    private fun fetchSubmitData() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val submitTaskPOJO = MyApp.getMyDatabase().submitTaskDao().getSubmitTaskById(taskId)
+            if (submitTaskPOJO != null) {
+                val submitTaskRequest = createSubmitTaskRequest(submitTaskPOJO)
+                updateFieldsBasedOnSavedSubmitData(submitTaskRequest)
+            }
+        }
+    }
+
+    private fun updateFieldsBasedOnSavedSubmitData(submitTaskRequest: SubmitTaskRequest) {
+        submitTaskRequest.data?.let { data ->
+            data.sadadBillerCode?.let { binding.billerCodeEt.setText(it.toString()) }
+            binding.accountNumberEt.setText(data.accountNumber)
+            binding.sadadDocExpiryValue.text = data.sadadExpiryDate
+            binding.leaseRentExpiryValue.text = data.rentVATExpiryDate
+        }
+    }
+
+    private fun createSubmitTaskRequest(submitTaskRequestPOJO: SubmitTaskRequestPOJO): SubmitTaskRequest {
+        val data = SubmitTaskRequest.SubmitTaskData(
+            accountNumber = submitTaskRequestPOJO.data.accountNumber,
+            additionalDocuments = submitTaskRequestPOJO.data.additionalDocuments as? List<SubmitTaskRequest.SubmitTaskData.Document?>,
+            documents = submitTaskRequestPOJO.data.documents as? List<SubmitTaskRequest.SubmitTaskData.Document?>,
+            paymentMethod = submitTaskRequestPOJO.data.paymentMethod,
+            rentVATExpiryDate = submitTaskRequestPOJO.data.rentVATExpiryDate,
+            sadadBillerCode = submitTaskRequestPOJO.data.sadadBillerCode,
+            sadadExpiryDate = submitTaskRequestPOJO.data.sadadExpiryDate
+        )
+
+        return SubmitTaskRequest(
+            data = data,
+            processId = submitTaskRequestPOJO.processId
+        )
+    }
+
 
     private fun submitData() {
         if (paymentMethod != null) {
             when (paymentMethod) {
-                AppConstants.KeyWords.check -> {
+                AppConstants.KeyWords.paymentTypeCheck -> {
                     submitInCheckCase()
                 }
 
-                AppConstants.KeyWords.sadad -> {
+                AppConstants.KeyWords.paymentTypeSadad -> {
                     submitInSADADCase()
                 }
 
-                AppConstants.KeyWords.iban -> {
+                AppConstants.KeyWords.paymentTypeIban -> {
                     submitInIbanCase()
 
                 }
@@ -381,37 +491,37 @@ class BasicDetailsActivity : BaseActivity() {
 
 
     private fun storeBase64AndShowDeleteUI(name: String?, size: String?, base64: String?) {
-        if (base64 == null) {
-            showToastMessage("Unable to get content string")
-            return
-        }
-        val saveAdditionalDocument = SaveAdditionalDocument(
-            docName = name, docSize = size, docContentString64 = base64
-        )
-
-        var deleteView = binding.deleteSadadDoc
-
-        if (paymentMethod == AppConstants.KeyWords.iban) {
-            deleteView = binding.deleteLeaseRentDoc    //checking which delete should work
-        }
-
-        deleteView.visibility = View.VISIBLE
-
-        val docName: TextView = deleteView.findViewById(R.id.docName)
-        val docSize: TextView = deleteView.findViewById(R.id.docSize)
-        val docDelete: TextView = deleteView.findViewById(R.id.deleteDoc)
-
-        saveAdditionalDocument.docName?.let {
-            docName.text = getLastChars(it, 16)
-        }
-        size?.let {
-            docSize.text = getLastChars(it, 10)
-        }
-        uploadDocument()
-        docDelete.setOnClickListener {
-            deleteView.visibility = View.GONE
-            docId = ""
-        }
+//        if (base64 == null) {
+//            showToastMessage("Unable to get content string")
+//            return
+//        }
+//        val saveAdditionalDocument = SaveAdditionalDocument(
+//            fileName = name, docSize = size, docContentString64 = base64
+//        )
+//
+//        var deleteView = binding.deleteSadadDoc
+//
+//        if (paymentMethod == AppConstants.KeyWords.iban) {
+//            deleteView = binding.deleteLeaseRentDoc    //checking which delete should work
+//        }
+//
+//        deleteView.visibility = View.VISIBLE
+//
+//        val docName: TextView = deleteView.findViewById(R.id.docName)
+//        val docSize: TextView = deleteView.findViewById(R.id.docSize)
+//        val docDelete: TextView = deleteView.findViewById(R.id.deleteDoc)
+//
+//        saveAdditionalDocument.fileName?.let {
+//            docName.text = getLastChars(it, 16)
+//        }
+//        size?.let {
+//            docSize.text = getLastChars(it, 10)
+//        }
+//        uploadDocument()
+//        docDelete.setOnClickListener {
+//            deleteView.visibility = View.GONE
+//            docId = ""
+//        }
     }
 
     private fun getLastChars(str: String, maxLength: Int): String {

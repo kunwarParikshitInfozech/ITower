@@ -234,14 +234,13 @@ class LsmTasksFragment : BaseFragment() {
             dialog.dismiss()
         }
         binding.startActivity.setOnClickListener {
-            val intent = Intent(requireActivity(), StartTaskActivity::class.java)
-            intent.putExtra(AppConstants.IntentKeys.taskDetailIntentExtra, taskResponse)
-            baseActivity.launchActivityWithIntent(intent)
             val taskResponseDao = db?.taskResponseDao()
             lifecycleScope.launch(Dispatchers.IO) {
                 taskResponseDao?.insertTaskResponse(createTaskResponsePojo(taskResponse))
             }
-
+            val intent = Intent(requireActivity(), StartTaskActivity::class.java)
+            intent.putExtra(AppConstants.IntentKeys.taskDetailIntentExtra, taskResponse)
+            baseActivity.launchActivityWithIntent(intent)
         }
         taskResponse.taskId?.let { taskId ->
             binding.unAssign.setOnClickListener {
@@ -407,11 +406,19 @@ class LsmTasksFragment : BaseFragment() {
         savedTasksAdapter = SavedTasksAdapter(taskResponse, activity as BaseActivity,
             object : ClickInterfaces.MyTasks {
                 override fun myTaskClicked(taskResponse: TaskResponse) {
-                    baseActivity.showToastMessage("Saved List")
+                    openStartTaskActivityWithRoomData(taskResponse)
                 }
             })
         binding.savedTasksRv.layoutManager = LinearLayoutManager(activity)
         binding.savedTasksRv.adapter = savedTasksAdapter
+    }
+
+    private fun openStartTaskActivityWithRoomData(taskResponse: TaskResponse) {
+        val intent = Intent(requireActivity(), StartTaskActivity::class.java)
+        intent.putExtra(AppConstants.IntentKeys.taskDetailIntentExtra, taskResponse)
+        intent.putExtra(AppConstants.IntentKeys.taskDetailIntentExtra, taskResponse)
+        intent.putExtra(AppConstants.IntentKeys.isStartCalledFromRoom, true)
+        baseActivity.launchActivityWithIntent(intent)
     }
 
 }

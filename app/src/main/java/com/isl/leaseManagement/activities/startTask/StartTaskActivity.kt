@@ -17,6 +17,7 @@ import com.isl.leaseManagement.dataClass.responses.TaskResponse
 import com.isl.leaseManagement.room.db.MyDatabase
 import com.isl.leaseManagement.room.entity.StartTaskResponsePOJO
 import com.isl.leaseManagement.utils.AppConstants
+import com.isl.leaseManagement.utils.AppConstants.IntentKeys.isStartCalledFromRoom
 import infozech.itower.R
 import infozech.itower.databinding.ActivityGetStartDataBinding
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +28,8 @@ class StartTaskActivity : BaseActivity() {
     private lateinit var viewModel: StartTaskViewModel
     private var taskResponse: TaskResponse? = null
     var db: MyDatabase? = null;
+    private var taskId = 0
+    private var isCalledFromSavedTaskList = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,12 +44,44 @@ class StartTaskActivity : BaseActivity() {
         taskResponse =
             intent.getSerializableExtra(AppConstants.IntentKeys.taskDetailIntentExtra) as TaskResponse?
         val taskId = taskResponse?.taskId
-        taskId?.let {
-            MyApp.localTempVarStore.taskId = it
+        if (taskId != null) {
+            this.taskId = taskId
+            MyApp.localTempVarStore.taskId = taskId
             MyApp.localTempVarStore.taskResponse = taskResponse
-            callStartTaskApi(taskId)
+
+            isCalledFromSavedTaskList = intent.getBooleanExtra(isStartCalledFromRoom, false)
+            if (isCalledFromSavedTaskList) {
+                getStartDataFromRoom(taskId)
+                showToastMessage("Starting from room")
+            } else {
+                callStartTaskApi(taskId)
+                showToastMessage("Starting from API")
+            }
+        } else {
+            showToastMessage("Task ID is empty!")
+            return
         }
         setClickListeners()
+    }
+
+    private fun getStartDataFromRoom(taskId: Int) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            db?.startTaskDao()?.getStartTaskById(taskId)?.let { startTaskPOJO ->
+                proceedWithStartTaskResponse(convertStartTaskPOJOtoDataClass(startTaskPOJO))
+            }
+        }
+    }
+
+    private fun convertStartTaskPOJOtoDataClass(pojo: StartTaskResponsePOJO): StartTaskResponse {
+        val dataJson = pojo.dataJson
+        val processId = pojo.processId
+        val gson = Gson()
+        val startTaskData: StartTaskResponse.StartTaskData? = if (dataJson.isEmpty()) {
+            null
+        } else {
+            gson.fromJson(dataJson, StartTaskResponse.StartTaskData::class.java)
+        }
+        return StartTaskResponse(startTaskData, processId)
     }
 
     private fun setClickListeners() {
@@ -63,35 +98,8 @@ class StartTaskActivity : BaseActivity() {
             timestamp = ""
         )
         viewModel.startTask(
-            { successResponse ->
-                successResponse?.let { response ->
-                    hideProgressBar()
-                    response.data?.let {
-                        //got success
-                        val intent = Intent(
-                            this@StartTaskActivity,
-                            TaskInProgressActivity::class.java
-                        )
-                        intent.putExtra(
-                            AppConstants.IntentKeys.taskDetailIntentExtra,
-                            taskResponse
-                        )
-                        MyApp.localTempVarStore.startTaskResponse = response
-                        response.processId?.let {
-                            if (it != 3) {
-                                showToastMessage("Process ID is not of Payment Process")
-                                return@startTask
-                            }
-                        }
-                        val startTaskPojo = convertToStartTaskResponse(response)
-                        val startTaskDao = db?.startTaskDao()
-                        lifecycleScope.launch(Dispatchers.IO) {
-                            startTaskDao?.insertStartTask(startTaskPojo)
-                        }
-                        finish()
-                        launchActivityWithIntent(intent)
-                    }
-                }
+            {
+                proceedWithStartTaskResponse(it)
             },
             { errorMessage ->
                 hideProgressBar()
@@ -103,16 +111,51 @@ class StartTaskActivity : BaseActivity() {
         )
     }
 
-    fun convertToStartTaskResponse(startTaskResponse: StartTaskResponse): StartTaskResponsePOJO {
+    private fun proceedWithStartTaskResponse(startTask: StartTaskResponse?) {
+        if (startTask == null) {
+            showToastMessage("Start Data is empty")
+            return
+        }
+        startTask.let { response ->
+            hideProgressBar()
+            response.data?.let {
+                //got success
+                val intent = Intent(
+                    this@StartTaskActivity,
+                    TaskInProgressActivity::class.java
+                )
+                intent.putExtra(
+                    AppConstants.IntentKeys.taskDetailIntentExtra,
+                    taskResponse
+                )
+                MyApp.localTempVarStore.startTaskResponse = response
+                response.processId?.let {
+                    if (it != 3) {
+                        showToastMessage("Process ID is not of Payment Process")
+                        return
+                    }
+                }
+                if (!isCalledFromSavedTaskList) {  //saving only when data is fetched from API and not from Room
+                    val startTaskPojo = convertToStartTaskResponsePOJO(response)
+                    val startTaskDao = db?.startTaskDao()
+                    lifecycleScope.launch(Dispatchers.IO) {
+                        startTaskDao?.insertStartTask(startTaskPojo)
+                    }
+                }
+                finish()
+                launchActivityWithIntent(intent)
+            }
+        }
+    }
+
+    private fun convertToStartTaskResponsePOJO(startTaskResponse: StartTaskResponse): StartTaskResponsePOJO {
         val gson = Gson()
         val dataJson = gson.toJson(startTaskResponse.data)
-        val startResponsePojo =
-            StartTaskResponsePOJO(
-                0, // Provide an appropriate taskId
-                dataJson,
-                startTaskResponse.processId
-            )
-        return startResponsePojo
+        return StartTaskResponsePOJO(
+            taskId,
+            dataJson,
+            startTaskResponse.processId
+        )
     }
 
     private fun showProgressBar() {

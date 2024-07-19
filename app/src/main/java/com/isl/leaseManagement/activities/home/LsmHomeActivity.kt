@@ -27,7 +27,8 @@ class LsmHomeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_tasks_home)
-        init1()
+        //      init1()
+        init2()
     }
 
     private fun init1() {
@@ -62,7 +63,7 @@ class LsmHomeActivity : BaseActivity() {
             { errorMessage ->
                 hideProgressBar()
                 init2()
-                showToastMessage("Unable to fetch userID!")
+                //       showToastMessage("Unable to fetch userID!")
             },
             body =
             fetchDeviceIDRequest

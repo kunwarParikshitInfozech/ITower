@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
+import com.isl.itower.MyApp
 import com.isl.leaseManagement.activities.addAdditionalDoc.AddAdditionalDocumentActivity
 import com.isl.leaseManagement.activities.addtionalDocs.AdditionalDocumentsActivity
 import com.isl.leaseManagement.activities.basicDetails.BasicDetailsActivity
@@ -19,6 +20,7 @@ import infozech.itower.databinding.ActivityTaskInProgressBinding
 
 class TaskInProgressActivity : BaseActivity() {
     private lateinit var binding: ActivityTaskInProgressBinding
+    private var paymentMethod: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,10 +29,21 @@ class TaskInProgressActivity : BaseActivity() {
     }
 
     private fun init() {
+        checkPaymentType()
         setCLickListeners()
         val taskResponse: TaskResponse? =
             intent.getSerializableExtra(AppConstants.IntentKeys.taskDetailIntentExtra) as TaskResponse?
         taskResponse?.let { fillTaskDetailsData(it) }
+    }
+
+    private fun checkPaymentType() {
+        MyApp.localTempVarStore?.let { tempVarStorage ->
+            tempVarStorage.startTaskResponse?.let { response ->
+                response.data?.let { data ->
+                    paymentMethod = data.paymentMethod
+                }
+            }
+        }
     }
 
     private fun fillTaskDetailsData(taskResponse: TaskResponse) {
@@ -45,7 +58,13 @@ class TaskInProgressActivity : BaseActivity() {
     private fun setCLickListeners() {
         binding.backIv.setOnClickListener { finish() }
         binding.basicDetailsTv.setOnClickListener { launchActivity(BasicDetailsActivity::class.java) }
-        binding.additionalDocuments.setOnClickListener { launchActivity(AdditionalDocumentsActivity::class.java) }
+        binding.additionalDocuments.setOnClickListener {
+            if (paymentMethod != AppConstants.KeyWords.paymentTypeCheck) {
+                launchActivity(AdditionalDocumentsActivity::class.java)
+            } else {
+                showToastMessage("Payment method is check!")
+            }
+        }
         binding.actionBtn.setOnClickListener { showTaskDetailsPopup() }
     }
 
@@ -69,7 +88,11 @@ class TaskInProgressActivity : BaseActivity() {
             launchActivity(RequestDetailsActivity::class.java)
         }
         binding.addAdditionalDocTv.setOnClickListener {
-            launchActivity(AddAdditionalDocumentActivity::class.java)
+            if (paymentMethod != AppConstants.KeyWords.paymentTypeCheck) {
+                launchActivity(AddAdditionalDocumentActivity::class.java)
+            } else {
+                showToastMessage("Payment method is check!")
+            }
         }
     }
 }

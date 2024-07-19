@@ -6,6 +6,7 @@ object AppConstants {
 
     object IntentKeys {
         const val taskDetailIntentExtra = "TaskDetailIntentExtra"
+        const val isStartCalledFromRoom = "IsStartCalledFromRoom"
     }
 
     object ActivityResultKeys {
@@ -17,9 +18,9 @@ object AppConstants {
     }
 
     object KeyWords {
-        const val sadad = "SADAD"
-        const val check = "Check"
-        const val iban = "IBAN"
+        const val paymentTypeSadad = "SADAD"
+        const val paymentTypeCheck = "Check"
+        const val paymentTypeIban = "IBAN"
         const val leaseRentDocTagName = "Lease Rent VAT Document"
         const val sadadDocumentTagName = "SADAD Document"
         const val additionalDocumentTagName = "Others"

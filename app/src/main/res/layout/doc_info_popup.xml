@@ -21,12 +21,12 @@
                 android:id="@+id/closeTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_16sdp"
                 android:layout_marginTop="@dimen/_12sdp"
                 android:text="@string/close"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_16ssp" />
+                android:textSize="@dimen/_14ssp" />
 
 
             <com.isl.leaseManagement.utils.CustomTextView
@@ -38,7 +38,7 @@
                 android:text="@string/document_information"
                 android:textAlignment="center"
                 android:textColor="@color/color_001E60"
-                android:textSize="@dimen/_18ssp"
+                android:textSize="@dimen/_16ssp"
                 app:layout_constraintEnd_toEndOf="parent" />
         </RelativeLayout>
 

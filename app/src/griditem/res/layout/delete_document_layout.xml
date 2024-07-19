@@ -1,45 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white"
-    android:padding="@dimen/_8sdp">
+<layout>
 
-    <com.isl.leaseManagement.utils.CustomTextView
-        android:id="@+id/docName"
-        android:layout_width="wrap_content"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_4sdp"
-        android:maxLength="16"
-        android:textColor="@color/color_606F8A"
-        android:textSize="@dimen/_14ssp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Whatsapp Image ABCDEFGHIJK" />
+        android:background="@color/white"
+        android:padding="@dimen/_8sdp">
 
-    <com.isl.leaseManagement.utils.CustomTextView
-        android:id="@+id/docSize"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:maxLength="10"
-        android:textColor="@color/color_606F8A"
-        android:textSize="@dimen/_14ssp"
-        tools:text="65 KB" />
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/docName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_4sdp"
+            android:maxLength="16"
+            android:textColor="@color/color_606F8A"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Whatsapp Image ABCDEFGHIJK" />
 
-    <com.isl.leaseManagement.utils.CustomTextView
-        android:id="@+id/deleteDoc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/_4sdp"
-        android:maxLength="30"
-        android:text="@string/delete"
-        android:layout_marginStart="@dimen/_8sdp"
-        android:textColor="@color/orange"
-        android:textSize="@dimen/_14ssp"
-        />
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/docSize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:maxLength="10"
+            android:textColor="@color/color_606F8A"
+            android:textSize="@dimen/_14ssp"
+            tools:text="65 KB" />
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/deleteDoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
+            android:maxLength="30"
+            android:text="@string/delete"
+            android:textColor="@color/orange"
+            android:textSize="@dimen/_14ssp" />
 
 
-</LinearLayout>
+    </LinearLayout>
+</layout>

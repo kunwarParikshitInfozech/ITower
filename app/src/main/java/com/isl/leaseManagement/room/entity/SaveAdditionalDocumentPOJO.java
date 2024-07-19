@@ -13,14 +13,14 @@ public class SaveAdditionalDocumentPOJO {
 
     private final String docName;
     private final String docSize;
-    private final String docUploadTime;
+    private final String docUploadId;
     private final Integer taskId; // Use Integer for nullable int
 
-    public SaveAdditionalDocumentPOJO(String docContentString64, String docName, String docSize, String docUploadTime, Integer taskId) {
+    public SaveAdditionalDocumentPOJO(String docContentString64, String docName, String docSize, String docUploadId, Integer taskId) {
         this.docContentString64 = docContentString64;
         this.docName = docName;
         this.docSize = docSize;
-        this.docUploadTime = docUploadTime;
+        this.docUploadId = docUploadId;
         this.taskId = taskId;
     }
 
@@ -37,8 +37,8 @@ public class SaveAdditionalDocumentPOJO {
         return docSize;
     }
 
-    public String getDocUploadTime() {
-        return docUploadTime;
+    public String getDocUploadId() {
+        return docUploadId;
     }
 
     public Integer getTaskId() {

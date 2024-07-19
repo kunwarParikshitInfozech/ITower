@@ -1,6 +1,7 @@
 package com.isl.leaseManagement.activities.addAdditionalDoc
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -9,34 +10,38 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.util.Base64
-import android.view.LayoutInflater
 import android.view.View
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.isl.itower.MyApp
+import com.isl.leaseManagement.adapters.DeleteDocumentAdapter
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocument
 import com.isl.leaseManagement.dataClass.requests.UploadDocumentRequest
-import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
+import com.isl.leaseManagement.room.entity.SaveAdditionalDocumentPOJO
 import com.isl.leaseManagement.utils.AppConstants
-import com.isl.leaseManagement.utils.Utilities.getLastChars
+import com.isl.leaseManagement.utils.ClickInterfaces
 import com.isl.leaseManagement.utils.Utilities.showYesNoDialog
 import infozech.itower.R
 import infozech.itower.databinding.ActivityAddAdditionalDocumentBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
 class AddAdditionalDocumentActivity : BaseActivity() {
     private lateinit var binding: ActivityAddAdditionalDocumentBinding
     private val pickDocumentCode = 1;
-    private val REQUEST_CODE_CAMERA = 2;
+    private val requestCameraCode = 2;
     private lateinit var viewModel: AddAdditionalDocumentViewModel
     private var stringBase64: String? = null
-    private val docList = ArrayList<Int>()
+    private var deleteDocumentAdapter: DeleteDocumentAdapter? = null
+    private var documentList = ArrayList<SaveAdditionalDocument>()
+    private var maxDocAllowed = 10
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,9 +50,33 @@ class AddAdditionalDocumentActivity : BaseActivity() {
     }
 
     private fun init() {
+        checkHowManyDocsAreUploaded()
+        initializeDeleteDocAdapter()
         val factory = AddAdditionalDocumentViewModelFactory(AddAdditionalDocumentRepository())
         viewModel = ViewModelProvider(this, factory)[AddAdditionalDocumentViewModel::class.java]
         setClickListeners()
+    }
+
+    private fun checkHowManyDocsAreUploaded() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val documentsList =
+                MyApp.getMyDatabase().saveAdditionalDocumentDao()
+                    .getAllSavedDocumentsOfATask(MyApp.localTempVarStore.taskId.toString())
+            maxDocAllowed -= documentsList.size
+        }
+    }
+
+    private fun initializeDeleteDocAdapter() {
+        binding.rvDeleteDocument.layoutManager = LinearLayoutManager(this)
+        deleteDocumentAdapter = DeleteDocumentAdapter(
+            documentList, this,
+            object : ClickInterfaces.AddAdditionalDocument {
+                override fun deleteDocument(saveAdditionalDocument: SaveAdditionalDocument) {
+                    deleteDocumentClicked(saveAdditionalDocument)
+                }
+            },
+        )
+        binding.rvDeleteDocument.adapter = deleteDocumentAdapter
     }
 
     private fun setClickListeners() {
@@ -56,15 +85,41 @@ class AddAdditionalDocumentActivity : BaseActivity() {
             openCameraDocPopup()
         }
         binding.saveBtn.setOnClickListener {
-            KotlinPrefkeeper.additionalDocIdsForSubmitApi = docList.toIntArray()
-//            KotlinPrefkeeper.additionalDocDataArray =
-//                SaveAdditionalDocumentsArray(saveAdditionalDocumentArray)
-            finish()
+            saveDocuments(documentList)
         }
     }
 
+    private fun saveDocuments(documentList: List<SaveAdditionalDocument>) {
+        if (documentList.isEmpty()) {
+            showToastMessage("Select a document before uploading!")
+            return
+        }
+        for (document in documentList) {
+            var insertedRowId = 0L
+            val documentPOJO = convertDocumentToPOJO(document) // Implement conversion function
+            lifecycleScope.launch(Dispatchers.IO) {
+                insertedRowId =
+                    MyApp.getMyDatabase().saveAdditionalDocumentDao().insertDocument(documentPOJO)
+            }
+        }
+        showToastMessage("Document Saved Successfully")
+    }
+
+    private fun convertDocumentToPOJO(document: SaveAdditionalDocument): SaveAdditionalDocumentPOJO {
+        val docName = document.fileName ?: ""
+        val docUploadId = document.docId ?: ""
+
+        return SaveAdditionalDocumentPOJO(
+            document.docContentString64!!,
+            docName,
+            document.docSize ?: "",
+            docUploadId,
+            document.taskId
+        )
+    }
+
     private fun openCameraDocPopup() {
-        if (docList.size < 5) {
+        if (documentList.size < maxDocAllowed) {
             val firstOptionText = "Camera" // Change this to your desired text
             val secondOptionText = "Document" // Change this to your desired text
             showYesNoDialog(
@@ -77,68 +132,12 @@ class AddAdditionalDocumentActivity : BaseActivity() {
                     openCameraAndGetBase64String()
                 },
                 secondOptionClicked = {
-                    pickDocument()
+                    pickDocumentAndGetBase64()
                 }
             )
         } else {
             showToastMessage("5 Documents are already selected")
         }
-    }
-
-    private fun uploadDocument() {
-        val taskId = MyApp.localTempVarStore.taskId
-        //    val taskId = 3220  // for testing
-        if (stringBase64 == null) {
-            showToastMessage("Please select document before uploading!")
-            return
-        }
-        val uploadDocumentRequest =
-            UploadDocumentRequest(
-                content = stringBase64,
-                fileName = "",
-                latitude = 0,
-                longitude = 0,
-                requestId = MyApp.localTempVarStore.taskResponse?.requestId,
-                tagName = AppConstants.KeyWords.additionalDocumentTagName,
-                timeStamp = "",
-                userId = 123
-            )
-
-        showProgressBar()
-        viewModel.uploadDocument(
-            { successResponse ->
-                successResponse?.let { response ->
-                    hideProgressBar()
-                    response.docId?.let {
-                        showToastMessage("Document Uploaded Successfully!")
-                        docList.add(it.toInt())
-
-                    }
-                }
-            },
-            { errorMessage ->
-                hideProgressBar()
-            }, taskId = taskId,
-            body =
-            uploadDocumentRequest
-        )
-    }
-
-    private fun showProgressBar() {
-        binding.progressBar.visibility = View.VISIBLE
-    }
-
-    private fun hideProgressBar() {
-        binding.progressBar.visibility = View.GONE
-    }
-
-
-    private fun pickDocument() {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "*/*"
-        }
-        startActivityForResult(intent, pickDocumentCode)
     }
 
     private fun openCameraAndGetBase64String() {
@@ -161,37 +160,57 @@ class AddAdditionalDocumentActivity : BaseActivity() {
         ActivityCompat.requestPermissions(
             this,
             arrayOf(Manifest.permission.CAMERA),
-            REQUEST_CODE_CAMERA
+            requestCameraCode
         )
     }
 
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent, REQUEST_CODE_CAMERA)
+        startActivityForResult(intent, requestCameraCode)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == pickDocumentCode && resultCode == RESULT_OK) {
             val uri = data?.data ?: return
-            processDocDataAndGetBase64(uri)
+            processDocumentAndCallUpload(uri)
         }
-        if (requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
+        if (requestCode == requestCameraCode && resultCode == RESULT_OK) {
             val capturedImage = data?.extras?.get("data") as Bitmap
-            val base64Image = getBase64StringFromBitmapForCamera(capturedImage)
-            storeBase64AndShowDeleteUI(base64 = base64Image, name = "Camera", size = "Unknown")
+            val result = getBase64StringAndSizeFromBitmapForCamera(capturedImage)
+            val (base64String, imageSize) = result
+            callUploadDocumentAndShowDeleteRv(
+                SaveAdditionalDocument(
+                    taskId = MyApp.localTempVarStore.taskId,
+                    docContentString64 = base64String,
+                    docSize = imageSize.toString()
+                )
+            )
         }
     }
 
-    private fun getBase64StringFromBitmapForCamera(bitmap: Bitmap): String? {
+    private fun getBase64StringAndSizeFromBitmapForCamera(bitmap: Bitmap): Pair<String?, Long> {
         val outputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
         val byteArray = outputStream.toByteArray()
-        stringBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT)
-        return stringBase64
+        val stringBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT)
+        val imageSize =
+            outputStream.size().toLong() // Get size from output stream after compression
+
+        return Pair(stringBase64, imageSize)
     }
 
-    private fun processDocDataAndGetBase64(uri: Uri) {
+
+    private fun pickDocumentAndGetBase64() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "*/*"
+        }
+        startActivityForResult(intent, pickDocumentCode)
+    }
+
+    @SuppressLint("Range")
+    private fun processDocumentAndCallUpload(uri: Uri) {
         try {
             var fileName: String? = null
             var fileSize: Long = 0
@@ -199,12 +218,10 @@ class AddAdditionalDocumentActivity : BaseActivity() {
             contentResolver.query(uri, null, null, null, null)?.use { cursor ->
                 if (cursor.moveToFirst()) {
                     fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                    fileSize = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE)) ?: 0L
+                    fileSize = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE))
 
                 }
             }
-
-            // Check if file name and size are retrieved
             if (fileName != null && fileSize > 0) {
                 contentResolver.takePersistableUriPermission(
                     uri,
@@ -216,11 +233,14 @@ class AddAdditionalDocumentActivity : BaseActivity() {
                     inputStream = contentResolver.openInputStream(uri) ?: return
                     val bytes = inputStream.readBytes()
                     stringBase64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
-                    storeBase64AndShowDeleteUI(
-                        base64 = stringBase64,
-                        name = fileName,
-                        size = ((fileSize / 1024.0).toString() + " KB")
+                    val saveAdditionalDocument = SaveAdditionalDocument(
+                        taskId = MyApp.localTempVarStore.taskId,
+                        docContentString64 = stringBase64,
+                        fileName = fileName,
+                        docSize = ((fileSize / 1024.0).toString() + " KB"),
+                        docId = ""  //id not available yet, need to upload the doc to API
                     )
+                    callUploadDocumentAndShowDeleteRv(saveAdditionalDocument)
                 } catch (e: Exception) {
                     // Handle exception
                 } finally {
@@ -234,48 +254,75 @@ class AddAdditionalDocumentActivity : BaseActivity() {
         }
     }
 
-    private val saveAdditionalDocumentArray = arrayListOf<SaveAdditionalDocument>()
-
-    private fun storeBase64AndShowDeleteUI(name: String?, size: String?, base64: String?) {
-        if (base64 == null) {
-            showToastMessage("Unable to get content string")
+    private fun callUploadDocumentAndShowDeleteRv(saveAdditionalDocument: SaveAdditionalDocument) {
+        val taskId = MyApp.localTempVarStore.taskId
+        if (saveAdditionalDocument.docContentString64 == null) {
+            showToastMessage("Please select document before uploading!")
             return
         }
-        val saveAdditionalDocument = SaveAdditionalDocument(
-            docName = name, docSize = size, docContentString64 = base64
+        val uploadDocumentRequest =
+            UploadDocumentRequest(
+                content = saveAdditionalDocument.docContentString64,
+                fileName = saveAdditionalDocument.fileName,
+                latitude = 0,
+                longitude = 0,
+                requestId = MyApp.localTempVarStore.taskResponse?.requestId,
+                tagName = AppConstants.KeyWords.additionalDocumentTagName,
+                timeStamp = "",
+                userId = 123
+            )
+        binding.addAttachmentIv.setOnClickListener(null)
+        showProgressBar()
+        viewModel.uploadDocument(
+            { successResponse ->
+                successResponse?.let { response ->
+                    hideProgressBar()
+                    if (response.docId != null) {
+                        saveAdditionalDocument.docId = response.docId
+                        showToastMessage("Document Uploaded Successfully!")
+                        showDeleteDocumentRecyclerView(saveAdditionalDocument)
+                    } else {
+                        showToastMessage("Document ID received empty!")
+                    }
+                }
+                binding.addAttachmentIv.setOnClickListener {
+                    openCameraDocPopup()
+                }
+            },
+            { errorMessage ->
+                hideProgressBar()
+                showToastMessage("Unable to upload Document!")
+                binding.addAttachmentIv.setOnClickListener {
+                    openCameraDocPopup()
+                }
+            }, taskId = taskId,
+            body =
+            uploadDocumentRequest
         )
+    }
 
-        saveAdditionalDocumentArray.add(saveAdditionalDocument)
+    private fun showDeleteDocumentRecyclerView(saveAdditionalDocument: SaveAdditionalDocument) {
+        documentList.add(saveAdditionalDocument)
+        deleteDocumentAdapter?.notifyItemInserted(documentList.size - 1)
+    }
 
-        val inflater = LayoutInflater.from(this)  // Assuming you're in an activity
-        val linearLayout = inflater.inflate(
-            R.layout.delete_document_layout,
-            binding.llDeleteDocUI,
-            false
-        ) as LinearLayout
-        binding.llDeleteDocUI.addView(linearLayout)
-        val docName = linearLayout.findViewById<TextView>(R.id.docName)
-        val docSize = linearLayout.findViewById<TextView>(R.id.docSize)
-        val docDelete = linearLayout.findViewById<TextView>(R.id.deleteDoc)
-
-        saveAdditionalDocument.docName?.let {
-            docName.text = getLastChars(it, 16)
-        }
-        size?.let {
-            docSize.text = getLastChars(it, 10)
-        }
-        uploadDocument()
-        docDelete.setOnClickListener {
-            binding.llDeleteDocUI.removeView(linearLayout)
-            if (docList.isNotEmpty()) {
-                docList.removeLast()
-            }
-            if (saveAdditionalDocumentArray.isNotEmpty()) {
-                saveAdditionalDocumentArray.removeLast()
-            }
+    private fun deleteDocumentClicked(saveAdditionalDocument: SaveAdditionalDocument) {
+        val indexOfObjectToDelete =
+            documentList.indexOfFirst { it.docSize == saveAdditionalDocument.docSize } // Find index with matching taskID
+        if (indexOfObjectToDelete != -1) {
+            documentList.removeAt(indexOfObjectToDelete)
+            deleteDocumentAdapter?.notifyItemRemoved(indexOfObjectToDelete)
+        } else {
+            showToastMessage("Unable to find document!")
         }
     }
 
+    private fun showProgressBar() {
+        binding.progressBar.visibility = View.VISIBLE
+    }
 
+    private fun hideProgressBar() {
+        binding.progressBar.visibility = View.GONE
+    }
 
 }

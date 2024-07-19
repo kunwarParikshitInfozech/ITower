@@ -8,6 +8,8 @@ import androidx.room.Query;
 
 import com.isl.leaseManagement.room.entity.SaveAdditionalDocumentPOJO;
 
+import java.util.List;
+
 
 @Dao
 public interface SaveAdditionalDocumentDao {
@@ -18,6 +20,6 @@ public interface SaveAdditionalDocumentDao {
     @Delete
     void deleteDocument(SaveAdditionalDocumentPOJO document);
 
-    @Query("SELECT * FROM SaveAdditionalDocumentPOJO WHERE docContentString64 = :docContentString64")
-    SaveAdditionalDocumentPOJO getDocumentByContentString(String docContentString64);
+    @Query("SELECT * FROM additional_document_table WHERE taskId = :taskId")
+    List<SaveAdditionalDocumentPOJO> getAllSavedDocumentsOfATask(String taskId);
 }

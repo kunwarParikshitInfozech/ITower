@@ -1,70 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white">
-
-    <RelativeLayout
+<layout>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/_12sdp"
-        android:background="@drawable/btn_light_grey_border_bg"
-        android:paddingVertical="@dimen/_8sdp"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@color/white">
 
-        <ImageView
-            android:id="@+id/docImage"
-            android:layout_width="@dimen/_36sdp"
-            android:layout_height="@dimen/_36sdp"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:contentDescription="@string/image"
-            android:src="@drawable/additional_doc_icon" />
-
-        <com.isl.leaseManagement.utils.CustomTextView
-            android:id="@+id/docDetailsTxt"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/docImage"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_toEndOf="@id/docImage"
-            android:maxLength="24"
-            android:text="SADAD Document"
-            android:textColor="@color/color_001E60"
-            android:textSize="@dimen/_12ssp" />
+            android:layout_margin="@dimen/_12sdp"
+            android:background="@drawable/btn_light_grey_border_bg"
+            android:paddingVertical="@dimen/_8sdp"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <com.isl.leaseManagement.utils.CustomTextView
-            android:id="@+id/docSizeTxt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@id/docImage"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_toEndOf="@id/docImage"
-            android:maxLength="18"
-            android:text="24 KB .pdf"
-            android:textColor="@color/color_A2A9C7"
-            android:textSize="@dimen/_12ssp" />
+            <ImageView
+                android:id="@+id/docImage"
+                android:layout_width="@dimen/_36sdp"
+                android:layout_height="@dimen/_36sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:contentDescription="@string/image"
+                android:src="@drawable/additional_doc_icon" />
 
-        <ImageView
-            android:id="@+id/downloadIv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/_12sdp"
-            android:contentDescription="@string/image"
-            android:src="@drawable/download_icon" />
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/docName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/docImage"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_toEndOf="@id/docImage"
+                android:maxLength="24"
+                android:text="Document"
+                android:textColor="@color/color_001E60"
+                android:textSize="@dimen/_12ssp" />
 
-        <ImageView
-            android:id="@+id/iIconIv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/_12sdp"
-            android:layout_toStartOf="@id/downloadIv"
-            android:contentDescription="@string/image"
-            android:src="@drawable/i_info_icon" />
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/docSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/docImage"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_toEndOf="@id/docImage"
+                android:maxLength="18"
+                android:text="0"
+                android:textColor="@color/color_A2A9C7"
+                android:textSize="@dimen/_12ssp" />
 
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/downloadIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:contentDescription="@string/image"
+                android:src="@drawable/download_icon" />
 
-</LinearLayout>
+            <ImageView
+                android:id="@+id/iIconIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:layout_toStartOf="@id/downloadIv"
+                android:contentDescription="@string/image"
+                android:src="@drawable/i_info_icon" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</layout>
