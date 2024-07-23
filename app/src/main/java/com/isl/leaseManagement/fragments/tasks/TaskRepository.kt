@@ -5,6 +5,7 @@ import com.isl.leaseManagement.dataClass.responses.ApiSuccessFlagResponse
 import com.isl.leaseManagement.dataClass.responses.SingleMessageResponse
 import com.isl.leaseManagement.dataClass.responses.TaskResponse
 import com.isl.leaseManagement.dataClass.responses.TasksSummaryResponse
+import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -25,8 +26,10 @@ class TaskRepository {
         slaStatus: String?,
         requestPriority: String?
     ) {
+        val lsmUserId = KotlinPrefkeeper.lsmUserId ?: ""
         val observable: Observable<List<TaskResponse>> = api!!.getTasks(
-            userId,
+            //         userId,
+            lsmUserId,
             requestStatus = requestStatus,
             taskStatus = taskStatus,
             slaStatus = slaStatus,
@@ -57,7 +60,8 @@ class TaskRepository {
     }
 
     fun getTasksSummary(callback: (List<TasksSummaryResponse>?) -> Unit) {
-        val observable: Observable<List<TasksSummaryResponse>> = api!!.getTasksSummary()
+        val lsmUserId = KotlinPrefkeeper.lsmUserId ?: ""
+        val observable: Observable<List<TasksSummaryResponse>> = api!!.getTasksSummary(lsmUserId)
         observable.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<List<TasksSummaryResponse>> {
@@ -84,8 +88,9 @@ class TaskRepository {
         taskStatus: String,
         body: RequestBody
     ) {
+        val lsmUserId = KotlinPrefkeeper.lsmUserId ?: ""
         val observable: Observable<ApiSuccessFlagResponse> =
-            api!!.updateTaskStatus(taskId, taskStatus, body)
+            api!!.updateTaskStatus(userId = lsmUserId, taskId, taskStatus, body)
         observable.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<ApiSuccessFlagResponse> {

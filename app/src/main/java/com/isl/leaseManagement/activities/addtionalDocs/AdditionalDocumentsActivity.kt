@@ -24,6 +24,7 @@ import infozech.itower.databinding.ActivityAdditonalDocumentsBinding
 import infozech.itower.databinding.DocInfoPopupBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import java.util.UUID
@@ -35,6 +36,10 @@ class AdditionalDocumentsActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_additonal_documents)
+    }
+
+    override fun onResume() {
+        super.onResume()
         init()
     }
 
@@ -54,7 +59,9 @@ class AdditionalDocumentsActivity : BaseActivity() {
             val documentsList =
                 MyApp.getMyDatabase().saveAdditionalDocumentDao()
                     .getAllSavedDocumentsOfATask(currentTaskId.toString()) as ArrayList<SaveAdditionalDocumentPOJO>
-            showAdditionalDocuments(documentsList)
+            withContext(Dispatchers.Main) {
+                showAdditionalDocuments(documentsList)
+            }
         }
     }
 
@@ -65,7 +72,8 @@ class AdditionalDocumentsActivity : BaseActivity() {
                 taskId = pojo.getTaskId() ?: 0, // Handle potential null taskId
                 fileName = pojo.getDocName(),
                 docSize = pojo.getDocSize(),
-                docContentString64 = pojo.getDocContentString64()
+                docContentString64 = pojo.getDocContentString64(),
+                docId = pojo.docUploadId
             )
             documentList.add(document)
         }

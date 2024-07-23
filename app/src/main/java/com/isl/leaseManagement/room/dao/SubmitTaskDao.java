@@ -24,4 +24,7 @@ public interface SubmitTaskDao {
 
     @Query("SELECT * FROM submit_task_table WHERE taskId = :taskId")
     SubmitTaskRequestPOJO getSubmitTaskById(int taskId);
+
+    @Query("DELETE FROM submit_task_table WHERE taskId = :taskId")
+    int deleteSubmitTaskByTaskId(int taskId);
 }

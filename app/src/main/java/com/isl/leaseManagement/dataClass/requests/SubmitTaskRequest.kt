@@ -1,21 +1,21 @@
 package com.isl.leaseManagement.dataClass.requests
 
 data class SubmitTaskRequest(
-    val data: SubmitTaskData?,
-    val processId: Int?
+    var data: SubmitTaskData,
+    var processId: Int?
 ) {
     data class SubmitTaskData(
-        val accountNumber: String?=null,
-        val additionalDocuments: List<Document?>?=null,
-        val documents: List<Document?>?=null,
-        val paymentMethod: String?=null,
-        val rentVATExpiryDate: String?=null,
-        val sadadBillerCode: Int?=null,
-        val sadadExpiryDate: String?=null
+        var accountNumber: String?=null,
+        var additionalDocuments: List<Document?>?=null,
+        var documents: List<Document?>?=null,
+        var paymentMethod: String?=null,
+        var rentVATExpiryDate: String?=null,
+        var sadadBillerCode: Int?=null,
+        var sadadExpiryDate: String?=null
     ) {
 
         data class Document(
-            val docId: String?
+            var docId: String?
         )
     }
 }

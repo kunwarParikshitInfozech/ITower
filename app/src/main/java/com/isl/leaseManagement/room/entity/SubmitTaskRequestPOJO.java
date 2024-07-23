@@ -7,6 +7,7 @@ import androidx.room.TypeConverters;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocument;
 
 import java.util.Collections;
 import java.util.List;
@@ -43,18 +44,16 @@ public class SubmitTaskRequestPOJO {
     public static class SubmitTaskData {
 
         private final String accountNumber;
-        private final List<Document> additionalDocuments;
-        private final List<Document> documents;
+        private final SaveAdditionalDocument document;
         private final String paymentMethod;
         private final String rentVATExpiryDate;
         private final Integer sadadBillerCode; // Use Integer for nullable int
         private final String sadadExpiryDate;
 
-        public SubmitTaskData(String accountNumber, List<Document> additionalDocuments, List<Document> documents,
+        public SubmitTaskData(String accountNumber, SaveAdditionalDocument document,
                               String paymentMethod, String rentVATExpiryDate, Integer sadadBillerCode, String sadadExpiryDate) {
             this.accountNumber = accountNumber;
-            this.additionalDocuments = additionalDocuments;
-            this.documents = documents;
+            this.document = document;  // as only one doc either of type lease or SADAD
             this.paymentMethod = paymentMethod;
             this.rentVATExpiryDate = rentVATExpiryDate;
             this.sadadBillerCode = sadadBillerCode;
@@ -64,14 +63,6 @@ public class SubmitTaskRequestPOJO {
         // Getters for all fields
         public String getAccountNumber() {
             return accountNumber;
-        }
-
-        public List<Document> getAdditionalDocuments() {
-            return additionalDocuments;
-        }
-
-        public List<Document> getDocuments() {
-            return documents;
         }
 
         public String getPaymentMethod() {
@@ -88,6 +79,10 @@ public class SubmitTaskRequestPOJO {
 
         public String getSadadExpiryDate() {
             return sadadExpiryDate;
+        }
+
+        public SaveAdditionalDocument getDocument() {
+            return document;
         }
     }
 
@@ -129,7 +124,8 @@ public class SubmitTaskRequestPOJO {
         @TypeConverter
         public static List<Document> fromString(String dataJson) {
             if (dataJson != null) {
-                return gson.fromJson(dataJson, new TypeToken<List<Document>>(){}.getType());
+                return gson.fromJson(dataJson, new TypeToken<List<Document>>() {
+                }.getType());
             }
             return Collections.emptyList();
         }

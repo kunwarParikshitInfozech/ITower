@@ -41,7 +41,7 @@ class AddAdditionalDocumentActivity : BaseActivity() {
     private var stringBase64: String? = null
     private var deleteDocumentAdapter: DeleteDocumentAdapter? = null
     private var documentList = ArrayList<SaveAdditionalDocument>()
-    private var maxDocAllowed = 10
+    private var maxDocAllowed = 5
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,16 +123,19 @@ class AddAdditionalDocumentActivity : BaseActivity() {
             val firstOptionText = "Camera" // Change this to your desired text
             val secondOptionText = "Document" // Change this to your desired text
             showYesNoDialog(
+                context = this,
+                message = "Select Camera OR Document",
                 firstOptionName = firstOptionText,
                 secondOptionName = secondOptionText,
-                context = this, // Assuming you're calling from an activity, use 'this'
-                title = "Choose Camera or file",
-                message = "Select",
-                firstOptionClicked = {
-                    openCameraAndGetBase64String()
-                },
-                secondOptionClicked = {
-                    pickDocumentAndGetBase64()
+                optionSelection = object : ClickInterfaces.TwoOptionSelection {
+                    override fun option1Selected() {
+                        openCameraAndGetBase64String()
+                    }
+
+                    override fun option2Selected() {
+                        pickDocumentAndGetBase64()
+                    }
+
                 }
             )
         } else {
@@ -193,13 +196,12 @@ class AddAdditionalDocumentActivity : BaseActivity() {
         val outputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
         val byteArray = outputStream.toByteArray()
-        val stringBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT)
+        val stringBase64 = Base64.encodeToString(byteArray, Base64.NO_WRAP)
         val imageSize =
             outputStream.size().toLong() // Get size from output stream after compression
 
         return Pair(stringBase64, imageSize)
     }
-
 
     private fun pickDocumentAndGetBase64() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -219,7 +221,11 @@ class AddAdditionalDocumentActivity : BaseActivity() {
                 if (cursor.moveToFirst()) {
                     fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                     fileSize = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE))
-
+                    if (fileSize > 10 * 1024 * 1024) { // 10 MB in bytes
+                        // Show toast message using Toast or a custom snackbar
+                        showToastMessage("File size exceeds 10 MB. Please choose a smaller file.")
+                        return@use // Exit the cursor use block if file is too large
+                    }
                 }
             }
             if (fileName != null && fileSize > 0) {

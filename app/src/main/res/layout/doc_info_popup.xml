@@ -25,7 +25,7 @@
                 android:layout_marginTop="@dimen/_12sdp"
                 android:text="@string/close"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/color_253746"
                 android:textSize="@dimen/_14ssp" />
 
 

@@ -6,6 +6,7 @@ import com.isl.leaseManagement.dataClass.requests.UploadDocumentRequest
 import com.isl.leaseManagement.dataClass.responses.ApiSuccessFlagResponse
 import com.isl.leaseManagement.dataClass.responses.SingleMessageResponse
 import com.isl.leaseManagement.dataClass.responses.UploadDocumentResponse
+import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,7 +22,9 @@ class BasicDetailsRepository {
         taskId: Int,
         body: SubmitTaskRequest
     ) {
-        val observable: Observable<ApiSuccessFlagResponse> = api!!.submitTask(taskId, body = body)
+        val lsmUserId = KotlinPrefkeeper.lsmUserId ?: ""
+        val observable: Observable<ApiSuccessFlagResponse> =
+            api!!.submitTask(userId = lsmUserId, taskId, body = body)
         observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<ApiSuccessFlagResponse> {
                 override fun onSubscribe(d: Disposable) {
@@ -46,7 +49,8 @@ class BasicDetailsRepository {
         taskId: Int,
         body: UploadDocumentRequest
     ) {
-        val observable: Observable<UploadDocumentResponse> = api!!.uploadDocument(taskId = taskId, body = body)
+        val observable: Observable<UploadDocumentResponse> =
+            api!!.uploadDocument(taskId = taskId, body = body)
         observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<UploadDocumentResponse> {
                 override fun onSubscribe(d: Disposable) {

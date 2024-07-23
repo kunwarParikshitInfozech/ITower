@@ -22,4 +22,7 @@ public interface SaveAdditionalDocumentDao {
 
     @Query("SELECT * FROM additional_document_table WHERE taskId = :taskId")
     List<SaveAdditionalDocumentPOJO> getAllSavedDocumentsOfATask(String taskId);
+
+    @Query("DELETE FROM additional_document_table WHERE taskId = :taskId")
+    int deleteAllDocumentsOfTask(int taskId);
 }

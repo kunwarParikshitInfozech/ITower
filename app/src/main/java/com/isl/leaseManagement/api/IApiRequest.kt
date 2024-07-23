@@ -3,6 +3,7 @@ import com.isl.leaseManagement.dataClass.requests.StartTaskRequest
 import com.isl.leaseManagement.dataClass.requests.SubmitTaskRequest
 import com.isl.leaseManagement.dataClass.requests.UploadDocumentRequest
 import com.isl.leaseManagement.dataClass.responses.ApiSuccessFlagResponse
+import com.isl.leaseManagement.dataClass.responses.FetchUserIdResponse
 import com.isl.leaseManagement.dataClass.responses.RequestDetailsResponse
 import com.isl.leaseManagement.dataClass.responses.StartTaskResponse
 import com.isl.leaseManagement.dataClass.responses.TaskResponse
@@ -16,40 +17,46 @@ interface IApiRequest {
 
     @GET("leasemanagement/1/users/{userId}/tasks")
     fun getTasks(
-        @Path("userId") userId: Int,
+        @Path("userId") userId: String,
         @Query("requestStatus") requestStatus: String?,
         @Query("taskStatus") taskStatus: String?,
         @Query("SLAStatus") slaStatus: String?,
         @Query("requestPriority") requestPriority: String?,
     ): Observable<List<TaskResponse>>
 
-    @GET("leasemanagement/1/users/123/tasks/summary")
-    fun getTasksSummary(): Observable<List<TasksSummaryResponse>>
+    @GET("leasemanagement/1/users/{userId}/tasks/summary")
+    fun getTasksSummary(@Path("userId") userId: String): Observable<List<TasksSummaryResponse>>
 
     @Headers("Content-Type: application/json")
-    @PUT("leasemanagement/leasemanagement/1/users/123/tasks/{taskId}/status/{taskStatus}")
+    @PUT("leasemanagement/1/users/{userId}/tasks/{taskId}/status/{taskStatus}")
     fun updateTaskStatus(
+        @Path("userId") userId: String,
         @Path("taskId") taskId: Int,
         @Path("taskStatus") taskStatus: String,
         @Body body: RequestBody
     ): Observable<ApiSuccessFlagResponse>
 
     @Headers("Content-Type: application/json")
-    @PUT("leasemanagement/1/users/123/tasks/{taskId}/start")
+    @PUT("leasemanagement/1/users/{userId}/tasks/{taskId}/start")
     fun startTask(
+        @Path("userId") userId: String,
         @Path("taskId") taskId: Int,
         @Body body: StartTaskRequest
     ): Observable<StartTaskResponse>
 
     @Headers("Content-Type: application/json")
-    @PUT("leasemanagement/1/users/123/tasks/{taskId}/submit")
+    @PUT("leasemanagement/1/users/{userId}/tasks/{taskId}/submit")
     fun submitTask(
+        @Path("userId") userId: String,
         @Path("taskId") taskId: Int,
         @Body body: SubmitTaskRequest
     ): Observable<ApiSuccessFlagResponse>
 
-    @GET("leasemanagement/1/users/123/request/{requestId}")
-    fun getTaskRequestDetails(@Path("requestId") requestId: String): Observable<RequestDetailsResponse>
+    @GET("leasemanagement/1/users/{userId}/request/{requestId}")
+    fun getTaskRequestDetails(
+        @Path("userId") userId: String,
+        @Path("requestId") requestId: String
+    ): Observable<RequestDetailsResponse>
 
     @POST("leasemanagement/1/tasks/{taskId}/documents")
     fun uploadDocument(
@@ -57,9 +64,9 @@ interface IApiRequest {
         @Body body: UploadDocumentRequest
     ): Observable<UploadDocumentResponse>
 
-    @POST("usertracking/1/users/deviceID")
+    @POST("usertracking/1/users/deviceId")
     fun fetchDeviceID(
         @Body body: FetchDeviceIDRequest
-    ): Observable<FetchDeviceIDRequest>   //response is also same
+    ): Observable<FetchUserIdResponse>   //response is also same
 
 }

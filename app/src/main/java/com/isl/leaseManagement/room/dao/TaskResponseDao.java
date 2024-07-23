@@ -29,4 +29,7 @@ public interface TaskResponseDao {
 
     @Query("SELECT * FROM task_response_table")
     List<TaskResponsePOJO> getAllTaskResponse();
+
+    @Query("DELETE FROM task_response_table WHERE taskId = :taskId")
+    int deleteTaskResponseByTaskId(int taskId);
 }

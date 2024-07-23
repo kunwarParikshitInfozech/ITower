@@ -16,4 +16,9 @@ object ClickInterfaces {
         fun docInfo(saveAdditionalDocument: SaveAdditionalDocument)
         fun docDownload(saveAdditionalDocument: SaveAdditionalDocument)
     }
+
+    interface TwoOptionSelection {
+        fun option1Selected()
+        fun option2Selected()
+    }
 }

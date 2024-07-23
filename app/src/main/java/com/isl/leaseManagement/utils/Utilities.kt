@@ -1,13 +1,21 @@
 package com.isl.leaseManagement.utils
 
-import android.app.AlertDialog
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.view.Gravity
+import android.view.View
+import android.view.Window
+import infozech.itower.R
 import java.math.BigInteger
+import java.text.SimpleDateFormat
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
+import java.util.Locale
 import java.util.TimeZone
 
 object Utilities {
@@ -27,22 +35,19 @@ object Utilities {
     }
 
     fun toIsoString(dateString: String): String? {
-        val parts = dateString.split("/")
-        if (parts.size != 3) return null  // Check for valid format
-
-        val year = parts[2].toIntOrNull() ?: return null  // Check for valid year
-        val month = parts[1].toIntOrNull()?.minus(1) ?: return null  // Months are 0-based
-        val day = parts[0].toIntOrNull() ?: return null  // Check for valid day
+        val formatter = SimpleDateFormat(
+            "dd MMM yyyy",
+            Locale.getDefault()
+        ) // Set format with MMM for month name
+        val parsedDate = formatter.parse(dateString) ?: return null // Try parsing
 
         val calendar = Calendar.getInstance().apply {
-            set(Calendar.YEAR, year)
-            set(Calendar.MONTH, month)
-            set(Calendar.DAY_OF_MONTH, day)
+            time = parsedDate
         }
 
-        val formatter = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
-        formatter.timeZone = TimeZone.getTimeZone("UTC")
-        return formatter.format(calendar.time)
+        val isoFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        isoFormatter.timeZone = TimeZone.getTimeZone("UTC")
+        return isoFormatter.format(calendar.time)
     }
 
 
@@ -103,32 +108,45 @@ object Utilities {
     }
 
     fun showYesNoDialog(
+        context: Context,
+        message: String,
         firstOptionName: String,
         secondOptionName: String,
-        context: Context,
-        title: String,
-        message: String,
-        firstOptionClicked: () -> Unit,
-        secondOptionClicked: () -> Unit
+        optionSelection: ClickInterfaces.TwoOptionSelection
     ) {
-        val builder = AlertDialog.Builder(context)
-        builder.setTitle(title)
-        builder.setMessage(message)
+        try {
+            val dialog = Dialog(context)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog.setCancelable(true)
+            dialog.setContentView(R.layout.two_options_popup_layout)
+            if (!dialog.isShowing) {
+                dialog.show()
+            }
 
-        // Set positive (Yes) button
-        builder.setPositiveButton(firstOptionName) { dialog, which ->
-            firstOptionClicked()
-            dialog.dismiss()
+            val tvMsg: CustomTextView = dialog.findViewById(R.id.message)
+            val btnOption1: CustomTextView = dialog.findViewById(R.id.option1Btn)
+            val tvTitle: CustomTextView = dialog.findViewById(R.id.title)
+            val btnOption2: CustomTextView = dialog.findViewById(R.id.option2Btn)
+            tvMsg.visibility = View.VISIBLE
+            tvTitle.gravity = Gravity.CENTER
+            tvMsg.text = message
+
+            tvTitle.setPadding(30, 0, 30, 0)
+            btnOption1.text = firstOptionName
+            btnOption2.text = secondOptionName
+            btnOption1.setOnClickListener {
+                optionSelection.option1Selected()
+                dialog.dismiss()
+            }
+            btnOption2.setOnClickListener {
+                optionSelection.option2Selected()
+                dialog.dismiss()
+            }
+        } catch (e: java.lang.Exception) {//no need
         }
-
-        // Set negative (No) button
-        builder.setNegativeButton(secondOptionName) { dialog, which ->
-            secondOptionClicked()
-            dialog.dismiss()
-        }
-
-        builder.create().show()
     }
+
 
     fun formatSingleDigitNumber(numberString: String?): String {
         if (numberString == null) return ""
@@ -139,7 +157,7 @@ object Utilities {
         }
     }
 
-     fun getLastChars(str: String, maxLength: Int): String {
+    fun getLastChars(str: String, maxLength: Int): String {
         val length = str.length
         return if (length <= maxLength) str else str.substring(length - maxLength)
     }

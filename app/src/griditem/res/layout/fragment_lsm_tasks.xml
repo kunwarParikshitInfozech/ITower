@@ -6,7 +6,6 @@
         android:layout_height="match_parent"
         android:background="@color/color_f8fafb"
         android:theme="@style/LightTheme"
-        tools:background="@color/white"
         tools:context="com.isl.leaseManagement.fragments.home.LsmHomeFragment">
 
         <com.isl.leaseManagement.utils.CustomTextView
@@ -21,29 +20,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-        <com.isl.leaseManagement.utils.CustomTextView
-            android:id="@+id/fieldWorkText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:text="@string/field_work"
-            android:textColor="@color/color_505F6B"
-            android:textSize="@dimen/_12ssp"
-            android:visibility="gone"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/myTasksText"
-            tools:visibility="visible" />
-
-
         <RelativeLayout
             android:id="@+id/assignedUnassignedRl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/_12sdp"
             android:layout_marginTop="@dimen/_18sdp"
-            app:layout_constraintTop_toBottomOf="@id/fieldWorkText">
+            app:layout_constraintTop_toBottomOf="@id/myTasksText">
 
             <include
                 android:id="@+id/assignedTask"
@@ -59,28 +42,6 @@
                 android:layout_below="@id/assignedTask"
                 android:layout_marginTop="@dimen/_16sdp" />
         </RelativeLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/savedTasksRv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_4sdp"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:layout_marginBottom="@dimen/_24sdp"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/fieldWorkText"
-            tools:visibility="visible" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tasksRv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_4sdp"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:layout_marginBottom="@dimen/_24sdp"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/savedTasksRv"
-            tools:visibility="visible" />
 
         <ProgressBar
             android:id="@+id/progressBar"

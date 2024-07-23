@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.isl.dao.cache.AppPreferences
 import com.isl.itower.HomeActivity
@@ -20,6 +21,17 @@ import infozech.itower.databinding.ActivityTasksHomeBinding
 import java.util.UUID
 
 class LsmHomeActivity : BaseActivity() {
+    companion object {
+        var taskIsAssigned = true  //used in lsm home and lsm list fragment
+        var myFragmentManager: FragmentManager? = null
+        fun openFragment(fragment: Fragment, supportFragmentManager: FragmentManager) {
+            val transaction = supportFragmentManager.beginTransaction()
+            transaction.replace(R.id.nav_host_fragment, fragment)
+            transaction.addToBackStack(null)
+            transaction.commit()
+        }
+
+    }
 
     private lateinit var binding: ActivityTasksHomeBinding
     private lateinit var viewModel: LsmHomeViewModel
@@ -27,11 +39,11 @@ class LsmHomeActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_tasks_home)
-        //      init1()
-        init2()
+        init1()
     }
 
     private fun init1() {
+        myFragmentManager = supportFragmentManager
         val factory = LsmHomeViewModelFactory(LsmHomeRepository())
         viewModel = ViewModelProvider(this, factory)[LsmHomeViewModel::class.java]
         fetchDeviceId()
@@ -50,20 +62,30 @@ class LsmHomeActivity : BaseActivity() {
                 pushToken = deviceToken,
                 deviceId = uuid.toString()
             )
+        showProgressBar()
         viewModel.fetchUserId(
             { successResponse ->
                 successResponse?.let { response ->
                     hideProgressBar()
-                    response.deviceId?.let {
-                        showToastMessage(it)
+                    if (response.userId != null) {
+                        KotlinPrefkeeper.lsmUserId = response.userId.toString()
                         init2()
+                    } else {
+                        showToastMessage("User's ID is empty")
+                        finish()
                     }
                 }
             },
             { errorMessage ->
+                //for testing only --
+                KotlinPrefkeeper.lsmUserId = "13"
                 hideProgressBar()
                 init2()
-                //       showToastMessage("Unable to fetch userID!")
+
+                //original code
+//                hideProgressBar()
+//                showToastMessage("Unable to get user's ID")
+//                finish()
             },
             body =
             fetchDeviceIDRequest
@@ -71,7 +93,7 @@ class LsmHomeActivity : BaseActivity() {
     }
 
     private fun init2() {
-        openFragment(LsmTasksFragment())
+        openFragment(LsmTasksFragment(), supportFragmentManager)
         binding.bottomNavigationView.selectedItemId = R.id.tasks
         setClickListeners()
         updateOnOffDutyStatus()
@@ -104,21 +126,21 @@ class LsmHomeActivity : BaseActivity() {
 
                 R.id.tasks -> {
                     if (currentFragment !is LsmTasksFragment) {
-                        openFragment(LsmTasksFragment())
+                        openFragment(LsmTasksFragment(), supportFragmentManager)
                     }
                     true
                 }
 
                 R.id.notifications -> {
                     if (currentFragment !is LsmNotificationsFragment) {
-                        openFragment(LsmNotificationsFragment())
+                        openFragment(LsmNotificationsFragment(), supportFragmentManager)
                     }
                     true
                 }
 
                 R.id.profile -> {
                     if (currentFragment !is LsmProfileFragment) {
-                        openFragment(LsmProfileFragment())
+                        openFragment(LsmProfileFragment(), supportFragmentManager)
                     }
                     true
                 }
@@ -133,14 +155,6 @@ class LsmHomeActivity : BaseActivity() {
         finish()
     }
 
-    private fun openFragment(fragment: Fragment) {
-//        binding.leaseManagementToolbar.visibility =
-//            if (fragment is HomeFragement) View.INVISIBLE else View.VISIBLE
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.nav_host_fragment, fragment)
-        transaction.addToBackStack(null)
-        transaction.commit()
-    }
 
     private fun showProgressBar() {
         binding.progressBar.visibility = View.VISIBLE

@@ -1,6 +1,7 @@
 package com.isl.leaseManagement.activities.basicDetails
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -21,21 +22,25 @@ import com.isl.leaseManagement.activities.home.LsmHomeActivity
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocument
 import com.isl.leaseManagement.dataClass.requests.SubmitTaskRequest
+import com.isl.leaseManagement.dataClass.requests.SubmitTaskRequest.SubmitTaskData
 import com.isl.leaseManagement.dataClass.requests.UploadDocumentRequest
 import com.isl.leaseManagement.room.entity.SaveAdditionalDocumentPOJO
 import com.isl.leaseManagement.room.entity.SubmitTaskRequestPOJO
-import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
 import com.isl.leaseManagement.utils.AppConstants
+import com.isl.leaseManagement.utils.ClickInterfaces
 import com.isl.leaseManagement.utils.Utilities
 import com.isl.leaseManagement.utils.Utilities.showDatePickerFromCurrentDate
 import com.isl.leaseManagement.utils.Utilities.toIsoString
 import infozech.itower.R
 import infozech.itower.databinding.ActivityBasicDetailsBinding
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
-import java.util.Calendar
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class BasicDetailsActivity : BaseActivity() {
 
@@ -43,14 +48,13 @@ class BasicDetailsActivity : BaseActivity() {
     private lateinit var viewModel: BasicDetailsViewModel
     private var paymentMethod: String? = null
     private var stringBase64: String? = null
-    private var docId = ""
-    private var processId = 0
-    private var taskId = 0
     private var tagName = ""
     private val pickDocumentCode = 1;
-    private val REQUEST_CODE_CAMERA = 2;
+    private val requestCameraCode = 2;
     private var saveAdditionalDocumentList = ArrayList<SaveAdditionalDocument>()
     private var currentTaskId = 0
+    private var submitTaskCompleteDocumentForRoom: SaveAdditionalDocument? = null
+    private var submitTaskRequest = SubmitTaskRequest(SubmitTaskData(), 0)  //created empty
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,104 +64,141 @@ class BasicDetailsActivity : BaseActivity() {
 
     private fun init() {
         currentTaskId = MyApp.localTempVarStore.taskId
+        setClickListeners()
+        fillDataOfStartApiAndApplyValidations()
         val factory = BasicDetailsViewModelFactory(BasicDetailsRepository())
         viewModel = ViewModelProvider(this, factory)[BasicDetailsViewModel::class.java]
-        setClickListeners()
-        getAdditionalDocListOfThisTask()
+        getAdditionalDocListOfThisTask()   //calling it at start to give enough time
     }
 
-    private fun getAdditionalDocListOfThisTask() {
+    private fun fillDataOfStartApiAndApplyValidations() {
+        MyApp.localTempVarStore?.let { tempVarStorage ->
+            tempVarStorage.startTaskResponse?.let { response ->
+                response.data?.let { responseData ->
+                    responseData.sadadBillerCode?.let { binding.billerCodeEt.setText(it) }
+                    responseData.accountNumber?.let { binding.accountNumberEt.setText(it) }
+                    responseData.sadadBillerCode?.let { binding.billerCodeEt.setText(it) }
+                    when (responseData.paymentMethod) {
+                        AppConstants.KeyWords.paymentTypeCheck -> {
+                            paymentMethod = AppConstants.KeyWords.paymentTypeCheck
+                            binding.billerCodeEt.isEnabled = false
+                            binding.accountNumberEt.isEnabled = false
+                            binding.sadadDocExpiryValue.setOnClickListener(null)
+                            binding.leaseRentExpiryValue.setOnClickListener(null)
+                            binding.sadadOrLeaseDocumentTv.visibility = View.GONE
+                            binding.attachDocumentIv.visibility = View.GONE
+                        }
+
+                        AppConstants.KeyWords.paymentTypeSadad -> {
+                            paymentMethod = AppConstants.KeyWords.paymentTypeSadad
+                            binding.leaseRentExpiryValue.setOnClickListener(null)
+                            binding.sadadOrLeaseDocumentTv.text = getString(R.string.sadad_document)
+                            tagName = AppConstants.KeyWords.sadadDocumentTagName
+                        }
+
+                        AppConstants.KeyWords.paymentTypeIban -> {
+                            paymentMethod = AppConstants.KeyWords.paymentTypeIban
+                            binding.billerCodeEt.isEnabled = false
+                            binding.sadadDocExpiryValue.setOnClickListener(null)
+                            binding.sadadOrLeaseDocumentTv.text =
+                                getString(R.string.lease_rent_vat_document)
+                            tagName = AppConstants.KeyWords.leaseRentDocTagName
+                        }
+
+                        else -> {// do nothing
+                        }
+                    }
+                }
+                response.processId?.let { submitTaskRequest.processId = it }
+            }
+            currentTaskId = tempVarStorage.taskId
+        }
+        fetchSubmitDataFromRoomAndFill()
+    }
+
+    private fun fetchSubmitDataFromRoomAndFill() {
         lifecycleScope.launch(Dispatchers.IO) {
-            val documentsList =
-                MyApp.getMyDatabase().saveAdditionalDocumentDao()
-                    .getAllSavedDocumentsOfATask(currentTaskId.toString()) as ArrayList<SaveAdditionalDocumentPOJO>
-            saveAdditionalDocumentList = convertPOJOListToDocumentList(documentsList)
+            val submitTaskPOJO =
+                MyApp.getMyDatabase().submitTaskDao().getSubmitTaskById(currentTaskId)
+            //    fillSubmitDataOfRoomFromMain(submitTaskPOJO)
+            delay(100)
+            withContext(Dispatchers.Main) {
+                submitTaskPOJO?.data?.let { data ->
+                    data.sadadBillerCode?.let {
+                        if (it != 0) {
+                            binding.billerCodeEt.setText(it.toString())
+                        }
+                    } // filling all 4 fields
+                    data.accountNumber?.let { binding.accountNumberEt.setText(it) }
+                    binding.sadadDocExpiryValue.text = data.sadadExpiryDate ?: ""
+                    binding.leaseRentExpiryValue.text = data.rentVATExpiryDate ?: ""
+                    if (data.document != null && data.document.fileName != null) {
+                        if (paymentMethod != AppConstants.KeyWords.paymentTypeCheck) { //filling delete layout
+                            binding.docName.text = getLastChars(data.document!!.fileName!!, 14)
+                            if (data.document.docSize != null) {
+                                binding.docSize.text = getLastChars(data.document.docSize!!, 12)
+                            }
+                            binding.rlDeleteDocLayout.visibility = View.VISIBLE
+                            data.document.docId?.let {
+                                submitTaskRequest.data.documents =
+                                    listOf(SubmitTaskData.Document(it))   //filled document ID in submit task request
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
-    private fun convertPOJOListToDocumentList(pojoList: ArrayList<SaveAdditionalDocumentPOJO>): ArrayList<SaveAdditionalDocument> {
-        val documentList = ArrayList<SaveAdditionalDocument>()
-        for (pojo in pojoList) {
-            val document = SaveAdditionalDocument(
-                taskId = pojo.taskId ?: 0,
-                fileName = pojo.docName,
-                docSize = pojo.docSize,
-                docContentString64 = pojo.docContentString64
-            )
-            documentList.add(document)
-        }
-        return documentList
-    }
+//    private fun fillSubmitDataOfRoomFromMain(submitTaskPOJO: SubmitTaskRequestPOJO) {
+//        lifecycleScope.launch(Dispatchers.Main) {
+//
+//        }
+//    }
 
     private fun setClickListeners() {
         binding.backIv.setOnClickListener { finish() }
-        binding.submitBtn.setOnClickListener { submitData() }
+        binding.submitBtn.setOnClickListener { submitDataToAPI() }
         binding.saveBtn.setOnClickListener { saveSubmitDetails() }
         binding.sadadDocExpiryValue.setOnClickListener { showDatePickerAndFillDate(it as TextView) }
         binding.leaseRentExpiryValue.setOnClickListener { showDatePickerAndFillDate(it as TextView) }
-        binding.attachSadadDocIv.setOnClickListener { openCameraDocPopup() }
-        binding.attachLeaseRentVatIv.setOnClickListener { openCameraDocPopup() }
-        fillDataOfStartApiAndApplyValidations()
+        binding.attachDocumentIv.setOnClickListener { openCameraDocPopup() }
+        binding.deleteDocBtn.setOnClickListener { deleteDocumentClicked() }
     }
 
-    private fun saveSubmitDetails() {
-        val taskId = currentTaskId
-        var sadadBillerInt = 0
-        if (binding.billerCodeEt.text.toString() != "") {
-            sadadBillerInt = binding.billerCodeEt.text.toString().toInt()
+    private fun showDatePickerAndFillDate(view: TextView) {
+        showDatePickerFromCurrentDate(this@BasicDetailsActivity) { selectedDate ->
+            val formatter = SimpleDateFormat(
+                "dd MMM yyyy",
+                Locale.getDefault()
+            ) // Set format with MMM for 3-letter month
+            val formattedDate = formatter.format(selectedDate.time)
+            view.text = formattedDate
         }
-        val accountNumber = binding.accountNumberEt.text.toString()
-        val sadadExpiryDate = binding.sadadDocExpiryValue.text.toString()
-        val rentVATExpiryDate = binding.leaseRentExpiryValue.text.toString()
-
-        val additionalDocuments = listOf(
-            SubmitTaskRequestPOJO.Document("doc1"),
-            SubmitTaskRequestPOJO.Document("doc2")
-        )
-        val documents = listOf(
-            SubmitTaskRequestPOJO.Document("doc3"),
-            SubmitTaskRequestPOJO.Document("doc4")
-        )
-        val paymentMethod = paymentMethod
-
-        val submitTaskData = SubmitTaskRequestPOJO.SubmitTaskData(
-            accountNumber,
-            additionalDocuments,
-            documents,
-            paymentMethod,
-            rentVATExpiryDate,
-            sadadBillerInt.toInt(),
-            sadadExpiryDate
-        )
-
-        val submitTaskRequestPOJO =
-            SubmitTaskRequestPOJO(taskId, submitTaskData, null) // processId can be null
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            MyApp.getMyDatabase().submitTaskDao().insertSubmitTask(submitTaskRequestPOJO)
-        }
-        showToastMessage("Submit Data Saved!")
     }
 
     private fun openCameraDocPopup() {
-        if (docId == "") {
+        if (binding.rlDeleteDocLayout.visibility == View.GONE) {
             val firstOptionText = "Camera" // Change this to your desired text
             val secondOptionText = "Document" // Change this to your desired text
             Utilities.showYesNoDialog(
+                context = this,
+                message = "Select Camera OR Document",
                 firstOptionName = firstOptionText,
                 secondOptionName = secondOptionText,
-                context = this, // Assuming you're calling from an activity, use 'this'
-                title = "Choose Camera or file",
-                message = "Select",
-                firstOptionClicked = {
-                    openCameraAndGetBase64String()
-                },
-                secondOptionClicked = {
-                    pickDocumentAndGetBase64()
+                optionSelection = object : ClickInterfaces.TwoOptionSelection {
+                    override fun option1Selected() {
+                        openCameraAndGetBase64String()
+                    }
+
+                    override fun option2Selected() {
+                        selectDocAndGetBase64()
+                    }
+
                 }
             )
         } else {
-            showToastMessage("Documents is already selected")
+            showToastMessage("Document is already selected")
         }
     }
 
@@ -181,129 +222,177 @@ class BasicDetailsActivity : BaseActivity() {
         ActivityCompat.requestPermissions(
             this,
             arrayOf(Manifest.permission.CAMERA),
-            REQUEST_CODE_CAMERA
+            requestCameraCode
         )
     }
 
     private fun openCamera() {
         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        startActivityForResult(intent, REQUEST_CODE_CAMERA)
+        startActivityForResult(intent, requestCameraCode)
+    }
+
+    private fun selectDocAndGetBase64() {
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "*/*"
+        }
+        startActivityForResult(intent, pickDocumentCode)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == pickDocumentCode && resultCode == RESULT_OK) {
             val uri = data?.data ?: return
-            processDocData(uri)
+            processDocumentAndCallUpload(uri)
         }
-        if (requestCode == REQUEST_CODE_CAMERA && resultCode == RESULT_OK) {
+        if (requestCode == requestCameraCode && resultCode == RESULT_OK) {
             val capturedImage = data?.extras?.get("data") as Bitmap
-            val base64Image = getBase64StringFromBitmap(capturedImage)
-            storeBase64AndShowDeleteUI(base64 = base64Image, name = "Camera", size = "Unknown")
+            val result = getBase64StringAndSizeFromBitmapForCamera(capturedImage)
+            val (base64String, imageSize) = result
+            callUploadDocumentAndUpdateAll3Places(
+                SaveAdditionalDocument(
+                    taskId = MyApp.localTempVarStore.taskId,
+                    docContentString64 = base64String,
+                    docSize = imageSize.toString()
+                )
+            )
         }
     }
 
-    private fun getBase64StringFromBitmap(bitmap: Bitmap): String? {
+    private fun getBase64StringAndSizeFromBitmapForCamera(bitmap: Bitmap): Pair<String?, Long> {
         val outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 10, outputStream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
         val byteArray = outputStream.toByteArray()
-        stringBase64 = Base64.encodeToString(byteArray, Base64.DEFAULT)
-        return stringBase64
+        val stringBase64 = Base64.encodeToString(byteArray, Base64.NO_WRAP)
+        val imageSize =
+            outputStream.size().toLong() // Get size from output stream after compression
+
+        return Pair(stringBase64, imageSize)
     }
 
 
-    private fun showDatePickerAndFillDate(view: TextView) {
-        showDatePickerFromCurrentDate(this@BasicDetailsActivity) { selectedDate ->
-            val year = selectedDate.get(Calendar.YEAR)
-            val month = selectedDate.get(Calendar.MONTH) + 1 // Months are 0-based
-            val day = selectedDate.get(Calendar.DAY_OF_MONTH)
+    @SuppressLint("Range")
+    private fun processDocumentAndCallUpload(uri: Uri) {
+        try {
+            var fileName: String? = null
+            var fileSize: Long = 0
 
-            view.text = "$day/$month/$year"
-        }
-    }
-
-    private fun fillDataOfStartApiAndApplyValidations() {
-        MyApp.localTempVarStore?.let { tempVarStorage ->
-            tempVarStorage.startTaskResponse?.let { response ->
-                response.data?.let { responseData ->
-                    responseData.sadadBillerCode?.let { binding.billerCodeEt.setText(it) }
-                    responseData.accountNumber?.let { binding.accountNumberEt.setText(it) }
-                    responseData.sadadBillerCode?.let { binding.billerCodeEt.setText(it) }
-                    when (responseData.paymentMethod) {
-                        AppConstants.KeyWords.paymentTypeCheck -> {
-                            paymentMethod = AppConstants.KeyWords.paymentTypeCheck
-                            binding.billerCodeEt.isEnabled = false
-                            binding.accountNumberEt.isEnabled = false
-                            binding.sadadDocExpiryValue.setOnClickListener(null)
-                            binding.leaseRentExpiryValue.setOnClickListener(null)
-                            binding.attachSadadDocIv.setOnClickListener(null)
-                            binding.attachLeaseRentVatIv.setOnClickListener(null)
-                        }
-
-                        AppConstants.KeyWords.paymentTypeSadad -> {
-                            paymentMethod = AppConstants.KeyWords.paymentTypeSadad
-                            binding.leaseRentExpiryValue.setOnClickListener(null)
-                            binding.attachLeaseRentVatIv.setOnClickListener(null)
-                            tagName = AppConstants.KeyWords.sadadDocumentTagName
-                        }
-
-                        AppConstants.KeyWords.paymentTypeIban -> {
-                            paymentMethod = AppConstants.KeyWords.paymentTypeIban
-                            binding.billerCodeEt.isEnabled = false
-                            binding.sadadDocExpiryValue.setOnClickListener(null)
-                            binding.attachSadadDocIv.setOnClickListener(null)
-                            tagName = AppConstants.KeyWords.leaseRentDocTagName
-                        }
-
-                        else -> {// do nothing
-                        }
+            contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                    fileSize = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE))
+                    if (fileSize > 10 * 1024 * 1024) { // 10 MB in bytes
+                        // Show toast message using Toast or a custom snackbar
+                        showToastMessage("File size exceeds 10 MB. Please choose a smaller file.")
+                        return
                     }
                 }
-                response.processId?.let { processId = it }
             }
-            taskId = tempVarStorage.taskId
-        }
-        fetchSubmitData()
-    }
+            if (fileName != null && fileSize > 0) {
+                contentResolver.takePersistableUriPermission(
+                    uri,
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION
+                )
 
-    private fun fetchSubmitData() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val submitTaskPOJO = MyApp.getMyDatabase().submitTaskDao().getSubmitTaskById(taskId)
-            if (submitTaskPOJO != null) {
-                val submitTaskRequest = createSubmitTaskRequest(submitTaskPOJO)
-                updateFieldsBasedOnSavedSubmitData(submitTaskRequest)
+                var inputStream: InputStream? = null
+                try {
+                    inputStream = contentResolver.openInputStream(uri) ?: return
+                    val bytes = inputStream.readBytes()
+                    stringBase64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+                    val saveAdditionalDocument = SaveAdditionalDocument(
+                        taskId = MyApp.localTempVarStore.taskId,
+                        docContentString64 = stringBase64,
+                        fileName = fileName,
+                        docSize = ((fileSize / 1024.0).toString() + " KB"),
+                        docId = ""  //id not available yet, need to upload the doc to API
+                    )
+                    callUploadDocumentAndUpdateAll3Places(saveAdditionalDocument)
+                } catch (e: Exception) {
+                    // Handle exception
+                } finally {
+                    inputStream?.close()
+                }
+            } else {
+                // Handle case where file name or size couldn't be retrieved
             }
+        } catch (e: Exception) {
+            showToastMessage("Error in parsing document!")
         }
     }
 
-    private fun updateFieldsBasedOnSavedSubmitData(submitTaskRequest: SubmitTaskRequest) {
-        submitTaskRequest.data?.let { data ->
-            data.sadadBillerCode?.let { binding.billerCodeEt.setText(it.toString()) }
-            binding.accountNumberEt.setText(data.accountNumber)
-            binding.sadadDocExpiryValue.text = data.sadadExpiryDate
-            binding.leaseRentExpiryValue.text = data.rentVATExpiryDate
+    private fun callUploadDocumentAndUpdateAll3Places(saveAdditionalDocument: SaveAdditionalDocument) {
+        if (saveAdditionalDocument.docContentString64 == null) {
+            showToastMessage("Please select document before uploading!")
+            return
         }
+
+        if (tagName.isEmpty()) {
+            showToastMessage("Unable to upload document Tag Name is Empty!")
+            return
+        }
+
+        val uploadDocumentRequest =
+            UploadDocumentRequest(
+                content = saveAdditionalDocument.docContentString64,
+                fileName = saveAdditionalDocument.fileName,
+                latitude = 0,
+                longitude = 0,
+                requestId = MyApp.localTempVarStore.taskResponse?.requestId,
+                tagName = tagName,
+                timeStamp = "",
+                userId = 123
+            )
+
+        showProgressBar()
+        viewModel.uploadDocument(
+            { successResponse ->
+                successResponse?.let { response ->
+                    hideProgressBar()
+                    if (response.docId != null) {
+                        saveAdditionalDocument.docId =
+                            response.docId
+                        submitTaskRequest.data.documents = //first, updating submit request for API
+                            listOf(SubmitTaskData.Document(saveAdditionalDocument.docId))
+
+                        if (saveAdditionalDocument.fileName != null) {  //second, updating delete layout and showing
+                            binding.docName.text =
+                                getLastChars(saveAdditionalDocument.fileName!!, 14)
+                        } else {
+                            binding.docName.text = "Unknown"
+                        }
+
+                        if (saveAdditionalDocument.docSize != null) {
+                            binding.docSize.text =
+                                getLastChars(saveAdditionalDocument.docSize!!, 12)
+                        } else {
+                            binding.docSize.text = "Unknown"
+                        }
+
+                        binding.rlDeleteDocLayout.visibility = View.VISIBLE
+
+                        submitTaskCompleteDocumentForRoom =
+                            saveAdditionalDocument  // third, saving complete doc for saving to room
+                    } else {
+                        showToastMessage("Document ID received empty!")
+                    }
+                }
+            },
+            { errorMessage ->
+                hideProgressBar()
+                showToastMessage("Unable to upload Document!")
+            }, taskId = currentTaskId,
+            body =
+            uploadDocumentRequest
+        )
     }
 
-    private fun createSubmitTaskRequest(submitTaskRequestPOJO: SubmitTaskRequestPOJO): SubmitTaskRequest {
-        val data = SubmitTaskRequest.SubmitTaskData(
-            accountNumber = submitTaskRequestPOJO.data.accountNumber,
-            additionalDocuments = submitTaskRequestPOJO.data.additionalDocuments as? List<SubmitTaskRequest.SubmitTaskData.Document?>,
-            documents = submitTaskRequestPOJO.data.documents as? List<SubmitTaskRequest.SubmitTaskData.Document?>,
-            paymentMethod = submitTaskRequestPOJO.data.paymentMethod,
-            rentVATExpiryDate = submitTaskRequestPOJO.data.rentVATExpiryDate,
-            sadadBillerCode = submitTaskRequestPOJO.data.sadadBillerCode,
-            sadadExpiryDate = submitTaskRequestPOJO.data.sadadExpiryDate
-        )
-
-        return SubmitTaskRequest(
-            data = data,
-            processId = submitTaskRequestPOJO.processId
-        )
+    private fun deleteDocumentClicked() {
+        submitTaskRequest.data.documents = listOf()   //first,  made it empty
+        binding.rlDeleteDocLayout.visibility = View.GONE  //second, delete visibility gone
+        submitTaskCompleteDocumentForRoom = null  //third
     }
 
-
-    private fun submitData() {
+    private fun submitDataToAPI() {   //note -  submitTaskRequest already have process id and document
         if (paymentMethod != null) {
             when (paymentMethod) {
                 AppConstants.KeyWords.paymentTypeCheck -> {
@@ -311,11 +400,25 @@ class BasicDetailsActivity : BaseActivity() {
                 }
 
                 AppConstants.KeyWords.paymentTypeSadad -> {
-                    submitInSADADCase()
+                    //for additional doc
+                    val additionalDocList = ArrayList<SubmitTaskData.Document>()
+                    saveAdditionalDocumentList.let {
+                        for (completeDoc in it) {
+                            additionalDocList.add(SubmitTaskData.Document(completeDoc.docId))
+                        }
+                    }
+                    submitInSADADCase(additionalDocList)
                 }
 
                 AppConstants.KeyWords.paymentTypeIban -> {
-                    submitInIbanCase()
+                    //for additional doc
+                    val additionalDocList = ArrayList<SubmitTaskData.Document>()
+                    saveAdditionalDocumentList.let {
+                        for (id in it) {
+                            additionalDocList.add(SubmitTaskData.Document(id.docId.toString()))
+                        }
+                    }
+                    submitInIbanCase(additionalDocList)
 
                 }
             }
@@ -324,20 +427,44 @@ class BasicDetailsActivity : BaseActivity() {
         }
     }
 
-    private fun submitInCheckCase() {
-        val docList = ArrayList<SubmitTaskRequest.SubmitTaskData.Document>()
-        val additionalDocList = ArrayList<SubmitTaskRequest.SubmitTaskData.Document>()
+    private fun getAdditionalDocListOfThisTask() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val documentsList =
+                MyApp.getMyDatabase().saveAdditionalDocumentDao()
+                    .getAllSavedDocumentsOfATask(currentTaskId.toString()) as ArrayList<SaveAdditionalDocumentPOJO>
+            saveAdditionalDocumentList = convertPOJOListToDocumentList(documentsList)
+        }
+    }
 
-        val submitTaskData = SubmitTaskRequest.SubmitTaskData(
-            additionalDocuments = additionalDocList,
+    private fun convertPOJOListToDocumentList(pojoList: ArrayList<SaveAdditionalDocumentPOJO>): ArrayList<SaveAdditionalDocument> {
+        val documentList = ArrayList<SaveAdditionalDocument>()
+        for (pojo in pojoList) {
+            val document = SaveAdditionalDocument(
+                taskId = pojo.taskId ?: 0,
+                fileName = pojo.docName,
+                docSize = pojo.docSize,
+                docContentString64 = pojo.docContentString64,
+                docId = pojo.docUploadId
+            )
+            documentList.add(document)
+        }
+        return documentList
+    }
+
+    private fun submitInCheckCase() {
+        val docList = ArrayList<SubmitTaskData.Document>()
+        val additionalDocList = ArrayList<SubmitTaskData.Document>()
+
+        //have to pass empty in check case
+        submitTaskRequest.data = SubmitTaskData(
+            additionalDocuments = additionalDocList,  //will be empty
             documents = docList,
             paymentMethod = paymentMethod,
         )
-        val submitTaskRequest = SubmitTaskRequest(processId = processId, data = submitTaskData)
-        callSubmitDataApi(taskId, submitTaskRequest)
+        callSubmitDataApi(currentTaskId, submitTaskRequest)
     }
 
-    private fun submitInSADADCase() {
+    private fun submitInSADADCase(additionalDocList: ArrayList<SubmitTaskData.Document>) {
         val accountNumber = binding.accountNumberEt.text.toString()
         if (accountNumber.isEmpty()) {
             showToastMessage("Enter account number")
@@ -357,64 +484,35 @@ class BasicDetailsActivity : BaseActivity() {
         val sadadExpiryDate = toIsoString(binding.sadadDocExpiryValue.text.toString())
         if (sadadExpiryDate == null) {
             showToastMessage("Select SADAD Expiry Date")
-        }
-        //for doc
-        var docList = ArrayList<SubmitTaskRequest.SubmitTaskData.Document>()
-        val document = SubmitTaskRequest.SubmitTaskData.Document(docId)
-        if (docId != "") {
-            docList = arrayListOf()
-            docList.add(document)
-        } else {
-            showToastMessage("Select Document to proceed!")
             return
         }
 
-        //for additional doc
-        val additionalDocList = ArrayList<SubmitTaskRequest.SubmitTaskData.Document>()
-        val additionalDocIdList = KotlinPrefkeeper.additionalDocIdsForSubmitApi
-        additionalDocIdList?.let {
-            for (id in it) {
-                additionalDocList.add(SubmitTaskRequest.SubmitTaskData.Document(id.toString()))
-            }
+        if (submitTaskRequest
+                .data.documents == null || submitTaskRequest.data.documents!!.isEmpty()
+        ) {
+            showToastMessage("Select Document")
+            return
         }
 
-        val submitTaskData = SubmitTaskRequest.SubmitTaskData(
-            sadadBillerCode = sadadBillerCode.toInt(),
-            accountNumber = accountNumber,
-            additionalDocuments = additionalDocList,
-            documents = docList,
-            paymentMethod = paymentMethod,
-            sadadExpiryDate = sadadExpiryDate
-        )
-        val submitTaskRequest = SubmitTaskRequest(processId = processId, data = submitTaskData)
-        callSubmitDataApi(taskId, submitTaskRequest)
+        submitTaskRequest.data =
+            SubmitTaskData(    //document is already updated by room and by selection
+                sadadBillerCode = sadadBillerCode.toInt(),
+                accountNumber = accountNumber,
+                documents = submitTaskRequest.data.documents,
+                additionalDocuments = additionalDocList,
+                paymentMethod = paymentMethod,
+                sadadExpiryDate = sadadExpiryDate
+            )
+        callSubmitDataApi(currentTaskId, submitTaskRequest)
     }
 
-    private fun submitInIbanCase() {
+    private fun submitInIbanCase(additionalDocList: ArrayList<SubmitTaskData.Document>) {
         if (!Utilities.IBANValidityCheck.checkIfIbanNumberIsValid(binding.accountNumberEt.text.toString())) {
             showToastMessage("Enter Valid IBAN number!")
             return
         }
 
         val accountNumber = binding.accountNumberEt.text.toString()
-        val document = SubmitTaskRequest.SubmitTaskData.Document(docId)
-        var docList = ArrayList<SubmitTaskRequest.SubmitTaskData.Document>()
-        if (docId != "") {
-            docList = arrayListOf()
-            docList.add(document)
-        } else {
-            showToastMessage("Select Document to proceed!")
-            return
-        }
-
-        //for additional doc
-        val additionalDocList = ArrayList<SubmitTaskRequest.SubmitTaskData.Document>()
-        val additionalDocIdList = KotlinPrefkeeper.additionalDocIdsForSubmitApi
-        additionalDocIdList?.let {
-            for (id in it) {
-                additionalDocList.add(SubmitTaskRequest.SubmitTaskData.Document(id.toString()))
-            }
-        }
 
         if (binding.leaseRentExpiryValue.text == null || binding.leaseRentExpiryValue.text.toString()
                 .isEmpty()
@@ -425,148 +523,23 @@ class BasicDetailsActivity : BaseActivity() {
         val leaseExpiryDate = toIsoString(binding.leaseRentExpiryValue.text.toString())
         if (leaseExpiryDate == null) {
             showToastMessage("Select Lease Expiry Date")
+            return
         }
-        val submitTaskData = SubmitTaskRequest.SubmitTaskData(
+        if (submitTaskRequest
+                .data.documents == null || submitTaskRequest.data.documents!!.isEmpty()
+        ) {
+            showToastMessage("Select Document")
+            return
+        }
+
+        submitTaskRequest.data = SubmitTaskData(
             accountNumber = accountNumber,
+            documents = submitTaskRequest.data.documents,
             additionalDocuments = additionalDocList,
-            documents = docList,
             paymentMethod = paymentMethod,
             rentVATExpiryDate = leaseExpiryDate
         )
-        val submitTaskRequest = SubmitTaskRequest(processId = processId, data = submitTaskData)
-        callSubmitDataApi(taskId, submitTaskRequest)
-    }
-
-
-    private fun pickDocumentAndGetBase64() {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-            addCategory(Intent.CATEGORY_OPENABLE)
-            type = "*/*" // Accepts various document types (adjust as needed)
-        }
-        startActivityForResult(intent, pickDocumentCode)
-    }
-
-    private fun processDocData(uri: Uri) {
-        try {
-            var fileName: String? = null
-            var fileSize: Long = 0
-
-            contentResolver.query(uri, null, null, null, null)?.use { cursor ->
-                if (cursor.moveToFirst()) {
-                    fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
-                    fileSize = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE)) ?: 0L
-
-                }
-            }
-
-            // Check if file name and size are retrieved
-            if (fileName != null && fileSize > 0) {
-                contentResolver.takePersistableUriPermission(
-                    uri,
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION
-                )
-
-                var inputStream: InputStream? = null
-                try {
-                    inputStream = contentResolver.openInputStream(uri) ?: return
-                    val bytes = inputStream.readBytes()
-                    stringBase64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
-                    storeBase64AndShowDeleteUI(
-                        base64 = stringBase64,
-                        name = fileName,
-                        size = ((fileSize / 1024.0).toString() + " KB")
-                    )
-                } catch (e: Exception) {
-                    // Handle exception
-                } finally {
-                    inputStream?.close()
-                }
-            } else {
-                // Handle case where file name or size couldn't be retrieved
-            }
-        } catch (e: Exception) {
-            showToastMessage("Error in parsing document!")
-        }
-    }
-
-
-    private fun storeBase64AndShowDeleteUI(name: String?, size: String?, base64: String?) {
-//        if (base64 == null) {
-//            showToastMessage("Unable to get content string")
-//            return
-//        }
-//        val saveAdditionalDocument = SaveAdditionalDocument(
-//            fileName = name, docSize = size, docContentString64 = base64
-//        )
-//
-//        var deleteView = binding.deleteSadadDoc
-//
-//        if (paymentMethod == AppConstants.KeyWords.iban) {
-//            deleteView = binding.deleteLeaseRentDoc    //checking which delete should work
-//        }
-//
-//        deleteView.visibility = View.VISIBLE
-//
-//        val docName: TextView = deleteView.findViewById(R.id.docName)
-//        val docSize: TextView = deleteView.findViewById(R.id.docSize)
-//        val docDelete: TextView = deleteView.findViewById(R.id.deleteDoc)
-//
-//        saveAdditionalDocument.fileName?.let {
-//            docName.text = getLastChars(it, 16)
-//        }
-//        size?.let {
-//            docSize.text = getLastChars(it, 10)
-//        }
-//        uploadDocument()
-//        docDelete.setOnClickListener {
-//            deleteView.visibility = View.GONE
-//            docId = ""
-//        }
-    }
-
-    private fun getLastChars(str: String, maxLength: Int): String {
-        val length = str.length
-        return if (length <= maxLength) str else str.substring(length - maxLength)
-    }
-
-    private fun uploadDocument() {
-        val taskId = MyApp.localTempVarStore.taskId
-        //     val taskId = 3263  // for testing
-        if (stringBase64 == null) {
-            showToastMessage("Please select document before uploading!")
-            return
-        }
-        val uploadDocumentRequest =
-            UploadDocumentRequest(
-                content = stringBase64,
-                fileName = "",
-                latitude = 0,
-                longitude = 0,
-                requestId = MyApp.localTempVarStore.taskResponse?.requestId,
-                tagName = tagName,
-                //       tagName = AppConstants.KeyWords.leaseRentDocTagName,    //for testing
-                timeStamp = "",
-                userId = 123
-            )
-
-        showProgressBar()
-        viewModel.uploadDocument(
-            { successResponse ->
-                successResponse?.let { response ->
-                    hideProgressBar()
-                    response.docId?.let {
-                        docId = it
-                        showToastMessage("Document Uploaded Successfully!")
-                    }
-                }
-            },
-            { errorMessage ->
-                hideProgressBar()
-                showToastMessage("Unable to upload Document!")
-            }, taskId = taskId,
-            body =
-            uploadDocumentRequest
-        )
+        callSubmitDataApi(currentTaskId, submitTaskRequest)
     }
 
     private fun callSubmitDataApi(taskId: Int, submitTaskRequest: SubmitTaskRequest) {
@@ -578,18 +551,66 @@ class BasicDetailsActivity : BaseActivity() {
                     it.flag?.let { flagNN ->
                         if (flagNN == "0") {
                             showToastMessage("Task Submitted Successfully!")
-                            launchNewActivityCloseAllOther(LsmHomeActivity::class.java)
+                            lifecycleScope.launch(Dispatchers.IO) {
+
+                                MyApp.getMyDatabase().saveAdditionalDocumentDao()
+                                    .deleteAllDocumentsOfTask(currentTaskId)  //deleting additional docs
+
+                                MyApp.getMyDatabase().startTaskDao()    //deleting start task  data
+                                    .deleteStartTaskByTaskId(currentTaskId)
+
+                                MyApp.getMyDatabase().submitTaskDao()    //deleting submit data
+                                    .deleteSubmitTaskByTaskId(currentTaskId)
+
+                                MyApp.getMyDatabase()
+                                    .taskResponseDao()    //deleting task response  data
+                                    .deleteTaskResponseByTaskId(currentTaskId)
+
+                                delay(100)
+                                launchNewActivityCloseAllOther(LsmHomeActivity::class.java)
+
+                            }
                         }
                     }
                 }
             },
             { errorMessage ->
                 hideProgressBar()
+                showToastMessage("Unable to submit!")
                 binding.progressBar.visibility = View.GONE
             }, taskId = taskId,
             body =
             submitTaskRequest
         )
+    }
+
+    private fun saveSubmitDetails() {
+        var sadadBillerInt = 0
+        if (binding.billerCodeEt.text.toString() != "") {
+            sadadBillerInt = binding.billerCodeEt.text.toString().toInt()
+        }
+        val accountNumber = binding.accountNumberEt.text.toString()
+        val sadadExpiryDate = binding.sadadDocExpiryValue.text.toString()
+        val rentVATExpiryDate = binding.leaseRentExpiryValue.text.toString()
+
+        val paymentMethod = paymentMethod
+
+        val submitTaskData = SubmitTaskRequestPOJO.SubmitTaskData(
+            accountNumber,
+            submitTaskCompleteDocumentForRoom,
+            paymentMethod,
+            rentVATExpiryDate,
+            sadadBillerInt,
+            sadadExpiryDate
+        )
+
+        val submitTaskRequestPOJO =
+            SubmitTaskRequestPOJO(currentTaskId, submitTaskData, null) // processId can be null
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            MyApp.getMyDatabase().submitTaskDao().insertSubmitTask(submitTaskRequestPOJO)
+        }
+        showToastMessage("Submit Data Saved!")
     }
 
     private fun showProgressBar() {
@@ -598,5 +619,10 @@ class BasicDetailsActivity : BaseActivity() {
 
     private fun hideProgressBar() {
         binding.progressBar.visibility = View.GONE
+    }
+
+    private fun getLastChars(str: String, maxLength: Int): String {
+        val length = str.length
+        return if (length <= maxLength) str else str.substring(length - maxLength)
     }
 }

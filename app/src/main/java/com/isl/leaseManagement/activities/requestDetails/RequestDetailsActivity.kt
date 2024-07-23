@@ -49,7 +49,7 @@ class RequestDetailsActivity : BaseActivity() {
         viewModel.getTaskRequestDetails(
             { successResponse ->
                 successResponse?.let { requestDetails ->
-                    binding.landlordNameEt.text = requestDetails.city ?: ""
+                    binding.landlordNameEt.text = requestDetails.landlordName ?: ""
                     binding.landlordNameArabicEt.text = requestDetails.landlordNameInArabic ?: ""
                     binding.landlordIdEt.text = requestDetails.landlordId ?: ""
                     binding.landlordTypeEt.text = requestDetails.landlordType ?: ""

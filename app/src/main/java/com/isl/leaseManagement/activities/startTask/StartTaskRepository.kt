@@ -4,6 +4,7 @@ import com.isl.leaseManagement.api.ApiClient
 import com.isl.leaseManagement.dataClass.requests.StartTaskRequest
 import com.isl.leaseManagement.dataClass.responses.SingleMessageResponse
 import com.isl.leaseManagement.dataClass.responses.StartTaskResponse
+import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
 import io.reactivex.Observable
 import io.reactivex.Observer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -19,7 +20,9 @@ class StartTaskRepository {
         taskId: Int,
         body: StartTaskRequest
     ) {
-        val observable: Observable<StartTaskResponse> = api!!.startTask(taskId, body = body)
+        val lsmUserId = KotlinPrefkeeper.lsmUserId ?: ""
+        val observable: Observable<StartTaskResponse> =
+            api!!.startTask(userId = lsmUserId, taskId, body = body)
         observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
             .subscribe(object : Observer<StartTaskResponse> {
                 override fun onSubscribe(d: Disposable) {

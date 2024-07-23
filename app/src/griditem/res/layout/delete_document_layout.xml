@@ -9,39 +9,56 @@
         android:background="@color/white"
         android:padding="@dimen/_8sdp">
 
-        <com.isl.leaseManagement.utils.CustomTextView
-            android:id="@+id/docName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_4sdp"
-            android:maxLength="16"
-            android:textColor="@color/color_606F8A"
-            android:textSize="@dimen/_14ssp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Whatsapp Image ABCDEFGHIJK" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-        <com.isl.leaseManagement.utils.CustomTextView
-            android:id="@+id/docSize"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:maxLength="10"
-            android:textColor="@color/color_606F8A"
-            android:textSize="@dimen/_14ssp"
-            tools:text="65 KB" />
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/docName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:maxLength="16"
+                android:textColor="@color/color_606F8A"
+                android:textSize="@dimen/_14ssp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="Whatsapp Image ABCDEFGHIJK" />
 
-        <com.isl.leaseManagement.utils.CustomTextView
-            android:id="@+id/deleteDoc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginEnd="@dimen/_4sdp"
-            android:maxLength="30"
-            android:text="@string/delete"
-            android:textColor="@color/orange"
-            android:textSize="@dimen/_14ssp" />
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/docSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_toEndOf="@id/docName"
+                android:maxLength="10"
+                android:textColor="@color/color_606F8A"
+                android:textSize="@dimen/_14ssp"
+                tools:text="65 KB" />
 
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/deleteDoc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_4sdp"
+                android:layout_toEndOf="@id/docSize"
+                android:maxLength="30"
+                android:text="@string/delete"
+                android:textColor="@color/orange"
+                android:textSize="@dimen/_14ssp" />
+
+            <ImageView
+                android:id="@+id/ivLine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
+                android:layout_below="@id/deleteDoc"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:contentDescription="@string/image"
+                android:src="@drawable/grey_line" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 </layout>

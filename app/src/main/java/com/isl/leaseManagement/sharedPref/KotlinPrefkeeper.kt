@@ -23,17 +23,10 @@ object KotlinPrefkeeper {
         set(isOnDuty) = prefs!!.edit().putBoolean(AppConstants.PrefsName.isOnDuty, isOnDuty)
             .apply()
 
-
-    var additionalDocIdsForSubmitApi: IntArray?
-        get() {
-            val json = prefs?.getString(AppConstants.PrefsName.ADDITIONAL_DOCUMENTS_DOC_ID, null)
-            return if (json.isNullOrEmpty()) null else gson.fromJson(json, IntArray::class.java)
-        }
-        set(value) {
-            val json = if (value != null) gson.toJson(value) else null
-            prefs!!.edit().putString(AppConstants.PrefsName.ADDITIONAL_DOCUMENTS_DOC_ID, json)
-                .apply()
-        }
+    var lsmUserId: String?
+        get() = prefs!!.getString(AppConstants.PrefsName.lsmUserId, "")
+        set(lsmUserId) = prefs!!.edit().putString(AppConstants.PrefsName.lsmUserId, lsmUserId)
+            .apply()
 
     fun clear() = prefs?.edit()?.clear()?.apply()
 

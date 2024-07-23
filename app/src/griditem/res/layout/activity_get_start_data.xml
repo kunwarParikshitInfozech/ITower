@@ -10,23 +10,13 @@
         android:theme="@style/LightTheme"
         tools:context="com.isl.leaseManagement.activities.taskInProgress.TaskInProgressActivity">
 
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.35" />
+
 
         <com.isl.leaseManagement.utils.CustomTextView
             android:id="@+id/myTasksText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_8sdp"
             android:text="@string/loading_your_content_this_may_take_a_few_seconds"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp"
@@ -46,6 +36,17 @@
             android:src="@drawable/back_icon_vector"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.35" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

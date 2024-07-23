@@ -28,8 +28,7 @@ object AppConstants {
 
     object PrefsName {
         const val isOnDuty = "isOnDuty"
-        const val ADDITIONAL_DOCUMENTS_DOC_ID = "additionalDocumentsDocId"
-        const val ADDITIONAL_DOCUMENTS_DATA_LIST = "AdditionalDocumentsDataList"
+        const val lsmUserId = "lsmUserId"
     }
 
 }

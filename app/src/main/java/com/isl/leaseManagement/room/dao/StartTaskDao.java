@@ -24,4 +24,7 @@ public interface StartTaskDao {
 
     @Query("SELECT * FROM start_task_table WHERE taskId = :taskId")
     StartTaskResponsePOJO getStartTaskById(int taskId);
+
+    @Query("DELETE FROM start_task_table WHERE taskId = :taskId")
+    int deleteStartTaskByTaskId(int taskId);
 }

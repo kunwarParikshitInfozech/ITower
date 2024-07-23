@@ -25,7 +25,7 @@
                 android:layout_marginTop="@dimen/_12sdp"
                 android:text="@string/close"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/color_253746"
                 android:textSize="@dimen/_16ssp" />
 
 
@@ -37,7 +37,7 @@
                 android:layout_marginTop="@dimen/_8sdp"
                 android:text="@string/task_details"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/color_001E60"
                 android:textSize="@dimen/_18ssp"
                 app:layout_constraintEnd_toEndOf="parent" />
         </RelativeLayout>
@@ -114,11 +114,11 @@
                     android:id="@+id/forecastStartDateValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/na"
                     android:textColor="@color/color_00AC69"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="@id/taskPriority"
-                    app:layout_constraintTop_toTopOf="@id/forecastStartDate"
-                    android:text="@string/na" />
+                    app:layout_constraintTop_toTopOf="@id/forecastStartDate" />
 
                 <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/forecastEndDate"
@@ -135,11 +135,11 @@
                     android:id="@+id/forecastEndDateValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/na"
                     android:textColor="@color/color_ff3B30"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="@id/taskPriority"
-                    app:layout_constraintTop_toTopOf="@id/forecastEndDate"
-                    android:text="@string/na" />
+                    app:layout_constraintTop_toTopOf="@id/forecastEndDate" />
 
                 <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/taskStatus"
@@ -257,11 +257,11 @@
                     android:id="@+id/planStartDateValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/na"
                     android:textColor="@color/color_48484A"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="@id/taskPriority"
-                    app:layout_constraintTop_toTopOf="@id/planStartDate"
-                    android:text="@string/na" />
+                    app:layout_constraintTop_toTopOf="@id/planStartDate" />
 
                 <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/planEndDate"
@@ -278,11 +278,11 @@
                     android:id="@+id/planEndDateValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/na"
                     android:textColor="@color/color_48484A"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="@id/taskPriority"
-                    app:layout_constraintTop_toTopOf="@id/planEndDate"
-                    android:text="@string/na" />
+                    app:layout_constraintTop_toTopOf="@id/planEndDate" />
 
                 <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/actualStartDate"
@@ -299,11 +299,11 @@
                     android:id="@+id/actualStartDateValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/na"
                     android:textColor="@color/color_48484A"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="@id/taskPriority"
-                    app:layout_constraintTop_toTopOf="@id/actualStartDate"
-                    android:text="@string/na" />
+                    app:layout_constraintTop_toTopOf="@id/actualStartDate" />
 
                 <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/actualEndDate"
@@ -320,11 +320,11 @@
                     android:id="@+id/actualEndDateValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="@string/na"
                     android:textColor="@color/color_48484A"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="@id/taskPriority"
-                    app:layout_constraintTop_toTopOf="@id/actualEndDate"
-                    android:text="@string/na" />
+                    app:layout_constraintTop_toTopOf="@id/actualEndDate" />
 
                 <View
                     android:id="@+id/line3"
@@ -350,11 +350,11 @@
                     android:id="@+id/requesterValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="-"
                     android:textColor="@color/color_48484A"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="@id/taskPriority"
-                    app:layout_constraintTop_toTopOf="@id/requester"
-                    android:text="-" />
+                    app:layout_constraintTop_toTopOf="@id/requester" />
 
                 <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/siteTowerType"

@@ -10,7 +10,6 @@ public class SaveAdditionalDocumentPOJO {
     @PrimaryKey
     @NonNull
     private final String docContentString64;
-
     private final String docName;
     private final String docSize;
     private final String docUploadId;
