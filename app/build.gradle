@@ -59,7 +59,7 @@ android {
         //applicationId "infozech.zamil" //replace by "voltalia.com.sa"
         //applicationId "in.clairvoyant.imaintain.activity"
         versionCode 157   // 35   _@-
-        versionName "3.57"     //Bangladesh,Kenya 1.0 and Manymar 1.34
+        versionName "3.62"     //Bangladesh,Kenya 1.0 and Manymar 1.34
         useLibrary 'org.apache.http.legacy'
         multiDexEnabled true
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'

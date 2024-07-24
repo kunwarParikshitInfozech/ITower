@@ -466,8 +466,6 @@ public class ValidateUDetails extends Activity {
                 }
             });
         }
-
-        KotlinPrefkeeper.INSTANCE.clear();
     }
 
     private void performLogin() {

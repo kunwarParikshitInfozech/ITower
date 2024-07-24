@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.content.pm.ServiceInfo;
 import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -65,17 +66,19 @@ public class UserTrackingService extends Service {
     private FusedLocationProviderClient fusedLocationClient;
     AppPreferences mAppPreferences;
     ResponseGetUserInfo response;
-    String netType = "",autoTime = "";
+    String netType = "", autoTime = "";
     boolean status;
     public int signalStrengthValue;
     private PowerManager.WakeLock wakeLock;
+
     @Override
     public void onCreate() {
         super.onCreate();
         mAppPreferences = new AppPreferences(this);
         handler = new Handler();
        LOCATION_INTERVAL = Integer.parseInt(mAppPreferences.getTimeInterval());
-        startForeground(NOTIFICATION_ID, createNotification("Service has been started"));
+   //     LOCATION_INTERVAL = 6000;
+        startForeground(NOTIFICATION_ID, createNotification("Service has been started"), ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         getLocation();
         acquireWakeLock();
@@ -85,7 +88,6 @@ public class UserTrackingService extends Service {
 //        }
 
     }
-
 
     private void startLocationUpdates() {
         handler.postDelayed(runnable = new Runnable() {
@@ -98,8 +100,6 @@ public class UserTrackingService extends Service {
     }
 
 
-
-
     public void getLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
@@ -108,26 +108,24 @@ public class UserTrackingService extends Service {
         fusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                if(location!=null) {
+                if (location != null) {
 
-                    saveData(location.getLatitude(),location.getLongitude());
-                  //  Toast.makeText(UserTrackingService.this,"Location Update: " + location.getLatitude() + ", " + location.getLongitude(),Toast.LENGTH_SHORT).show();
+                    saveData(location.getLatitude(), location.getLongitude());
+                    //  Toast.makeText(UserTrackingService.this,"Location Update: " + location.getLatitude() + ", " + location.getLongitude(),Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Location Update: " + location.getLatitude() + ", " + location.getLongitude());
                 }
-
-
             }
         });
         fusedLocationClient.getLastLocation().addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(UserTrackingService.this,"Fused Location Failure!!",Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserTrackingService.this, "Fused Location Failure!!", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
-    public void saveData(double latitude,double longitude) {
+    public void saveData(double latitude, double longitude) {
         DateFormat df = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
         String date = df.format(Calendar.getInstance().getTime());
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -175,8 +173,7 @@ public class UserTrackingService extends Service {
         response.setImei("");
         response.setGps(String.valueOf(1));
         response.setMock("" + "~" + true);
-        if(mAppPreferences.getCheckInSataus().equalsIgnoreCase("First Time"))
-        {
+        if (mAppPreferences.getCheckInSataus().equalsIgnoreCase("First Time")) {
             response.setCheckInStatus("IN");
             mAppPreferences.setCheckInStatus("");
         }
@@ -184,8 +181,7 @@ public class UserTrackingService extends Service {
 //        {
 //            response.setCheckInStatus("OUT");
 //        }
-        else
-        {
+        else {
             response.setCheckInStatus("");
         }
 
@@ -228,7 +224,6 @@ public class UserTrackingService extends Service {
     }
 
 
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -244,7 +239,7 @@ public class UserTrackingService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-       releaseWakeLock();
+        releaseWakeLock();
         // Stop the foreground service and remove the notification
         createNotification("Service has been stopped");
         stopForeground(true);
@@ -310,7 +305,7 @@ public class UserTrackingService extends Service {
         okclient.connectTimeout(120, TimeUnit.SECONDS);
         okclient.readTimeout(120, TimeUnit.SECONDS);
         okclient.writeTimeout(120, TimeUnit.SECONDS);
-        String BaseUrl=Utils.msg(UserTrackingService.this, "831");
+        String BaseUrl = Utils.msg(UserTrackingService.this, "831");
 
         Retrofit builder = new Retrofit.Builder().baseUrl(BaseUrl).
                 addConverterFactory(GsonConverterFactory.create()).client(okclient.build()).build();

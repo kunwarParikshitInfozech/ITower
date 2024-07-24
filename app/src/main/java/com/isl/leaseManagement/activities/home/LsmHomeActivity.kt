@@ -54,13 +54,15 @@ class LsmHomeActivity : BaseActivity() {
         mAppPref = AppPreferences(this@LsmHomeActivity)
         val deviceToken = mAppPref.gcmRegistationId
         val loginId = mAppPref.loginId
-        val uuid = UUID.randomUUID()
+        if (KotlinPrefkeeper.deviceUUID == null || KotlinPrefkeeper.deviceUUID!!.isEmpty()) {  //updating only after logout (as data will be cleared)
+            KotlinPrefkeeper.deviceUUID = UUID.randomUUID().toString()
+        }
 
         val fetchDeviceIDRequest =
             FetchDeviceIDRequest(
                 loginId = loginId,
                 pushToken = deviceToken,
-                deviceId = uuid.toString()
+                deviceId = KotlinPrefkeeper.deviceUUID
             )
         showProgressBar()
         viewModel.fetchUserId(
@@ -70,6 +72,7 @@ class LsmHomeActivity : BaseActivity() {
                     if (response.userId != null) {
                         KotlinPrefkeeper.lsmUserId = response.userId.toString()
                         init2()
+      //                  showToastMessage("User's ID is ${KotlinPrefkeeper.lsmUserId}")
                     } else {
                         showToastMessage("User's ID is empty")
                         finish()
@@ -78,14 +81,15 @@ class LsmHomeActivity : BaseActivity() {
             },
             { errorMessage ->
                 //for testing only --
-                KotlinPrefkeeper.lsmUserId = "13"
-                hideProgressBar()
-                init2()
+//                KotlinPrefkeeper.lsmUserId = "13"
+//                hideProgressBar()
+//                hideProgressBar()
+//                init2()
 
                 //original code
-//                hideProgressBar()
-//                showToastMessage("Unable to get user's ID")
-//                finish()
+                hideProgressBar()
+                showToastMessage("Unable to get user's ID")
+                finish()
             },
             body =
             fetchDeviceIDRequest

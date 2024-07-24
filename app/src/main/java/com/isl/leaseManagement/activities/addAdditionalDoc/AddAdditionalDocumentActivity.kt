@@ -194,7 +194,11 @@ class AddAdditionalDocumentActivity : BaseActivity() {
 
     private fun getBase64StringAndSizeFromBitmapForCamera(bitmap: Bitmap): Pair<String?, Long> {
         val outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+        bitmap.compress(
+            Bitmap.CompressFormat.JPEG,
+            80,
+            outputStream
+        )   //around 30 percent compression
         val byteArray = outputStream.toByteArray()
         val stringBase64 = Base64.encodeToString(byteArray, Base64.NO_WRAP)
         val imageSize =
@@ -202,6 +206,7 @@ class AddAdditionalDocumentActivity : BaseActivity() {
 
         return Pair(stringBase64, imageSize)
     }
+
 
     private fun pickDocumentAndGetBase64() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
@@ -243,7 +248,7 @@ class AddAdditionalDocumentActivity : BaseActivity() {
                         taskId = MyApp.localTempVarStore.taskId,
                         docContentString64 = stringBase64,
                         fileName = fileName,
-                        docSize = ((fileSize / 1024.0).toString() + " KB"),
+                        docSize = (((fileSize / 1024.0).toInt()).toString() + " KB"),
                         docId = ""  //id not available yet, need to upload the doc to API
                     )
                     callUploadDocumentAndShowDeleteRv(saveAdditionalDocument)
@@ -259,6 +264,7 @@ class AddAdditionalDocumentActivity : BaseActivity() {
             showToastMessage("Error in parsing document!")
         }
     }
+
 
     private fun callUploadDocumentAndShowDeleteRv(saveAdditionalDocument: SaveAdditionalDocument) {
         val taskId = MyApp.localTempVarStore.taskId

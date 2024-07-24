@@ -29,6 +29,7 @@ object AppConstants {
     object PrefsName {
         const val isOnDuty = "isOnDuty"
         const val lsmUserId = "lsmUserId"
+        const val deviceUUID = "deviceUUID"
     }
 
 }

@@ -212,7 +212,7 @@ public class HomeFragement extends Fragment {
         UTRoleRights = dbHelper.getSubMenuRight("UserTrackOnOff", "UserTrackModule");
         if (mAppPreferences.getTrackingOnOff().equalsIgnoreCase("ON") &&
                 UTRoleRights.equalsIgnoreCase("1")) {
-            //           checkInOut.setVisibility(View.VISIBLE);
+              checkInOut.setVisibility(View.VISIBLE);
             if (mAppPreferences.getCheckIn().equalsIgnoreCase("Y")) {
 //                checkOut.setBackground(null);
 //                checkOut.setTextColor(getResources().getColor(R.color.black));
@@ -233,7 +233,6 @@ public class HomeFragement extends Fragment {
             }
 
         } else {
-            ;
             checkInOut.setVisibility(View.GONE);
         }
 

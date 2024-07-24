@@ -55,6 +55,7 @@ import com.isl.home.module.NotificationListFrag;
 import com.isl.home.module.NotificationSettingFrag;
 import com.isl.home.module.PendingFrag;
 import com.isl.home.module.RejectFrag;
+import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper;
 import com.isl.modal.MultiLanguageList;
 import com.isl.modal.ResponceLoginList;
 import com.isl.modal.Response;
@@ -142,8 +143,6 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         try {
             setContentView(R.layout.activity_home);
-
-
             try {
                 pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             } catch (PackageManager.NameNotFoundException e) {
@@ -634,6 +633,9 @@ public class HomeActivity extends AppCompatActivity
                         getApplicationContext().getPackageName().equalsIgnoreCase
                                 ("tawal.com.sa")) {
                     signOut();
+                    String uuid = KotlinPrefkeeper.INSTANCE.getDeviceUUID();  // not deleting this even with logout
+                    KotlinPrefkeeper.INSTANCE.clear();   // clearing kotlin shared pref
+                    KotlinPrefkeeper.INSTANCE.setDeviceUUID(uuid);
                     new LogoutAuth2(HomeActivity.this).execute();
                     //  new LogoutTask1(HomeActivity.this).execute();
 

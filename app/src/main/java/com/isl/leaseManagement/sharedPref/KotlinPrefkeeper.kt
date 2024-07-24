@@ -28,6 +28,11 @@ object KotlinPrefkeeper {
         set(lsmUserId) = prefs!!.edit().putString(AppConstants.PrefsName.lsmUserId, lsmUserId)
             .apply()
 
+    var deviceUUID: String?
+        get() = prefs!!.getString(AppConstants.PrefsName.deviceUUID, "")
+        set(deviceUUID) = prefs!!.edit().putString(AppConstants.PrefsName.deviceUUID, deviceUUID)
+            .apply()
+
     fun clear() = prefs?.edit()?.clear()?.apply()
 
 

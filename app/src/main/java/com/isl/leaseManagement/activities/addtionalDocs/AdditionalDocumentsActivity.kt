@@ -1,11 +1,22 @@
 package com.isl.leaseManagement.activities.addtionalDocs
 
+import android.Manifest
 import android.app.Dialog
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.ContentValues
+import android.content.Context
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.util.Base64
 import android.view.Gravity
 import android.view.WindowManager
+import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -26,7 +37,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.FileOutputStream
 import java.util.UUID
 
 class AdditionalDocumentsActivity : BaseActivity() {
@@ -69,10 +79,10 @@ class AdditionalDocumentsActivity : BaseActivity() {
         val documentList = ArrayList<SaveAdditionalDocument>()
         for (pojo in pojoList) {
             val document = SaveAdditionalDocument(
-                taskId = pojo.getTaskId() ?: 0, // Handle potential null taskId
-                fileName = pojo.getDocName(),
-                docSize = pojo.getDocSize(),
-                docContentString64 = pojo.getDocContentString64(),
+                taskId = pojo.taskId ?: 0, // Handle potential null taskId
+                fileName = pojo.docName,
+                docSize = pojo.docSize,
+                docContentString64 = pojo.docContentString64,
                 docId = pojo.docUploadId
             )
             documentList.add(document)
@@ -90,10 +100,13 @@ class AdditionalDocumentsActivity : BaseActivity() {
                     }
 
                     override fun docDownload(saveAdditionalDocument: SaveAdditionalDocument) {
-                        if (saveAdditionalDocument.docContentString64 != null) {
-                            downloadFileFromBase64(saveAdditionalDocument.docContentString64!!)
+                        if (saveAdditionalDocument.docContentString64 != null && saveAdditionalDocument.fileName != null) {
+                            downloadFileFromBase64(
+                                saveAdditionalDocument.docContentString64!!,
+                                saveAdditionalDocument.fileName!!
+                            )
                         } else {
-                            showToastMessage("Unable to download, Base 64 not found")
+                            showToastMessage("Unable to download, Base 64 or filename not found")
                         }
 
                     }
@@ -102,24 +115,104 @@ class AdditionalDocumentsActivity : BaseActivity() {
         binding.rvDocumentList.adapter = additionalDocumentAdapter
     }
 
-    fun downloadFileFromBase64(base64String: String) {
-        val decodedBytes = Base64.decode(base64String, Base64.DEFAULT)
-        val context = this
-        val fileName = generateUniqueFileName()
-        val outputFile = File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS),
-            fileName
-        )
-        if (outputFile.exists()) {
-            outputFile.delete()
-        }
-        val outputStream = FileOutputStream(outputFile)
-        outputStream.write(decodedBytes)
-        outputStream.close()
-
-        // Inform the user about the downloaded file (optional)
-        showToastMessage("File downloaded: $fileName") // Or use a Snackbar
+    fun getFileExtensionWithDot(filename: String): String {
+        val lastDotIndex = filename.lastIndexOf('.')
+        return if (lastDotIndex != -1) filename.substring(lastDotIndex) else ".png"
     }
+
+    private fun downloadFileFromBase64(base64String: String, fileName: String) {
+        val mimeExtension = getFileExtensionWithDot(fileName)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            val fileName = generateUniqueFileName() + mimeExtension
+            val values = ContentValues().apply {
+                put(MediaStore.Downloads.DISPLAY_NAME, fileName)
+                //         put(MediaStore.Downloads.MIME_TYPE, mimeType)
+                put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS)
+            }
+
+            val uri = contentResolver.insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values)
+            showToastMessage("File $fileName downloaded successfully!")
+            if (uri != null) {
+                saveFileToUri(uri, base64String)
+            } else {
+                showToastMessage("Failed to create file")
+            }
+        } else {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                showToastMessage("Permission not granted")
+                return
+            }
+
+            saveFile(base64String, fileName)
+        }
+    }
+
+
+    private fun saveFile(base64String: String, nameOfFile: String) {
+        try {
+            val decodedBytes = Base64.decode(base64String, Base64.DEFAULT)
+            val fileName = generateUniqueFileName() + getFileExtensionWithDot(nameOfFile)
+            val outputFile =
+                File(this.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), fileName)
+            outputFile.parentFile?.mkdirs()
+
+            outputFile.outputStream().use { outputStream ->
+                outputStream.write(decodedBytes)
+            }
+            showToastMessage("File $fileName downloaded successfully!")
+            notifyFileDownloaded(outputFile.absolutePath)
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showToastMessage("Exception Occurred")
+        }
+    }
+
+
+    private fun saveFileToUri(uri: Uri, base64String: String) {
+        try {
+            val decodedBytes = Base64.decode(base64String, Base64.DEFAULT)
+            contentResolver.openOutputStream(uri)?.use { outputStream ->
+                outputStream.write(decodedBytes)
+            }
+
+            notifyFileDownloaded(uri.toString())
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            showToastMessage("Exception Occurred")
+        }
+    }
+
+
+    private fun notifyFileDownloaded(filePath: String) {
+        val channelId = "download_channel"
+        val channelName = "Download Channel"
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(channelId, channelName, importance)
+            val notificationManager =
+                this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val notificationBuilder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.download_icon)
+            .setContentTitle("File Downloaded")
+            .setContentText("File saved to: $filePath")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+        val notificationManager =
+            this.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(
+            100,
+            notificationBuilder.build()
+        )
+    }
+
 
     private fun generateUniqueFileName(): String {
         val timestamp = System.currentTimeMillis().toString()
@@ -145,6 +238,10 @@ class AdditionalDocumentsActivity : BaseActivity() {
             dialog.dismiss()
         }
         binding.documentNameValue.text = saveAdditionalDocument.fileName ?: ""
+        binding.uploadDateTimeValue.text = saveAdditionalDocument.dateOfSaving ?: ""
+        MyApp.localTempVarStore?.startTaskResponse?.data?.paymentMethod?.let {
+            binding.documentTypeValue.text = it
+        }
     }
 
     private fun showActionsPopup() {

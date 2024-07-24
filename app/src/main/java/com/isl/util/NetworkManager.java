@@ -18,11 +18,12 @@ public class NetworkManager {
     public void getToken(final TokenCallback callback) {
         // Make network request to retrieve token
         JsonObject jsonObject = new JsonObject();
-      //  jsonObject.addProperty("username","SOE_RSVC");
-      //  jsonObject.addProperty("password","Soe@202030");
-
-        jsonObject.addProperty("username","amistya");
-        jsonObject.addProperty("password","a");
+//        jsonObject.addProperty("username","SOE_RSVC");
+//        jsonObject.addProperty("password","Soe@202030");
+        jsonObject.addProperty("username","superadmin");
+        jsonObject.addProperty("password","tms@1234");
+//        jsonObject.addProperty("username","amistya");
+//        jsonObject.addProperty("password","a");
         IApiRequest request = RetrofitApiClient.getRequest();
         Call<ResponseBody> call = request.getToken(jsonObject);
         call.enqueue(new Callback<ResponseBody>() {
