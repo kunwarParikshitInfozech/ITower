@@ -79,6 +79,10 @@
         android:usesCleartextTraffic="false">
 
         <activity
+            android:name="com.isl.leaseManagement.activities.Notification.NotificationDetailActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
             android:name="com.isl.leaseManagement.activities.filter.FilterTasksActivity"
             android:exported="false"
             android:theme="@style/LightTheme" />

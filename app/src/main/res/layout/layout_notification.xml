@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:paddingTop="@dimen/_10sdp"
+    android:paddingBottom="@dimen/_10sdp"
+    android:layout_marginTop="@dimen/_10sdp"
+    android:background="@color/white"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_centerVertical="true"
+        android:id="@+id/imgview_ilease"
+        android:src="@drawable/irelease"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/_8sdp"
+        android:layout_toRightOf="@id/imgview_ilease"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/txtview_notificationSubject"
+            android:textFontWeight="600"
+            android:textSize="@dimen/_14ssp"
+            android:textColor="@color/black"
+            android:text="iLease field work notification"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:layout_marginTop="@dimen/_5sdp"
+            android:id="@+id/txtview_siteid"
+            android:textSize="@dimen/_12ssp"
+            android:textColor="#606F8A"
+            android:text="Site ID : 231231"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:layout_marginTop="@dimen/_5sdp"
+            android:id="@+id/txtview_date"
+            android:textSize="@dimen/_12ssp"
+            android:textColor="#606F8A"
+            android:text="20.07.2024  14:04:03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgview_next"
+        android:layout_width="@dimen/_30sdp"
+        android:layout_height="@dimen/_30sdp"
+        android:layout_alignParentRight="true"
+        android:layout_centerInParent="true"
+        android:src="@drawable/tasks_click_icon" />
+
+</RelativeLayout>

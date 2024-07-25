@@ -1150,4 +1150,15 @@ public class AppPreferences {
 		prefsEditor.commit();
 	}
 
+	public void setNotificationList(String list)
+	{
+		prefsEditor.putString("notilist",list);
+		prefsEditor.commit();
+	}
+
+	public String getNotificationList()
+	{
+		return appSharedPrefs.getString("notilist",null);
+	}
+
 }

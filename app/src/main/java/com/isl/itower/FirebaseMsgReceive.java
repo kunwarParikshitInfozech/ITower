@@ -3,6 +3,8 @@ package com.isl.itower;
  * Created by dhakan on 7/4/2018.
  */
 
+import static com.isl.workflow.constant.Constants.gson;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -19,12 +21,15 @@ import androidx.core.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.isl.dao.DataBaseHelper;
 import com.isl.dao.cache.AppPreferences;
 import com.isl.energy.withdrawal.FuelPurchaseGridRPT;
 import com.isl.home.module.NotificationUpdate;
 import com.isl.incident.TicketDetailsTabs;
+import com.isl.leaseManagement.activities.Notification.NotificationDetailActivity;
 import com.isl.modal.BeanAddNotification;
+import com.isl.modal.NotificationListItem;
 import com.isl.notification.ShortcutBadger;
 import com.isl.preventive.PMTabs;
 import com.isl.user.tracking.GetUserInfoService;
@@ -43,15 +48,17 @@ public class FirebaseMsgReceive extends FirebaseMessagingService {
     AppPreferences mAppPreferences;
     DataBaseHelper db;
     BeanAddNotification temp;
+    ArrayList<NotificationListItem> notificationListItem;
 
     String notification_type, tkt_id, SiteId, AlarmDescription, UpdatedFields, AssignedTo, Duration, EscalationLevel, ActivityType,
-            Status, ScheduleDate, RunHour, CurrentRunHour, data, fillingQty, dgType, fillDate, genMessage, subject, DoneDate, RejectBy;
+            Status, ScheduleDate, RunHour, CurrentRunHour, data, fillingQty, dgType, fillDate, genMessage, subject, DoneDate, RejectBy,task,assignedTime,requestId;
     Context homeScreen;
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
         mAppPreferences = new AppPreferences(this);
         temp = new BeanAddNotification();
+        notificationListItem = new ArrayList<>();
 
         if (remoteMessage.getData() != null) {
             if (remoteMessage.getData().get("message") != null &&
@@ -203,6 +210,18 @@ public class FirebaseMsgReceive extends FirebaseMessagingService {
                 String tkt_mode = dataTS[counter].substring(position + 1, dataTS[counter].length());
                 temp.setTkt_mode(tkt_mode);
             }
+            else if (dataTS[counter].contains("AssignedTime")) {
+                int position = dataTS[counter].indexOf("~");
+                assignedTime = dataTS[counter].substring(position + 1, dataTS[counter].length());
+            }
+            else if (dataTS[counter].contains("Request Id")) {
+                int position = dataTS[counter].indexOf("~");
+                requestId = dataTS[counter].substring(position + 1, dataTS[counter].length());
+            }
+            else if (dataTS[counter].contains("Task")) {
+                int position = dataTS[counter].indexOf("~");
+                task = dataTS[counter].substring(position + 1, dataTS[counter].length());
+            }
         }
 
         if (notification_type.equalsIgnoreCase("1")) {
@@ -234,71 +253,105 @@ public class FirebaseMsgReceive extends FirebaseMessagingService {
         } else if (notification_type.equalsIgnoreCase("13")) {
             temp.setNotification("Site Activity Done Notification");
         }
+        else if(notification_type.equalsIgnoreCase("20"))
+        {
+            NotificationListItem item = new NotificationListItem(notification_type,SiteId,requestId,assignedTime,task,subject);
+            Gson gson = new Gson();
+            if(mAppPreferences.getNotificationList()!=null) {
+                notificationListItem = gson.fromJson(mAppPreferences.getNotificationList(), new TypeToken<ArrayList<NotificationListItem>>() {
+                }.getType());
+            }
+            notificationListItem.add(item);
+            String data = new Gson().toJson(notificationListItem);
+            mAppPreferences.setNotificationList(data);
+        }
 
         if (!(notification_type.equalsIgnoreCase("9")
                 || notification_type.equalsIgnoreCase("10"))) {
             onNotificationSetting();
         }
+
     }
 
     private void onNotificationSetting() {
-        db = new DataBaseHelper(this);
-        db.open();
-        temp.setDropTime(Utils.dateNotification());
-        temp.setDisplayTime(Utils.CurrentDateTime());
-        data = new Gson().toJson(temp);
-        db.insertNotificationData(mAppPreferences.getUserId(), data);
-        ArrayList<String> list = db.getNotificationCount(mAppPreferences.getUserId(), "0");
-        String msg = "You've received " + list.size() + " " + temp.getNotification();
-        int flag = 0;
-        if (list != null && list.size() > 1) {
-            mAppPreferences.setTicketFrmNtBr("1");
-            msg = "You've received " + list.size() + " iTower notification.";
-            flag = 1;
-        }
         Intent resultIntent = null;
-        if (flag == 0 && (notification_type.equalsIgnoreCase("1")
-                || notification_type.equalsIgnoreCase("2")
-                || notification_type.equalsIgnoreCase("3"))) {
-            mAppPreferences.setTicketFrmNtBr(list.get(0).toString());
-            mAppPreferences.SetBackModeNotifi123(1);
-            resultIntent = new Intent(this, TicketDetailsTabs.class);
-            resultIntent.putExtra("id", tkt_id);
-            resultIntent.putExtra("rights",
-                    db.getSubMenuRight("AssignedTab", "Incident"));
-        } else if (flag == 0 && (notification_type.equalsIgnoreCase("4")
-                || notification_type.equalsIgnoreCase("12")
-                || notification_type.equalsIgnoreCase("13"))) {
-            mAppPreferences.setTicketFrmNtBr(list.get(0).toString());
-            mAppPreferences.SetBackModeNotifi45(1);
-            resultIntent = new Intent(this, PMTabs.class);
-        } else if (flag == 0 && (notification_type.equalsIgnoreCase("5"))) {
-            mAppPreferences.setTicketFrmNtBr(list.get(0).toString());
-            mAppPreferences.SetBackModeNotifi45(1);
-            mAppPreferences.setPMTabs("N"); //default open Miss tab
-            resultIntent = new Intent(this, PMTabs.class);
-        } else if (flag == 0 && (notification_type.equalsIgnoreCase("6")
-                || notification_type.equalsIgnoreCase("7")
-                || notification_type.equalsIgnoreCase("14"))) {
-            resultIntent = new Intent(this, NotificationList.class);
-        } else if (flag == 1) {
-            resultIntent = new Intent(this, NotificationList.class);
-        } else if (notification_type.equalsIgnoreCase("8")) {
-            resultIntent = new Intent(Intent.ACTION_VIEW);
-            resultIntent.setData(Uri.parse("https://maps.google.com/maps?saddr=28.5335,77.2109&daddr=28.5857,77.311&z=17"));
-            resultIntent.setPackage("com.google.android.apps.maps");
-        } else if (notification_type.equalsIgnoreCase("11")) {
-            resultIntent = new Intent(this, FuelPurchaseGridRPT.class);
+        String msg = "";
+        ArrayList<String> list = new ArrayList<>();
+
+            db = new DataBaseHelper(this);
+            db.open();
+            temp.setDropTime(Utils.dateNotification());
+            temp.setDisplayTime(Utils.CurrentDateTime());
+            data = new Gson().toJson(temp);
+        if(!notification_type.equalsIgnoreCase("20")) {
+            db.insertNotificationData(mAppPreferences.getUserId(), data);
         }
-        db.close();
-        PendingIntent resultPendingIntent = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            resultPendingIntent = PendingIntent.getActivity
-                    (this, 0, resultIntent, PendingIntent.FLAG_MUTABLE);
-        } else {
-            resultPendingIntent = PendingIntent.getActivity
-                    (this, 0, resultIntent, PendingIntent.FLAG_ONE_SHOT);
+            list = db.getNotificationCount(mAppPreferences.getUserId(), "0");
+        if(!notification_type.equalsIgnoreCase("20")) {
+            msg = "You've received " + list.size() + " " + temp.getNotification();
         }
+        else
+        {
+            msg = "You've received "+ " " + temp.getNotification();
+        }
+
+            int flag = 0;
+            if (list != null && list.size() > 1) {
+                mAppPreferences.setTicketFrmNtBr("1");
+                msg = "You've received " + list.size() + " iTower notification.";
+                flag = 1;
+            }
+
+            if (flag == 0 && (notification_type.equalsIgnoreCase("1")
+                    || notification_type.equalsIgnoreCase("2")
+                    || notification_type.equalsIgnoreCase("3"))) {
+                mAppPreferences.setTicketFrmNtBr(list.get(0).toString());
+                mAppPreferences.SetBackModeNotifi123(1);
+                resultIntent = new Intent(this, TicketDetailsTabs.class);
+                resultIntent.putExtra("id", tkt_id);
+                resultIntent.putExtra("rights",
+                        db.getSubMenuRight("AssignedTab", "Incident"));
+            } else if (flag == 0 && (notification_type.equalsIgnoreCase("4")
+                    || notification_type.equalsIgnoreCase("12")
+                    || notification_type.equalsIgnoreCase("13"))) {
+                mAppPreferences.setTicketFrmNtBr(list.get(0).toString());
+                mAppPreferences.SetBackModeNotifi45(1);
+                resultIntent = new Intent(this, PMTabs.class);
+            } else if (flag == 0 && (notification_type.equalsIgnoreCase("5"))) {
+                mAppPreferences.setTicketFrmNtBr(list.get(0).toString());
+                mAppPreferences.SetBackModeNotifi45(1);
+                mAppPreferences.setPMTabs("N"); //default open Miss tab
+                resultIntent = new Intent(this, PMTabs.class);
+            } else if (flag == 0 && (notification_type.equalsIgnoreCase("6")
+                    || notification_type.equalsIgnoreCase("7")
+                    || notification_type.equalsIgnoreCase("14"))) {
+                resultIntent = new Intent(this, NotificationList.class);
+            } else if (flag == 1) {
+                resultIntent = new Intent(this, NotificationList.class);
+            } else if (notification_type.equalsIgnoreCase("8")) {
+                resultIntent = new Intent(Intent.ACTION_VIEW);
+                resultIntent.setData(Uri.parse("https://maps.google.com/maps?saddr=28.5335,77.2109&daddr=28.5857,77.311&z=17"));
+                resultIntent.setPackage("com.google.android.apps.maps");
+            } else if (notification_type.equalsIgnoreCase("11")) {
+                resultIntent = new Intent(this, FuelPurchaseGridRPT.class);
+            }
+            else if (notification_type.equalsIgnoreCase("20")) {
+                resultIntent = new Intent(this, NotificationDetailActivity.class);
+                resultIntent.putExtra("subject",subject);
+                resultIntent.putExtra("siteid",SiteId);
+                resultIntent.putExtra("requestid",requestId);
+                resultIntent.putExtra("task",task);
+            }
+            db.close();
+            PendingIntent resultPendingIntent = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                resultPendingIntent = PendingIntent.getActivity
+                        (this, 0, resultIntent, PendingIntent.FLAG_MUTABLE);
+            } else {
+                resultPendingIntent = PendingIntent.getActivity
+                        (this, 0, resultIntent, PendingIntent.FLAG_ONE_SHOT);
+            }
+
         int icon = clientIcon(getApplicationContext().getPackageName());
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this,

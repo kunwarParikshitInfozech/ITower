@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/lnrlayout"
+        android:padding="@dimen/_10sdp"
+        android:background="#EDF3FF"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_120sdp">
+
+        <ImageView
+            android:id="@+id/img_back"
+            android:src="@drawable/back_icon_vector"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <RelativeLayout
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/txview_notification"
+                android:textSize="@dimen/_16ssp"
+                android:textColor="#001E60"
+                android:text="@string/notifications"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_below="@id/txview_notification"
+                android:id="@+id/txtview_notification_type"
+                android:textSize="@dimen/_12ssp"
+                android:textColor="#505F6B"
+                android:text="iLease Field Work"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:paddingLeft="@dimen/_10sdp"
+        android:paddingRight="@dimen/_10sdp"
+        android:layout_below="@+id/lnrlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_alignParentLeft="true"
+            android:textSize="@dimen/_12ssp"
+            android:textColor="#505F6B"
+            android:text="SiteId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_alignParentRight="true"
+            android:id="@+id/txtview_siteid"
+            android:textSize="@dimen/_12ssp"
+            android:textColor="#505F6B"
+            android:text="231231"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:paddingLeft="@dimen/_10sdp"
+        android:paddingRight="@dimen/_10sdp"
+        android:layout_below="@+id/lnrlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_alignParentLeft="true"
+            android:textSize="@dimen/_12ssp"
+            android:textColor="#505F6B"
+            android:text="Request ID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_alignParentRight="true"
+            android:id="@+id/txtview_requestid"
+            android:textSize="@dimen/_12ssp"
+            android:textColor="#505F6B"
+            android:text="SP-00231"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:paddingLeft="@dimen/_10sdp"
+        android:paddingRight="@dimen/_10sdp"
+        android:layout_below="@+id/lnrlayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_alignParentLeft="true"
+            android:textSize="@dimen/_12ssp"
+            android:textColor="#505F6B"
+            android:text="Task"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:layout_marginTop="@dimen/_10sdp"
+            android:layout_alignParentRight="true"
+            android:id="@+id/txtview_task"
+            android:textSize="@dimen/_12ssp"
+            android:textColor="#505F6B"
+            android:text="SP-00231"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+</LinearLayout>
