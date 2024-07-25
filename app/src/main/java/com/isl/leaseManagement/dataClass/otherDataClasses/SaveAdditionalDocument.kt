@@ -5,7 +5,7 @@ import java.util.Calendar
 import java.util.Locale
 
 data class SaveAdditionalDocument(
-    val taskId: Int,
+    var taskId: Int,
     var fileName: String? = "Camera Image",
     var docSize: String? = "Unknown",
     var docContentString64: String? = "",

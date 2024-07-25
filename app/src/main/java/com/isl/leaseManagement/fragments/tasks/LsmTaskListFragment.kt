@@ -65,10 +65,14 @@ class LsmTaskListFragment : BaseFragment() {
 
     private fun init() {
         changeToolBar()
-        getTaskListData()
         setClickListeners()
         db = MyApp.getMyDatabase()
         registerActivityLauncher()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getTaskListData()
     }
 
     private fun getTaskListData() {
@@ -365,7 +369,6 @@ class LsmTaskListFragment : BaseFragment() {
 
     private fun openStartTaskActivityWithRoomData(taskResponse: TaskResponse) {
         val intent = Intent(requireActivity(), StartTaskActivity::class.java)
-        intent.putExtra(AppConstants.IntentKeys.taskDetailIntentExtra, taskResponse)
         intent.putExtra(AppConstants.IntentKeys.taskDetailIntentExtra, taskResponse)
         intent.putExtra(AppConstants.IntentKeys.isStartCalledFromRoom, true)
         baseActivity.launchActivityWithIntent(intent)

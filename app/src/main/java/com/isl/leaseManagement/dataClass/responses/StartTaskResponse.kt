@@ -5,8 +5,16 @@ data class StartTaskResponse(
     val processId: Int?
 ) {
     data class StartTaskData(
-        val accountNumber: String?,
-        val paymentMethod: String?,
-        val sadadBillerCode: String?
-    )
+        var accountNumber: String?,
+        val documents: List<StartTaskDocument?>?,
+        var paymentMethod: String?,
+        var sadadBillerCode: String?,
+        var shouldUpdateSubmitDocFromStart: Boolean = true     // this is not for api, just to allow only first time saving doc from start to submit
+    ) {
+        data class StartTaskDocument(
+            var content: String?,
+            var fileName: String?,
+            val tagName: String?
+        )
+    }
 }

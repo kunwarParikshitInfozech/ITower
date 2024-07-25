@@ -52,10 +52,10 @@ class StartTaskActivity : BaseActivity() {
             isCalledFromSavedTaskList = intent.getBooleanExtra(isStartCalledFromRoom, false)
             if (isCalledFromSavedTaskList) {
                 getStartDataFromRoom(taskId)
-         //       showToastMessage("Starting from room")
+                //       showToastMessage("Starting from room")
             } else {
                 callStartTaskApi(taskId)
-       //         showToastMessage("Starting from API")
+                //         showToastMessage("Starting from API")
             }
         } else {
             showToastMessage("Task ID is empty!")
@@ -128,6 +128,8 @@ class StartTaskActivity : BaseActivity() {
                     AppConstants.IntentKeys.taskDetailIntentExtra,
                     taskResponse
                 )
+                response.data.shouldUpdateSubmitDocFromStart =
+                    true //for first time allowing doc to be saved from start task
                 MyApp.localTempVarStore.startTaskResponse = response
                 response.processId?.let {
                     if (it != 3) {
@@ -135,7 +137,7 @@ class StartTaskActivity : BaseActivity() {
                         return
                     }
                 }
-                if (!isCalledFromSavedTaskList) {  //saving only when data is fetched from API and not from Room
+                if (!isCalledFromSavedTaskList) { //saving only when data is fetched from API and not from Room
                     val startTaskPojo = convertToStartTaskResponsePOJO(response)
                     val startTaskDao = db?.startTaskDao()
                     lifecycleScope.launch(Dispatchers.IO) {
