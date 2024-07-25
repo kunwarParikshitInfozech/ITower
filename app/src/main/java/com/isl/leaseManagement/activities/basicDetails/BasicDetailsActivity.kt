@@ -17,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.google.gson.Gson
 import com.isl.itower.MyApp
 import com.isl.leaseManagement.activities.home.LsmHomeActivity
 import com.isl.leaseManagement.base.BaseActivity
@@ -24,8 +25,11 @@ import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocument
 import com.isl.leaseManagement.dataClass.requests.SubmitTaskRequest
 import com.isl.leaseManagement.dataClass.requests.SubmitTaskRequest.SubmitTaskData
 import com.isl.leaseManagement.dataClass.requests.UploadDocumentRequest
+import com.isl.leaseManagement.dataClass.responses.StartTaskResponse
 import com.isl.leaseManagement.room.entity.SaveAdditionalDocumentPOJO
+import com.isl.leaseManagement.room.entity.StartTaskResponsePOJO
 import com.isl.leaseManagement.room.entity.SubmitTaskRequestPOJO
+import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
 import com.isl.leaseManagement.utils.AppConstants
 import com.isl.leaseManagement.utils.ClickInterfaces
 import com.isl.leaseManagement.utils.Utilities
@@ -55,6 +59,7 @@ class BasicDetailsActivity : BaseActivity() {
     private var currentTaskId = 0
     private var submitTaskCompleteDocumentForRoom: SaveAdditionalDocument? = null
     private var submitTaskRequest = SubmitTaskRequest(SubmitTaskData(), 0)  //created empty
+    private var processId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,13 +68,16 @@ class BasicDetailsActivity : BaseActivity() {
     }
 
     private fun init() {
+        val factory = BasicDetailsViewModelFactory(BasicDetailsRepository())
+        viewModel = ViewModelProvider(this, factory)[BasicDetailsViewModel::class.java]
         currentTaskId = MyApp.localTempVarStore.taskId
         setClickListeners()
         fillDataOfStartApiAndApplyValidations()
-        val factory = BasicDetailsViewModelFactory(BasicDetailsRepository())
-        viewModel = ViewModelProvider(this, factory)[BasicDetailsViewModel::class.java]
         getAdditionalDocListOfThisTask()   //calling it at start to give enough time
     }
+
+    private var docFromStartTask: StartTaskResponse.StartTaskData.StartTaskDocument? = null
+    private var shouldWeUpdateSubmitDocFromStart = false
 
     private fun fillDataOfStartApiAndApplyValidations() {
         MyApp.localTempVarStore?.let { tempVarStorage ->
@@ -105,16 +113,128 @@ class BasicDetailsActivity : BaseActivity() {
                             tagName = AppConstants.KeyWords.leaseRentDocTagName
                         }
 
-                        else -> {// do nothing
+                        else -> { // when case ends
+                            showToastMessage("Payment type not found!")
+                            return
                         }
                     }
+                    shouldWeUpdateSubmitDocFromStart = responseData.shouldUpdateSubmitDocFromStart
+                    responseData.documents?.get(0)?.let { // doc is received from start task,
+                        docFromStartTask = it
+                    }
                 }
-                response.processId?.let { submitTaskRequest.processId = it }
+                response.processId?.let {
+                    submitTaskRequest.processId = it
+                    processId = it
+                }
             }
             currentTaskId = tempVarStorage.taskId
         }
-        fetchSubmitDataFromRoomAndFill()
+        if (docFromStartTask != null && shouldWeUpdateSubmitDocFromStart) {
+            uploadStartTaskDocGetDocID(docFromStartTask!!)
+        } else {
+            fetchSubmitDataFromRoomAndFill()     //if doc is not present, simply loading from room , but if present uploading it and saving in room than fetching it from their
+        }
     }
+
+    private fun uploadStartTaskDocGetDocID(docFromStartTask: StartTaskResponse.StartTaskData.StartTaskDocument) {
+
+        if (docFromStartTask.content == null || docFromStartTask.content!!.isEmpty() || tagName.isEmpty() || KotlinPrefkeeper.lsmUserId == null || KotlinPrefkeeper.lsmUserId!!.isEmpty()
+            || processId == 0
+        ) {
+            fetchSubmitDataFromRoomAndFill()
+            return
+        }
+
+        val uploadDocumentRequest =
+            UploadDocumentRequest(
+                content = docFromStartTask.content,
+                fileName = docFromStartTask.fileName,
+                latitude = 0,
+                longitude = 0,
+                requestId = MyApp.localTempVarStore.taskResponse?.requestId,
+                tagName = tagName,
+                timeStamp = "",
+                userId = KotlinPrefkeeper.lsmUserId!!.toInt()
+            )
+
+        showProgressBar()
+        viewModel.uploadDocument(
+            { successResponse ->
+                successResponse?.let { response ->
+                    hideProgressBar()
+                    if (response.docId != null) {
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            try {
+                                submitTaskCompleteDocumentForRoom = SaveAdditionalDocument(
+                                    taskId = currentTaskId
+                                )
+                                submitTaskCompleteDocumentForRoom?.fileName =
+                                    docFromStartTask.fileName
+                                submitTaskCompleteDocumentForRoom?.docContentString64 =
+                                    docFromStartTask.content
+                                submitTaskCompleteDocumentForRoom?.docId = response.docId
+                                withContext(Dispatchers.Main) {
+                                    saveSubmitDetails()
+                                }
+                                delay(100) // for allowing saving of data
+                                fetchSubmitDataFromRoomAndFill()
+                                val starTaskDao = MyApp.getMyDatabase()
+                                    .startTaskDao()  //start data saved to submit doc, now removing it from start to avoid overriding it
+                                starTaskDao?.getStartTaskById(taskId)?.let { startTaskPOJO ->
+                                    val startDataClass =
+                                        convertStartTaskPOJOtoDataClass(startTaskPOJO)
+                                    startDataClass.data?.documents?.get(0)?.content = ""
+                                    startDataClass.data?.documents?.get(0)?.fileName = ""
+                                    startDataClass.data?.shouldUpdateSubmitDocFromStart = false
+                                    val startTaskPojo =
+                                        convertToStartTaskResponsePOJO(startDataClass)
+                                    starTaskDao.insertStartTask(startTaskPojo)
+                                }
+
+                            } catch (e: Exception) {
+                                withContext(Dispatchers.Main) {
+                                    showToastMessage("Exception in saving submit doc!")
+                                }
+                                fetchSubmitDataFromRoomAndFill()
+                            }
+                        }
+                    } else {
+                        fetchSubmitDataFromRoomAndFill()
+                    }
+                }
+            },
+            { errorMessage ->
+                hideProgressBar()
+                fetchSubmitDataFromRoomAndFill()
+            }, taskId = currentTaskId,
+            body =
+            uploadDocumentRequest
+        )
+    }
+
+    private fun convertToStartTaskResponsePOJO(startTaskResponse: StartTaskResponse): StartTaskResponsePOJO {
+        val gson = Gson()
+        val dataJson = gson.toJson(startTaskResponse.data)
+        return StartTaskResponsePOJO(
+            taskId,
+            dataJson,
+            startTaskResponse.processId
+        )
+    }
+
+    private fun convertStartTaskPOJOtoDataClass(pojo: StartTaskResponsePOJO): StartTaskResponse {
+        val dataJson = pojo.dataJson
+        val processId = pojo.processId
+        val gson = Gson()
+        val startTaskData: StartTaskResponse.StartTaskData? = if (dataJson.isEmpty()) {
+            null
+        } else {
+            gson.fromJson(dataJson, StartTaskResponse.StartTaskData::class.java)
+        }
+        return StartTaskResponse(startTaskData, processId)
+    }
+
 
     private fun fetchSubmitDataFromRoomAndFill() {
         lifecycleScope.launch(Dispatchers.IO) {
@@ -159,7 +279,10 @@ class BasicDetailsActivity : BaseActivity() {
     private fun setClickListeners() {
         binding.backIv.setOnClickListener { finish() }
         binding.submitBtn.setOnClickListener { submitDataToAPI() }
-        binding.saveBtn.setOnClickListener { saveSubmitDetails() }
+        binding.saveBtn.setOnClickListener {
+            showToastMessage("Submit Data Saved!")
+            saveSubmitDetails()
+        }
         binding.sadadDocExpiryValue.setOnClickListener { showDatePickerAndFillDate(it as TextView) }
         binding.leaseRentExpiryValue.setOnClickListener { showDatePickerAndFillDate(it as TextView) }
         binding.attachDocumentIv.setOnClickListener { openCameraDocPopup() }
@@ -610,8 +733,9 @@ class BasicDetailsActivity : BaseActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             MyApp.getMyDatabase().submitTaskDao().insertSubmitTask(submitTaskRequestPOJO)
         }
-        showToastMessage("Submit Data Saved!")
+
     }
+
 
     private fun showProgressBar() {
         binding.progressBar.visibility = View.VISIBLE
