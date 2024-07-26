@@ -15,7 +15,6 @@ import com.isl.leaseManagement.utils.CustomTextView;
 import com.isl.modal.NotificationListItem;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import infozech.itower.R;
 
@@ -38,21 +37,33 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-       NotificationListItem item = listItem.get(position);
-       holder.txtview_notificationSubject.setText(item.getNotificationSubject());
-       holder.txtview_siteid.setText(item.getSiteId());
-       holder.txtview_date.setText(item.getAssignedTime());
-       holder.imgview_next.setOnClickListener(new View.OnClickListener() {
-          @Override
-          public void onClick(View view) {
-              Intent intent = new Intent(context, NotificationDetailActivity.class);
-              intent.putExtra("subject",item.getNotificationSubject());
-              intent.putExtra("siteid",item.getSiteId());
-              intent.putExtra("requestid",item.getRequestId());
-              intent.putExtra("task",item.getTask());
-              context.startActivity(intent);
-          }
-      });
+        NotificationListItem item = listItem.get(position);
+        try {
+            String modifiedString = item.getNotificationSubject().replaceAll("\n", " ");
+            holder.txtview_notificationSubject.setText(modifiedString);
+            String siteNumber = extractTextAfterColon(item.getSiteId());
+            holder.txtview_siteid.setText("Site ID : " + siteNumber);
+            String notificationDate = extractTextAfterColon(item.getAssignedTime());
+            holder.txtview_date.setText(notificationDate);
+        } catch (Exception e) {
+            return;
+        }
+        holder.imgview_next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, NotificationDetailActivity.class);
+                intent.putExtra("subject", item.getNotificationSubject());
+                intent.putExtra("siteid", item.getSiteId());
+                intent.putExtra("requestid", item.getRequestId());
+                intent.putExtra("task", item.getTask());
+                context.startActivity(intent);
+            }
+        });
+    }
+
+    public static String extractTextAfterColon(String inputString) {
+        int colonIndex = inputString.indexOf(':');
+        return colonIndex != -1 ? inputString.substring(colonIndex + 1) : "";
     }
 
     @Override
@@ -62,8 +73,9 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-         ImageView imgview_next;
-         CustomTextView txtview_notificationSubject,txtview_siteid,txtview_date;
+        ImageView imgview_next;
+        CustomTextView txtview_notificationSubject, txtview_siteid, txtview_date;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imgview_next = itemView.findViewById(R.id.imgview_next);
@@ -74,3 +86,4 @@ public class NotificationListAdapter extends RecyclerView.Adapter<NotificationLi
 
     }
 }
+

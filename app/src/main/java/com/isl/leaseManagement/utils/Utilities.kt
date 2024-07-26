@@ -26,7 +26,7 @@ object Utilities {
 
     fun getDateFromISO8601(inputDate: String): String {
         val inputFormatter = DateTimeFormatter.ISO_DATE_TIME
-        val outputFormatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
+        val outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
         val zonedDateTime = ZonedDateTime.parse(inputDate, inputFormatter)
         val localDateTime = zonedDateTime.withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()

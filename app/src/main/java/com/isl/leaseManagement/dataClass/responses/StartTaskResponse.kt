@@ -9,7 +9,7 @@ data class StartTaskResponse(
         val documents: List<StartTaskDocument?>?,
         var paymentMethod: String?,
         var sadadBillerCode: String?,
-        var shouldUpdateSubmitDocFromStart: Boolean = true     // this is not for api, just to allow only first time saving doc from start to submit
+        var shouldUpdateSubmitDocFromStart: Int = 0     // 0 = default, 1 = update, 2 = ignore
     ) {
         data class StartTaskDocument(
             var content: String?,

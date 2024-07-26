@@ -35,51 +35,64 @@
             app:layout_constraintTop_toBottomOf="@id/myTasksText"
             tools:visibility="visible" />
 
-        <com.isl.leaseManagement.utils.CustomTextView
-            android:id="@+id/resumeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:text="Resume (00)"
-            android:textColor="@color/color_001E60"
-            android:textSize="@dimen/_12ssp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/fieldWorkText"
-            tools:visibility="visible" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/savedTasksRv"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:paddingBottom="@dimen/_92sdp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_4sdp"
-            android:layout_marginTop="@dimen/_2sdp"
-            android:layout_marginBottom="@dimen/_24sdp"
-            app:layout_constraintTop_toBottomOf="@id/resumeText"
-            tools:visibility="visible" />
-
-        <com.isl.leaseManagement.utils.CustomTextView
-            android:id="@+id/scheduledText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:text="@string/schedule"
-            android:textColor="@color/color_001E60"
-            android:textSize="@dimen/_12ssp"
+            android:fillViewport="true"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/savedTasksRv"
-            tools:visibility="visible" />
+            app:layout_constraintTop_toBottomOf="@id/fieldWorkText">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/tasksRv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/_4sdp"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:layout_marginBottom="@dimen/_24sdp"
-            app:layout_constraintTop_toBottomOf="@id/scheduledText"
-            tools:visibility="visible" />
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/resumeText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:text="Resume (00)"
+                    android:textColor="@color/color_001E60"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:visibility="visible" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/savedTasksRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_marginBottom="@dimen/_24sdp"
+                    app:layout_constraintTop_toBottomOf="@id/resumeText"
+                    tools:visibility="visible" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/scheduledText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:text="@string/schedule"
+                    android:textColor="@color/color_001E60"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/savedTasksRv"
+                    tools:visibility="visible" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/tasksRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_4sdp"
+                    android:layout_marginTop="@dimen/_4sdp"
+                    android:layout_marginBottom="@dimen/_24sdp"
+                    app:layout_constraintTop_toBottomOf="@id/scheduledText"
+                    tools:visibility="visible" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
         <ProgressBar
             android:id="@+id/progressBar"

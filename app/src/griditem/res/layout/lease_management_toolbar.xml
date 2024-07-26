@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/onDutyTv"
             android:layout_marginStart="@dimen/_4sdp"
-            android:text="On DUTY"
+            tools:text="On DUTY"
             android:textColor="@color/color_34C759"
             app:layout_constraintBottom_toBottomOf="@id/imagePlaceholder"
             app:layout_constraintStart_toEndOf="@id/imagePlaceholder"
@@ -56,9 +56,9 @@
             android:padding="@dimen/_4sdp"
             android:contentDescription="@string/image"
             android:src="@drawable/back_icon_vector"
-            app:layout_constraintBottom_toBottomOf="@id/searchIv"
+            app:layout_constraintBottom_toBottomOf="@id/toolbarFilterIv"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/searchIv" />
+            app:layout_constraintTop_toTopOf="@id/toolbarFilterIv" />
 
         <ImageView
             android:id="@+id/searchIv"
@@ -67,6 +67,7 @@
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_marginEnd="@dimen/_16sdp"
             android:contentDescription="@string/image"
+            android:visibility="gone"
             android:src="@drawable/search_icon_vect"
             app:layout_constraintEnd_toStartOf="@id/toolbarFilterIv"
             app:layout_constraintTop_toTopOf="parent" />

@@ -118,7 +118,9 @@ class BasicDetailsActivity : BaseActivity() {
                             return
                         }
                     }
-                    shouldWeUpdateSubmitDocFromStart = responseData.shouldUpdateSubmitDocFromStart
+                    if (responseData.shouldUpdateSubmitDocFromStart == 1) {
+                        shouldWeUpdateSubmitDocFromStart = true
+                    }
                     responseData.documents?.get(0)?.let { // doc is received from start task,
                         docFromStartTask = it
                     }
@@ -181,12 +183,15 @@ class BasicDetailsActivity : BaseActivity() {
                                 fetchSubmitDataFromRoomAndFill()
                                 val starTaskDao = MyApp.getMyDatabase()
                                     .startTaskDao()  //start data saved to submit doc, now removing it from start to avoid overriding it
-                                starTaskDao?.getStartTaskById(taskId)?.let { startTaskPOJO ->
+                                starTaskDao?.getStartTaskById(currentTaskId)?.let { startTaskPOJO ->
                                     val startDataClass =
                                         convertStartTaskPOJOtoDataClass(startTaskPOJO)
                                     startDataClass.data?.documents?.get(0)?.content = ""
                                     startDataClass.data?.documents?.get(0)?.fileName = ""
-                                    startDataClass.data?.shouldUpdateSubmitDocFromStart = false
+                                    startDataClass.data?.shouldUpdateSubmitDocFromStart =
+                                        2 // now, it wouldn't update
+                                    MyApp.localTempVarStore.startTaskResponse?.data?.shouldUpdateSubmitDocFromStart =
+                                        2// for this session that is no need to get updated value from start task
                                     val startTaskPojo =
                                         convertToStartTaskResponsePOJO(startDataClass)
                                     starTaskDao.insertStartTask(startTaskPojo)
@@ -217,7 +222,7 @@ class BasicDetailsActivity : BaseActivity() {
         val gson = Gson()
         val dataJson = gson.toJson(startTaskResponse.data)
         return StartTaskResponsePOJO(
-            taskId,
+            currentTaskId,
             dataJson,
             startTaskResponse.processId
         )
@@ -270,12 +275,6 @@ class BasicDetailsActivity : BaseActivity() {
         }
     }
 
-//    private fun fillSubmitDataOfRoomFromMain(submitTaskPOJO: SubmitTaskRequestPOJO) {
-//        lifecycleScope.launch(Dispatchers.Main) {
-//
-//        }
-//    }
-
     private fun setClickListeners() {
         binding.backIv.setOnClickListener { finish() }
         binding.submitBtn.setOnClickListener { submitDataToAPI() }
@@ -292,7 +291,7 @@ class BasicDetailsActivity : BaseActivity() {
     private fun showDatePickerAndFillDate(view: TextView) {
         showDatePickerFromCurrentDate(this@BasicDetailsActivity) { selectedDate ->
             val formatter = SimpleDateFormat(
-                "dd MMM yyyy",
+                "dd.MM.yyyy",
                 Locale.getDefault()
             ) // Set format with MMM for 3-letter month
             val formattedDate = formatter.format(selectedDate.time)
@@ -665,7 +664,7 @@ class BasicDetailsActivity : BaseActivity() {
         callSubmitDataApi(currentTaskId, submitTaskRequest)
     }
 
-    private fun callSubmitDataApi(taskId: Int, submitTaskRequest: SubmitTaskRequest) {
+    private fun callSubmitDataApi(currentTaskId: Int, submitTaskRequest: SubmitTaskRequest) {
         showProgressBar()
         viewModel.submitTask(
             { successResponse ->
@@ -701,7 +700,7 @@ class BasicDetailsActivity : BaseActivity() {
                 hideProgressBar()
                 showToastMessage("Unable to submit!")
                 binding.progressBar.visibility = View.GONE
-            }, taskId = taskId,
+            }, taskId = currentTaskId,
             body =
             submitTaskRequest
         )

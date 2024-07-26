@@ -29,6 +29,7 @@ import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocument
 import com.isl.leaseManagement.room.entity.SaveAdditionalDocumentPOJO
 import com.isl.leaseManagement.utils.ClickInterfaces
 import com.isl.leaseManagement.utils.Utilities
+import com.isl.leaseManagement.utils.Utilities.getLastChars
 import infozech.itower.R
 import infozech.itower.databinding.ActionsPopupBinding
 import infozech.itower.databinding.ActivityAdditonalDocumentsBinding
@@ -236,6 +237,9 @@ class AdditionalDocumentsActivity : BaseActivity() {
         dialog.show()
         binding.closeTv.setOnClickListener {
             dialog.dismiss()
+        }
+        saveAdditionalDocument.fileName?.let {
+            getLastChars(it,28)
         }
         binding.documentNameValue.text = saveAdditionalDocument.fileName ?: ""
         binding.uploadDateTimeValue.text = saveAdditionalDocument.dateOfSaving ?: ""

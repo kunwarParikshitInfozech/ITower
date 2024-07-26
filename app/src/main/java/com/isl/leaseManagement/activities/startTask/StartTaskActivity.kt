@@ -128,8 +128,9 @@ class StartTaskActivity : BaseActivity() {
                     AppConstants.IntentKeys.taskDetailIntentExtra,
                     taskResponse
                 )
-                response.data.shouldUpdateSubmitDocFromStart =
-                    true //for first time allowing doc to be saved from start task
+                if (response.data.shouldUpdateSubmitDocFromStart != 2) {
+                    response.data.shouldUpdateSubmitDocFromStart = 1
+                }  //for first time allowing doc to be saved from start task
                 MyApp.localTempVarStore.startTaskResponse = response
                 response.processId?.let {
                     if (it != 3) {
