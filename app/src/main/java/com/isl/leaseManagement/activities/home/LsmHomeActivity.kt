@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -71,7 +72,7 @@ class LsmHomeActivity : BaseActivity() {
                     if (response.userId != null) {
                         KotlinPrefkeeper.lsmUserId = response.userId.toString()
                         init2()
-      //                  showToastMessage("User's ID is ${KotlinPrefkeeper.lsmUserId}")
+                        //                  showToastMessage("User's ID is ${KotlinPrefkeeper.lsmUserId}")
                     } else {
                         showToastMessage("User's ID is empty")
                         finish()
@@ -130,6 +131,13 @@ class LsmHomeActivity : BaseActivity() {
                 R.id.tasks -> {
                     if (currentFragment !is LsmTasksFragment) {
                         openFragment(LsmTasksFragment(), supportFragmentManager)
+
+//                        val toolbar: View = binding.leaseManagementToolbar
+//                        val profileLayoutToolbar = toolbar.findViewById<ConstraintLayout>(R.id.profileDutyCl)
+//                        val searchSortLayoutToolbar = toolbar.findViewById<ConstraintLayout>(R.id.searchSortCl)
+//                        profileLayoutToolbar.visibility = View.VISIBLE
+//                        searchSortLayoutToolbar.visibility = View.GONE
+                        binding.leaseManagementToolbar.visibility = View.VISIBLE
                     }
                     true
                 }
@@ -137,6 +145,7 @@ class LsmHomeActivity : BaseActivity() {
                 R.id.notifications -> {
                     if (currentFragment !is LsmNotificationsFragment) {
                         openFragment(LsmNotificationsFragment(), supportFragmentManager)
+                        binding.leaseManagementToolbar.visibility = View.GONE
                     }
                     true
                 }
@@ -144,6 +153,7 @@ class LsmHomeActivity : BaseActivity() {
                 R.id.profile -> {
                     if (currentFragment !is LsmProfileFragment) {
                         openFragment(LsmProfileFragment(), supportFragmentManager)
+                        binding.leaseManagementToolbar.visibility = View.GONE
                     }
                     true
                 }
