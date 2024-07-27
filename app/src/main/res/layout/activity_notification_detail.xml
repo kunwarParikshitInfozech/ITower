@@ -8,7 +8,7 @@
     <LinearLayout
         android:id="@+id/lnrlayout"
         android:padding="@dimen/_10sdp"
-        android:background="#EDF3FF"
+        android:background="@color/color_F7FAFB"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_120sdp">
@@ -53,13 +53,13 @@
         android:layout_height="wrap_content">
 
         <com.isl.leaseManagement.utils.CustomTextView
-            android:layout_marginTop="@dimen/_10sdp"
-            android:layout_alignParentLeft="true"
-            android:textSize="@dimen/_12ssp"
-            android:textColor="#505F6B"
-            android:text="SiteId"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginTop="@dimen/_10sdp"
+            android:text="Site ID"
+            android:textColor="#505F6B"
+            android:textSize="@dimen/_12ssp" />
 
         <com.isl.leaseManagement.utils.CustomTextView
             android:layout_marginTop="@dimen/_10sdp"

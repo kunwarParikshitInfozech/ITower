@@ -25,6 +25,7 @@
                 android:textSize="@dimen/_20ssp" />
 
             <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/mark_all_read"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

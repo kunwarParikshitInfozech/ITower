@@ -177,7 +177,7 @@ public class NotificationList extends Activity {
 		 ArrayList<String> notification_counter = new ArrayList<String>();
 		 final DataBaseHelper dbHelper = new DataBaseHelper(NotificationList.this);
 		 dbHelper.open();
-		 notification_counter = dbHelper.getNotificationCount(mAppPreferences.getUserId(),"0");
+		 notification_counter = dbHelper.getNotificationCount(mAppPreferences.getUserId(),"0","onm");
 		 ShortcutBadger.removeCount(NotificationList.this);
 		 if(notification_counter.size()>0){
 		 ShortcutBadger.applyCount(NotificationList.this,notification_counter.size());

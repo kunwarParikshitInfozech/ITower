@@ -30,7 +30,6 @@ class LsmHomeActivity : BaseActivity() {
             transaction.addToBackStack(null)
             transaction.commit()
         }
-
     }
 
     private lateinit var binding: ActivityTasksHomeBinding

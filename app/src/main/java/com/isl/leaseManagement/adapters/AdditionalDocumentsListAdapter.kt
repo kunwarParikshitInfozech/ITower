@@ -33,7 +33,6 @@ class AdditionalDocumentsListAdapter(
             )
         return AdditionalDocHolder(binding, ctx, clickListener)
     }
-
     override fun onBindViewHolder(holder: AdditionalDocHolder, position: Int) {
         holder.bindItems(documentList[position])
     }

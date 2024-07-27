@@ -68,7 +68,7 @@ public interface SQLConstants {
             "pFlag TEXT,viRemark TEXT,rMandatory TEXT,rRemark TEXT,rStatus TEXT,linkChkList Text,baseDataLevel Text);";
 
     public static String createNotification = "CREATE TABLE IF NOT EXISTS NOTIFICATION (ID INTEGER PRIMARY KEY,"
-            + "userId INTEGER,notification  TEXT,readFlag TEXT);"; // 0.2
+            + "userId INTEGER,notification  TEXT,readFlag TEXT,notificationType TEXT);"; // 0.2
 
     public static String createTTForm = "CREATE TABLE IF NOT EXISTS CHECKLIST_TT_FORM (ID INTEGER PRIMARY KEY,"
             + "FieldId  INTEGER,Caption TEXT,AddVisable TEXT,UpdateVisable TEXT,DetailsVisable TEXT,ModuleId TEXT);"; // 0.3

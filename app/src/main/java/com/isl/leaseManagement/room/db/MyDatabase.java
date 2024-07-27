@@ -7,17 +7,20 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
+import com.isl.leaseManagement.room.dao.NotificationDao;
 import com.isl.leaseManagement.room.dao.SaveAdditionalDocumentDao;
 import com.isl.leaseManagement.room.dao.StartTaskDao;
 import com.isl.leaseManagement.room.dao.SubmitTaskDao;
 import com.isl.leaseManagement.room.dao.TaskResponseDao;
+import com.isl.leaseManagement.room.entity.NotificationPOJO;
 import com.isl.leaseManagement.room.entity.SaveAdditionalDocumentPOJO;
 import com.isl.leaseManagement.room.entity.StartTaskResponsePOJO;
 import com.isl.leaseManagement.room.entity.SubmitTaskRequestPOJO;
 import com.isl.leaseManagement.room.entity.TaskResponsePOJO;
 
 @Database(
-        entities = {TaskResponsePOJO.class, StartTaskResponsePOJO.class, SaveAdditionalDocumentPOJO.class, SubmitTaskRequestPOJO.class},
+        entities = {TaskResponsePOJO.class, StartTaskResponsePOJO.class, SaveAdditionalDocumentPOJO.class, SubmitTaskRequestPOJO.class,
+                        NotificationPOJO.class},
         version = 1,
         exportSchema = false
 )
@@ -46,4 +49,6 @@ public abstract class MyDatabase extends RoomDatabase {
     public abstract SaveAdditionalDocumentDao saveAdditionalDocumentDao();
 
     public abstract SubmitTaskDao submitTaskDao();
+
+    public abstract NotificationDao notificationDao();
 }

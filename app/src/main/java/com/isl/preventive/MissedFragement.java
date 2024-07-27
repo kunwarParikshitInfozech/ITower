@@ -759,7 +759,7 @@ public class MissedFragement extends Fragment {
         ArrayList<String> notification_counter = new ArrayList<String>();
         db.open();
         notification_counter = db.getNotificationCount(
-                mAppPreferences.getUserId(), "0");
+                mAppPreferences.getUserId(), "0","onm");
         db.close();
         ShortcutBadger.removeCount(getActivity());
         if (notification_counter.size() > 0) {
