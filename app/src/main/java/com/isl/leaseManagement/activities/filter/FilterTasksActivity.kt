@@ -23,7 +23,7 @@ class FilterTasksActivity : BaseActivity() {
     private var assignedTask = "Assigned"
     private var unAssignedTask = "Unassigned"
     private var delayed = "Delayed"
-    private var onTime = "On_Time"
+    private var onTime = "On Time"
     private var high = "High"
     private var medium = "Medium"
     private var low = "Low"
@@ -50,6 +50,9 @@ class FilterTasksActivity : BaseActivity() {
                 AppConstants.ActivityResultKeys.FilterActivity.task,
                 tasksStatusSelected
             )
+            if (slaSelected==onTime){
+                slaSelected = "On_Time"
+            }
             resultIntent.putExtra(
                 AppConstants.ActivityResultKeys.FilterActivity.slaStatus,
                 slaSelected

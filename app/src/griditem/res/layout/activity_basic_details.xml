@@ -2,56 +2,60 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
+        android:background="@color/white"
         android:layout_height="match_parent">
 
-        <androidx.core.widget.NestedScrollView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/llStartActivity"
-            android:fillViewport="true">
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:context="com.isl.leaseManagement.activities.taskInProgress.TaskInProgressActivity">
 
-            <androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/rlBasicDetailsText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/light_sky_blue"
-                android:theme="@style/LightTheme"
-                tools:context="com.isl.leaseManagement.activities.taskInProgress.TaskInProgressActivity">
+                android:paddingBottom="@dimen/_20sdp"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/backIv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_12sdp"
-                    android:layout_marginTop="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
                     android:contentDescription="@string/image"
                     android:src="@drawable/back_icon_vector"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.isl.leaseManagement.utils.CustomTextView
-                    android:id="@+id/basicDetailsTv"
+                    android:id="@+id/additionalDocsTv"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_16sdp"
+                    android:layout_alignStart="@id/backIv"
+                    android:layout_marginTop="@dimen/_24sdp"
                     android:text="@string/basic_details"
                     android:textColor="@color/color_001E60"
                     android:textSize="@dimen/_14ssp"
                     app:layout_constraintStart_toStartOf="@id/backIv"
                     app:layout_constraintTop_toBottomOf="@id/backIv" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true"
+                app:layout_constraintTop_toBottomOf="@id/rlBasicDetailsText">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/clBasicDetails"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_24sdp"
-                    android:background="@color/white"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/basicDetailsTv">
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
                     <com.isl.leaseManagement.utils.CustomTextView
                         android:id="@+id/sadadBillerCodeTv"
@@ -78,6 +82,7 @@
                         android:paddingVertical="@dimen/_14sdp"
                         android:paddingStart="@dimen/_8sdp"
                         android:paddingEnd="@dimen/_8sdp"
+                        android:textColor="@color/color_606F8A"
                         android:textColorHint="@color/color_B1B7C8"
                         android:textSize="@dimen/_12ssp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -108,6 +113,7 @@
                         android:paddingStart="@dimen/_8sdp"
                         android:paddingEnd="@dimen/_8sdp"
                         android:textAlignment="gravity"
+                        android:textColor="@color/color_606F8A"
                         android:textColorHint="@color/color_B1B7C8"
                         android:textSize="@dimen/_12ssp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -139,6 +145,7 @@
                         android:paddingStart="@dimen/_8sdp"
                         android:paddingEnd="@dimen/_8sdp"
                         android:textAlignment="gravity"
+                        android:textColor="@color/color_606F8A"
                         android:textColorHint="@color/color_B1B7C8"
                         android:textSize="@dimen/_12ssp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -170,6 +177,7 @@
                         android:paddingStart="@dimen/_8sdp"
                         android:paddingEnd="@dimen/_8sdp"
                         android:textAlignment="gravity"
+                        android:textColor="@color/color_606F8A"
                         android:textColorHint="@color/color_B1B7C8"
                         android:textSize="@dimen/_12ssp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -248,10 +256,10 @@
                             android:id="@+id/ivLine"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:scaleType="centerCrop"
                             android:layout_below="@id/deleteDocBtn"
                             android:layout_marginTop="@dimen/_8sdp"
                             android:contentDescription="@string/image"
+                            android:scaleType="centerCrop"
                             android:src="@drawable/grey_line" />
 
 
@@ -259,24 +267,24 @@
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
 
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.35" />
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.35" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.core.widget.NestedScrollView>
 
         <LinearLayout
-            android:id="@+id/llStartActivity"
+            android:id="@+id/llSubmitSave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -284,8 +292,8 @@
             android:orientation="horizontal"
             android:paddingTop="@dimen/_16sdp"
             android:paddingBottom="@dimen/_16sdp"
-            android:theme="@style/LightTheme"
-            android:weightSum="2">
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <com.isl.leaseManagement.utils.CustomTextView
                 android:id="@+id/submitBtn"
@@ -314,5 +322,5 @@
                 android:textSize="@dimen/_12ssp"
                 app:layout_constraintTop_toBottomOf="@id/login" />
         </LinearLayout>
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

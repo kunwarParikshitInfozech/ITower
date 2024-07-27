@@ -85,8 +85,8 @@
     <string name="apply">Apply</string>
     <string name="enter_alphanumeric">Enter alphanumeric</string>
     <string name="dd_mm_yyyy">dd.mm.yyyy</string>
-    <string name="off_duty">OFF Duty</string>
-    <string name="on_duty">ON Duty</string>
+    <string name="off_duty">OFF DUTY</string>
+    <string name="on_duty">ON DUTY</string>
     <string name="actions">Actions</string>
     <string name="field_work">Field Work</string>
     <string name="na">NA</string>
@@ -94,5 +94,6 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="mark_all_as_read">Mark all as read</string>
+    <string name="update_date">Update Date</string>
 
 </resources>

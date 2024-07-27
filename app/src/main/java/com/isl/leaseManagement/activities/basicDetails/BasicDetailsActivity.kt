@@ -86,28 +86,40 @@ class BasicDetailsActivity : BaseActivity() {
                     responseData.sadadBillerCode?.let { binding.billerCodeEt.setText(it) }
                     responseData.accountNumber?.let { binding.accountNumberEt.setText(it) }
                     responseData.sadadBillerCode?.let { binding.billerCodeEt.setText(it) }
+                    responseData.sadadExpiryDate?.let { date ->
+                        binding.sadadDocExpiryValue.text = Utilities.getDateFromISO8601(date)
+                    }
                     when (responseData.paymentMethod) {
                         AppConstants.KeyWords.paymentTypeCheck -> {
                             paymentMethod = AppConstants.KeyWords.paymentTypeCheck
-                            binding.billerCodeEt.isEnabled = false
+                  //          binding.billerCodeEt.isEnabled = false
+                            binding.sadadBillerCodeTv.visibility = View.GONE
+                            binding.billerCodeEt.visibility = View.GONE
                             binding.accountNumberEt.isEnabled = false
-                            binding.sadadDocExpiryValue.setOnClickListener(null)
-                            binding.leaseRentExpiryValue.setOnClickListener(null)
+                            binding.sadadDocExpiryTv.visibility = View.GONE
+                            binding.sadadDocExpiryValue.visibility = View.GONE
+                            binding.leaseRentVatExpiryDateTv.visibility = View.GONE
+                            binding.leaseRentExpiryValue.visibility = View.GONE
                             binding.sadadOrLeaseDocumentTv.visibility = View.GONE
                             binding.attachDocumentIv.visibility = View.GONE
+                            binding.clBasicDetails.visibility = View.GONE
                         }
 
                         AppConstants.KeyWords.paymentTypeSadad -> {
                             paymentMethod = AppConstants.KeyWords.paymentTypeSadad
-                            binding.leaseRentExpiryValue.setOnClickListener(null)
+                            binding.leaseRentVatExpiryDateTv.visibility = View.GONE
+                            binding.leaseRentExpiryValue.visibility = View.GONE
                             binding.sadadOrLeaseDocumentTv.text = getString(R.string.sadad_document)
                             tagName = AppConstants.KeyWords.sadadDocumentTagName
                         }
 
                         AppConstants.KeyWords.paymentTypeIban -> {
                             paymentMethod = AppConstants.KeyWords.paymentTypeIban
-                            binding.billerCodeEt.isEnabled = false
-                            binding.sadadDocExpiryValue.setOnClickListener(null)
+             //               binding.billerCodeEt.isEnabled = false
+                            binding.sadadBillerCodeTv.visibility = View.GONE
+                            binding.billerCodeEt.visibility = View.GONE
+                            binding.sadadDocExpiryTv.visibility = View.GONE
+                            binding.sadadDocExpiryValue.visibility = View.GONE
                             binding.sadadOrLeaseDocumentTv.text =
                                 getString(R.string.lease_rent_vat_document)
                             tagName = AppConstants.KeyWords.leaseRentDocTagName
@@ -375,13 +387,13 @@ class BasicDetailsActivity : BaseActivity() {
                 SaveAdditionalDocument(
                     taskId = MyApp.localTempVarStore.taskId,
                     docContentString64 = base64String,
-                    docSize = imageSize.toString()
+                    docSize = "$imageSize KB"
                 )
             )
         }
     }
 
-    private fun getBase64StringAndSizeFromBitmapForCamera(bitmap: Bitmap): Pair<String?, Long> {
+    private fun getBase64StringAndSizeFromBitmapForCamera(bitmap: Bitmap): Pair<String?, Int> {
         val outputStream = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
         val byteArray = outputStream.toByteArray()
@@ -389,7 +401,7 @@ class BasicDetailsActivity : BaseActivity() {
         val imageSize =
             outputStream.size().toLong() // Get size from output stream after compression
 
-        return Pair(stringBase64, imageSize)
+        return Pair(stringBase64, ((imageSize).toInt()))
     }
 
 
@@ -404,7 +416,6 @@ class BasicDetailsActivity : BaseActivity() {
                     fileName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME))
                     fileSize = cursor.getLong(cursor.getColumnIndex(OpenableColumns.SIZE))
                     if (fileSize > 10 * 1024 * 1024) { // 10 MB in bytes
-                        // Show toast message using Toast or a custom snackbar
                         showToastMessage("File size exceeds 10 MB. Please choose a smaller file.")
                         return
                     }
@@ -425,7 +436,7 @@ class BasicDetailsActivity : BaseActivity() {
                         taskId = MyApp.localTempVarStore.taskId,
                         docContentString64 = stringBase64,
                         fileName = fileName,
-                        docSize = ((fileSize / 1024.0).toString() + " KB"),
+                        docSize = (((fileSize / 1024.0).toInt()).toString() + " KB"),
                         docId = ""  //id not available yet, need to upload the doc to API
                     )
                     callUploadDocumentAndUpdateAll3Places(saveAdditionalDocument)

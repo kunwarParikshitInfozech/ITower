@@ -29,6 +29,7 @@ import com.isl.leaseManagement.utils.Utilities.showYesNoDialog
 import infozech.itower.R
 import infozech.itower.databinding.ActivityAddAdditionalDocumentBinding
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
@@ -50,6 +51,8 @@ class AddAdditionalDocumentActivity : BaseActivity() {
     }
 
     private fun init() {
+        binding.additionalDocScrollView.isNestedScrollingEnabled = true
+        binding.rvDeleteDocument.isNestedScrollingEnabled = true
         checkHowManyDocsAreUploaded()
         initializeDeleteDocAdapter()
         val factory = AddAdditionalDocumentViewModelFactory(AddAdditionalDocumentRepository())
@@ -100,6 +103,8 @@ class AddAdditionalDocumentActivity : BaseActivity() {
             lifecycleScope.launch(Dispatchers.IO) {
                 insertedRowId =
                     MyApp.getMyDatabase().saveAdditionalDocumentDao().insertDocument(documentPOJO)
+                delay(100)
+                finish()
             }
         }
         showToastMessage("Document Saved Successfully")
@@ -186,13 +191,13 @@ class AddAdditionalDocumentActivity : BaseActivity() {
                 SaveAdditionalDocument(
                     taskId = MyApp.localTempVarStore.taskId,
                     docContentString64 = base64String,
-                    docSize = imageSize.toString()
+                    docSize = "$imageSize KB"
                 )
             )
         }
     }
 
-    private fun getBase64StringAndSizeFromBitmapForCamera(bitmap: Bitmap): Pair<String?, Long> {
+    private fun getBase64StringAndSizeFromBitmapForCamera(bitmap: Bitmap): Pair<String?, Int> {
         val outputStream = ByteArrayOutputStream()
         bitmap.compress(
             Bitmap.CompressFormat.JPEG,
@@ -204,7 +209,7 @@ class AddAdditionalDocumentActivity : BaseActivity() {
         val imageSize =
             outputStream.size().toLong() // Get size from output stream after compression
 
-        return Pair(stringBase64, imageSize)
+        return Pair(stringBase64, ((imageSize).toInt()))
     }
 
 

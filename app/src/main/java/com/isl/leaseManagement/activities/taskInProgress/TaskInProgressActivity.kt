@@ -48,7 +48,7 @@ class TaskInProgressActivity : BaseActivity() {
 
     private fun fillTaskDetailsData(taskResponse: TaskResponse) {
         taskResponse.taskStatus
-        binding.taskId.text = (taskResponse.taskId ?: "").toString()
+        binding.taskId.text = (taskResponse.siteId ?: "").toString()
         binding.taskName.text = taskResponse.taskName ?: ""
         taskResponse.forecastEndDate?.let {
             binding.dueByValue.text = Utilities.getDateFromISO8601(it)
@@ -85,9 +85,11 @@ class TaskInProgressActivity : BaseActivity() {
             dialog.dismiss()
         }
         binding.requestDetailsTv.setOnClickListener {
+            dialog.dismiss()
             launchActivity(RequestDetailsActivity::class.java)
         }
         binding.addAdditionalDocTv.setOnClickListener {
+            dialog.dismiss()
             if (paymentMethod != AppConstants.KeyWords.paymentTypeCheck) {
                 launchActivity(AddAdditionalDocumentActivity::class.java)
             } else {

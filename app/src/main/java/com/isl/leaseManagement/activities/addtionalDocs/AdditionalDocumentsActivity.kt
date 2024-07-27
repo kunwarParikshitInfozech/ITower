@@ -152,7 +152,6 @@ class AdditionalDocumentsActivity : BaseActivity() {
         }
     }
 
-
     private fun saveFile(base64String: String, nameOfFile: String) {
         try {
             val decodedBytes = Base64.decode(base64String, Base64.DEFAULT)
@@ -239,9 +238,8 @@ class AdditionalDocumentsActivity : BaseActivity() {
             dialog.dismiss()
         }
         saveAdditionalDocument.fileName?.let {
-            getLastChars(it,28)
+            binding.documentNameValue.text= getLastChars(it, 28)
         }
-        binding.documentNameValue.text = saveAdditionalDocument.fileName ?: ""
         binding.uploadDateTimeValue.text = saveAdditionalDocument.dateOfSaving ?: ""
         MyApp.localTempVarStore?.startTaskResponse?.data?.paymentMethod?.let {
             binding.documentTypeValue.text = it
@@ -265,9 +263,11 @@ class AdditionalDocumentsActivity : BaseActivity() {
             dialog.dismiss()
         }
         binding.requestDetailsTv.setOnClickListener {
+            dialog.dismiss()
             launchActivity(RequestDetailsActivity::class.java)
         }
         binding.addAdditionalDocTv.setOnClickListener {
+            dialog.dismiss()
             launchActivity(AddAdditionalDocumentActivity::class.java)
         }
     }

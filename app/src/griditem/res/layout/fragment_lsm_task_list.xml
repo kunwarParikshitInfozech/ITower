@@ -1,58 +1,67 @@
-<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_f8fafb"
-        android:theme="@style/LightTheme"
-        tools:background="@color/white"
+        android:background="@color/white"
         tools:context="com.isl.leaseManagement.fragments.home.LsmHomeFragment">
 
-        <com.isl.leaseManagement.utils.CustomTextView
-            android:id="@+id/myTasksText"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/rlMyTaskText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_8sdp"
-            android:text="@string/my_tasks"
-            android:textColor="@color/black"
-            android:textSize="@dimen/_20ssp"
+            android:background="@color/light_sky_blue"
+            android:paddingBottom="@dimen/_20sdp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/myTasksText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:text="@string/my_tasks"
+                android:textColor="@color/color_001E60"
+                android:textSize="@dimen/_20ssp" />
 
 
-        <com.isl.leaseManagement.utils.CustomTextView
-            android:id="@+id/fieldWorkText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_8sdp"
-            android:layout_marginTop="@dimen/_4sdp"
-            android:text="@string/field_work"
-            android:textColor="@color/color_505F6B"
-            android:textSize="@dimen/_12ssp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/myTasksText"
-            tools:visibility="visible" />
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/fieldWorkText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/myTasksText"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:text="@string/field_work"
+                android:textColor="@color/color_505F6B"
+                android:textSize="@dimen/_12ssp"
+                tools:visibility="visible" />
+        </RelativeLayout>
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/_20sdp"
-            android:paddingBottom="@dimen/_92sdp"
             android:layout_height="wrap_content"
+
             android:fillViewport="true"
+            android:paddingBottom="@dimen/_92sdp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/fieldWorkText">
+            app:layout_constraintTop_toBottomOf="@id/rlMyTaskText">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/white">
 
                 <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/resumeText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:paddingBottom="@dimen/_8sdp"
                     android:text="Resume (00)"
                     android:textColor="@color/color_001E60"
                     android:textSize="@dimen/_12ssp"
@@ -65,8 +74,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/_4sdp"
-                    android:layout_marginBottom="@dimen/_24sdp"
+                    android:background="@color/white"
                     app:layout_constraintTop_toBottomOf="@id/resumeText"
+                    tools:layout_editor_absoluteX="5dp"
                     tools:visibility="visible" />
 
                 <com.isl.leaseManagement.utils.CustomTextView
@@ -75,6 +85,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_8sdp"
                     android:layout_marginTop="@dimen/_12sdp"
+                    android:paddingBottom="@dimen/_8sdp"
                     android:text="@string/schedule"
                     android:textColor="@color/color_001E60"
                     android:textSize="@dimen/_12ssp"
@@ -89,6 +100,7 @@
                     android:layout_marginHorizontal="@dimen/_4sdp"
                     android:layout_marginTop="@dimen/_4sdp"
                     android:layout_marginBottom="@dimen/_24sdp"
+                    android:background="@color/light_sky_blue"
                     app:layout_constraintTop_toBottomOf="@id/scheduledText"
                     tools:visibility="visible" />
             </androidx.constraintlayout.widget.ConstraintLayout>

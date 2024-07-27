@@ -63,7 +63,7 @@ class RequestDetailsActivity : BaseActivity() {
                     binding.landlordEmailEt.text = requestDetails.landlordEmail ?: ""
                     binding.commercialRegNumberEt.text =
                         requestDetails.commercialRegistrationNumber ?: ""
-                    binding.isVatApplicableEt.text = ""
+                    binding.isVatApplicableEt.text = requestDetails.isVATApplicable ?: ""
                 }
                 hideProgressBar()
             },

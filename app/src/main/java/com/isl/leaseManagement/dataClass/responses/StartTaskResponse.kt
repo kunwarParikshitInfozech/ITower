@@ -6,6 +6,7 @@ data class StartTaskResponse(
 ) {
     data class StartTaskData(
         var accountNumber: String?,
+        var sadadExpiryDate:String?,
         val documents: List<StartTaskDocument?>?,
         var paymentMethod: String?,
         var sadadBillerCode: String?,

@@ -15,7 +15,7 @@
             android:layout_marginStart="@dimen/_8sdp"
             android:layout_marginTop="@dimen/_8sdp"
             android:text="@string/my_tasks"
-            android:textColor="@color/black"
+            android:textColor="@color/color_001E60"
             android:textSize="@dimen/_20ssp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

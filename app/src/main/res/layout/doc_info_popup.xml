@@ -112,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_16sdp"
                     android:layout_marginTop="@dimen/_6sdp"
-                    android:text="@string/upload_date_amp_time"
+                    android:text="@string/update_date"
                     android:textColor="@color/color_606F8A"
                     android:textSize="@dimen/_11ssp"
                     app:layout_constraintStart_toStartOf="parent"

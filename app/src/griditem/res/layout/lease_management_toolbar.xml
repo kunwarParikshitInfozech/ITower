@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingBottom="@dimen/_8sdp"
-    android:theme="@style/LightTheme"
-    tools:background="@color/white">
+    tools:background="@color/light_sky_blue">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/profileDutyCl"
@@ -42,6 +41,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/searchSortCl"
         android:layout_width="match_parent"
+        android:paddingBottom="@dimen/_4sdp"
         android:layout_height="wrap_content"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"

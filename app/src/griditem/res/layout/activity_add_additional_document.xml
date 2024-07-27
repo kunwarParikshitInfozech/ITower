@@ -1,55 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clParent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/light_sky_blue"
-        android:theme="@style/LightTheme">
+        android:background="@color/white">
 
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/rlSave"
-            android:fillViewport="true">
+        <RelativeLayout
+            android:id="@+id/rlAdditionalDocText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/light_sky_blue"
+            android:paddingBottom="@dimen/_24sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <ImageView
+                android:id="@+id/backIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:contentDescription="@string/image"
+                android:src="@drawable/back_icon_vector" />
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/additionalDocsTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/backIv"
+                android:layout_alignStart="@id/backIv"
+                android:layout_marginTop="@dimen/_24sdp"
+                android:text="@string/add_additional_document"
+                android:textColor="@color/color_001E60"
+                android:textSize="@dimen/_14ssp" />
+        </RelativeLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/rlSave"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rlAdditionalDocText">
+
+
+            <androidx.core.widget.NestedScrollView
+                android:id="@+id/additionalDocScrollView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="com.isl.leaseManagement.activities.taskInProgress.TaskInProgressActivity">
-
-                <ImageView
-                    android:id="@+id/backIv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_12sdp"
-                    android:layout_marginTop="@dimen/_16sdp"
-                    android:contentDescription="@string/image"
-                    android:src="@drawable/back_icon_vector"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.isl.leaseManagement.utils.CustomTextView
-                    android:id="@+id/additionalDocsTv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_24sdp"
-                    android:text="@string/add_additional_document"
-                    android:textColor="@color/color_001E60"
-                    android:textSize="@dimen/_14ssp"
-                    app:layout_constraintStart_toStartOf="@id/backIv"
-                    app:layout_constraintTop_toBottomOf="@id/backIv" />
-
+                android:layout_height="wrap_content"
+                android:fillViewport="true"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_24sdp"
-                    android:background="@color/white"
-                    app:layout_constraintTop_toBottomOf="@id/additionalDocsTv">
+                    android:layout_height="match_parent">
 
                     <com.isl.leaseManagement.utils.CustomTextView
                         android:id="@+id/docTypeTv"
@@ -138,39 +148,36 @@
                         android:id="@+id/rvDeleteDocument"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_8sdp"
                         android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginBottom="@dimen/_8sdp"
                         app:layout_constraintTop_toBottomOf="@id/addAttachmentIv" />
-
-
                 </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
 
 
-        </androidx.core.widget.NestedScrollView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
         <RelativeLayout
             android:id="@+id/rlSave"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_72sdp"
-            android:layout_alignParentBottom="true"
             android:background="@color/white"
             android:orientation="horizontal"
             android:paddingTop="@dimen/_4sdp"
             android:paddingBottom="@dimen/_16sdp"
             android:theme="@style/LightTheme"
-            android:weightSum="2">
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <com.isl.leaseManagement.utils.CustomTextView
                 android:id="@+id/saveBtn"
@@ -187,5 +194,6 @@
                 app:layout_constraintBottom_toBottomOf="parent" />
 
         </RelativeLayout>
-    </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

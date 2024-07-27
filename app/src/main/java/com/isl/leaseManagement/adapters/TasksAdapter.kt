@@ -48,7 +48,7 @@ class TasksAdapter(
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bindItems(item: TaskResponse?, taskSelectedPosition: Int) {
             item ?: return
-            item.taskId?.let { binding.taskNumber.text = it.toString() }
+            item.siteId?.let { binding.taskNumber.text = it }
             item.taskName?.let { binding.taskName.text = it }
             item.taskStatus?.let { binding.assigned.text = it }
             var slaDuration = ""
@@ -57,7 +57,15 @@ class TasksAdapter(
             item.slaUnit?.let { slaUnit = it }
             binding.taskDays.text = "$slaDuration $slaUnit"
             item.slaStatus?.let { binding.slaStatus.text = it }
-            item.requestPriority?.let { binding.taskPriority.text = it }
+            item.requestPriority?.let {
+                binding.taskPriority.text = it
+                if (it == "Low") {
+                    binding.taskPriority.setTextColor(ctx.getColor(R.color.color_34C759))
+                    binding.taskPriority.background =
+                        ctx.getDrawable(R.drawable.rounded_bg_tv_green)
+                }
+            }
+
             item.actualStartDate?.let { binding.taskDate.text = getDateFromISO8601(it) }
 
             binding.clTasks.setOnClickListener { clickListener.myTaskClicked(item) }

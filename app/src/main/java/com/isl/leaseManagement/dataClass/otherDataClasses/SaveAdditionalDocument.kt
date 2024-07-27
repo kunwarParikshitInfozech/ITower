@@ -15,6 +15,6 @@ data class SaveAdditionalDocument(
 
 fun getCurrentDateInCustomFormat(): String {
     val calendar = Calendar.getInstance()
-    val formatter = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+    val formatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     return formatter.format(calendar.time)
 }

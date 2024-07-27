@@ -12,5 +12,6 @@ data class RequestDetailsResponse(
     val landlordNameInArabic: String?,
     val landlordNationalIdNumber: String?,
     val landlordTelephone: Long?,
-    val landlordType: String?
+    val landlordType: String?,
+    val isVATApplicable:String?
 )

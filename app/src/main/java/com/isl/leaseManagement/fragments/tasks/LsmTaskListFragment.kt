@@ -68,11 +68,11 @@ class LsmTaskListFragment : BaseFragment() {
         setClickListeners()
         db = MyApp.getMyDatabase()
         registerActivityLauncher()
+        getTaskListData()  //to avoid overriding data of filter data
     }
 
     override fun onResume() {
         super.onResume()
-        getTaskListData()
     }
 
     private fun getTaskListData() {
@@ -85,7 +85,6 @@ class LsmTaskListFragment : BaseFragment() {
             binding.scheduledText.visibility = View.GONE
         }
     }
-
 
     private fun changeToolBar() {
         val toolbar: View = requireActivity().findViewById(R.id.leaseManagementToolbar)
@@ -211,7 +210,7 @@ class LsmTaskListFragment : BaseFragment() {
         binding: TaskDetailsPopupBinding,
         dialog: Dialog
     ) {
-        binding.taskNumber.text = (taskResponse.taskId ?: "").toString()
+        binding.taskNumber.text = (taskResponse.siteId ?: "").toString()
         binding.taskName.text = taskResponse.taskName ?: ""
         binding.forecastStartDateValue.text =
             taskResponse.forecastStartDate?.let { Utilities.getDateFromISO8601(it) }
@@ -283,7 +282,7 @@ class LsmTaskListFragment : BaseFragment() {
         )
     }
 
-    fun createTaskResponsePojo(taskResponse: TaskResponse): TaskResponsePOJO {
+    private fun createTaskResponsePojo(taskResponse: TaskResponse): TaskResponsePOJO {
         return TaskResponsePOJO(
             taskResponse.taskId ?: 0,
             taskResponse.requestId,

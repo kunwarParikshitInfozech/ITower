@@ -27,16 +27,14 @@ object Utilities {
     fun getDateFromISO8601(inputDate: String): String {
         val inputFormatter = DateTimeFormatter.ISO_DATE_TIME
         val outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-
         val zonedDateTime = ZonedDateTime.parse(inputDate, inputFormatter)
-        val localDateTime = zonedDateTime.withZoneSameInstant(ZoneOffset.UTC).toLocalDateTime()
-
-        return localDateTime.format(outputFormatter)
+        val localDate = zonedDateTime.toLocalDate()
+        return localDate.format(outputFormatter)
     }
 
     fun toIsoString(dateString: String): String? {
         val formatter = SimpleDateFormat(
-            "dd MMM yyyy",
+            "dd.MM.yyyy",
             Locale.getDefault()
         ) // Set format with MMM for month name
         val parsedDate = formatter.parse(dateString) ?: return null // Try parsing

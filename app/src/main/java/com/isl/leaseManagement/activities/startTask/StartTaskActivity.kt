@@ -52,10 +52,8 @@ class StartTaskActivity : BaseActivity() {
             isCalledFromSavedTaskList = intent.getBooleanExtra(isStartCalledFromRoom, false)
             if (isCalledFromSavedTaskList) {
                 getStartDataFromRoom(taskId)
-                //       showToastMessage("Starting from room")
             } else {
                 callStartTaskApi(taskId)
-                //         showToastMessage("Starting from API")
             }
         } else {
             showToastMessage("Task ID is empty!")
