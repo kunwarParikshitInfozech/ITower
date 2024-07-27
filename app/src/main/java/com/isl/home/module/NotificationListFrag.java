@@ -133,7 +133,7 @@ public class NotificationListFrag extends Fragment {
 		 ArrayList<String> notification_counter = new ArrayList<String>();
 		 final DataBaseHelper dbHelper = new DataBaseHelper(getActivity());
 		 dbHelper.open();
-		 notification_counter = dbHelper.getNotificationCount(mAppPreferences.getUserId(),"0");
+		 notification_counter = dbHelper.getNotificationCount(mAppPreferences.getUserId(),"0","onm");
 		 ShortcutBadger.removeCount(getActivity());
 		 if(notification_counter.size()>0){
 		 ShortcutBadger.applyCount(getActivity(),notification_counter.size());

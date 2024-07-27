@@ -213,7 +213,7 @@ public class PMTabs extends AppCompatActivity{
 		super.onPause();
 		ArrayList<String> notification_counter = new ArrayList<String>();
 		notification_counter = db.getNotificationCount(
-				mAppPreferences.getUserId(), "0");
+				mAppPreferences.getUserId(), "0","onm");
 		ShortcutBadger.removeCount(PMTabs.this);
 		if (notification_counter.size() > 0) {
 			ShortcutBadger.applyCount(PMTabs.this, notification_counter.size());

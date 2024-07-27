@@ -3,8 +3,6 @@ package com.isl.itower;
  * Created by dhakan on 7/4/2018.
  */
 
-import static com.isl.workflow.constant.Constants.gson;
-
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -21,13 +19,14 @@ import androidx.core.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.isl.dao.DataBaseHelper;
 import com.isl.dao.cache.AppPreferences;
 import com.isl.energy.withdrawal.FuelPurchaseGridRPT;
 import com.isl.home.module.NotificationUpdate;
 import com.isl.incident.TicketDetailsTabs;
-import com.isl.leaseManagement.activities.Notification.NotificationDetailActivity;
+import com.isl.leaseManagement.activities.notification.NotificationDetailActivity;
+import com.isl.leaseManagement.fragments.notifications.LsmNotificationsFragment;
+import com.isl.leaseManagement.room.entity.NotificationPOJO;
 import com.isl.modal.BeanAddNotification;
 import com.isl.modal.NotificationListItem;
 import com.isl.notification.ShortcutBadger;
@@ -37,6 +36,7 @@ import com.isl.user.tracking.NoDataPacket;
 import com.isl.util.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import infozech.itower.R;
 
@@ -50,8 +50,7 @@ public class FirebaseMsgReceive extends FirebaseMessagingService {
     BeanAddNotification temp;
     ArrayList<NotificationListItem> notificationListItem;
 
-    String notification_type, tkt_id, SiteId, AlarmDescription, UpdatedFields, AssignedTo, Duration, EscalationLevel, ActivityType,
-            Status, ScheduleDate, RunHour, CurrentRunHour, data, fillingQty, dgType, fillDate, genMessage, subject, DoneDate, RejectBy,task,assignedTime,requestId;
+    String  data;
     Context homeScreen;
 
     @Override
@@ -71,203 +70,192 @@ public class FirebaseMsgReceive extends FirebaseMessagingService {
                 createNotification(remoteMessage.getData().get("body").toString());
             }
         }
-
-    }
+   }
 
     public void createNotification(String messageBody) {
+
         String[] dataTS = messageBody.split("@@@");
+
         for (int counter = 0; counter < dataTS.length; counter++) {
             if (dataTS[counter].contains("NotificationType")) {
                 int position = dataTS[counter].indexOf("~");
-                notification_type = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setNotification_type(notification_type);
+                //notification_type = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setNotification_type(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("DisplayTime")) {
                 int position = dataTS[counter].indexOf("~");
-                String display = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setDisplayDuration(display);
+                //String display = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setDisplayDuration(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("NotificationSubject")) {
                 int position = dataTS[counter].indexOf("~");
-                subject = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setNotification(subject);
+                //subject = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setNotification(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("GenMSG")) { //0.2
                 int position = dataTS[counter].indexOf("~");
-                genMessage = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setGenMessage(genMessage);
+                //genMessage = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setGenMessage(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("TicketId")) {
                 int position = dataTS[counter].indexOf("~");
-                tkt_id = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setTkt_id(tkt_id);
+                //tkt_id = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setTkt_id(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("SiteId")) {
                 int position = dataTS[counter].indexOf("~");
-                SiteId = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setSiteId(SiteId);
+                //SiteId = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setSiteId(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("AlarmDescription")) {
                 int position = dataTS[counter].indexOf("~");
-                AlarmDescription = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setAlarmDescription(AlarmDescription);
+                //AlarmDescription = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setAlarmDescription(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("UpdatedFields")) {
                 int position = dataTS[counter].indexOf("~");
-                UpdatedFields = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setUpdatedFields(UpdatedFields);
+                //UpdatedFields = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setUpdatedFields(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("AssignedTo")) {
                 int position = dataTS[counter].indexOf("~");
-                AssignedTo = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setAssignedTo(AssignedTo);
+                //AssignedTo = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setAssignedTo(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("Duration")) {
                 int position = dataTS[counter].indexOf("~");
-                Duration = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setDuration(Duration);
+                //Duration = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setDuration(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("EscalationLevel")) {
                 int position = dataTS[counter].indexOf("~");
-                EscalationLevel = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setEscalationLevel(EscalationLevel);
+                //EscalationLevel = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setEscalationLevel(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("ActivityType")) {
                 int position = dataTS[counter].indexOf("~");
-                ActivityType = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setActivityType(ActivityType);
+                //ActivityType = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setActivityType( dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("ScheduleDate")) {
                 int position = dataTS[counter].indexOf("~");
-                ScheduleDate = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setScheduleDate(ScheduleDate);
+                //ScheduleDate = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setScheduleDate(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("Status")) {
                 int position = dataTS[counter].indexOf("~");
-                Status = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setStatus(Status);
+                //Status = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setStatus(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("DoneDate")) {
                 int position = dataTS[counter].indexOf("~");
-                DoneDate = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setDoneDate(DoneDate);
+                //DoneDate = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setDoneDate(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("RejectBy")) {
                 int position = dataTS[counter].indexOf("~");
-                RejectBy = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setRejectBy(RejectBy);
+                //RejectBy = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setRejectBy(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("CurrentRunHour")) {
                 int position = dataTS[counter].indexOf("~");
-                CurrentRunHour = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setCurrentRunHour(CurrentRunHour);
+                //CurrentRunHour = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setCurrentRunHour(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("RunHours")) {
                 int position = dataTS[counter].indexOf("~");
-                RunHour = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setRunHour(RunHour);
+                //RunHour = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setRunHour(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("FillingQuantity")) {
                 int position = dataTS[counter].indexOf("~");
-                fillingQty = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setFillingQuantity(fillingQty);
+                //fillingQty = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setFillingQuantity(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("DGType")) {
                 int position = dataTS[counter].indexOf("~");
-                dgType = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setDGType(dgType);
+                //dgType = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setDGType(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("FillingDate")) {//0.2
                 int position = dataTS[counter].indexOf("~");
-                fillDate = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setFillingDate(fillDate);
+                //fillDate = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setFillingDate(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("lattitude")) {
                 int position = dataTS[counter].indexOf("~");
-                String lat = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setLattitude(lat);
+                //String lat = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setLattitude(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("longitude")) {
                 int position = dataTS[counter].indexOf("~");
-                String log = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setLongitude(log);
+                //String log = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setLongitude(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("SupplierName")) {
                 int position = dataTS[counter].indexOf("~");
-                String supplier = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setSupplierName(supplier);
+                //String supplier = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setSupplierName(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("RequestDate")) {
                 int position = dataTS[counter].indexOf("~");
-                String requestDate = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setRequestDate(requestDate);
+                //String requestDate = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setRequestDate(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("ApprovalDate")) {
                 int position = dataTS[counter].indexOf("~");
-                String approvalDate = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setApprovalDate(approvalDate);
+                //String approvalDate = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setApprovalDate(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("Circle")) {
                 int position = dataTS[counter].indexOf("~");
-                String Circle = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setCircle(Circle);
+                //String Circle = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setCircle(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("Zone")) {
                 int position = dataTS[counter].indexOf("~");
-                String Zone = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setZone(Zone);
+               //String Zone = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setZone(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("Cluster")) {
                 int position = dataTS[counter].indexOf("~");
                 String Cluster = dataTS[counter].substring(position + 1, dataTS[counter].length());
                 temp.setCluster(Cluster);
             } else if (dataTS[counter].contains("txnStatus")) {
                 int position = dataTS[counter].indexOf("~");
-                String txnStatus = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setTxnStatus(txnStatus);
+                //String txnStatus = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setTxnStatus(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("aqty")) {
                 int position = dataTS[counter].indexOf("~");
-                String aqty = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setAqty(aqty);
+                //String aqty = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setAqty(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("DoneDate")) {
                 int position = dataTS[counter].indexOf("~");
-                String DoneDate = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setDoneDate(DoneDate);
+                //String DoneDate = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setDoneDate(dataTS[counter].substring(position + 1, dataTS[counter].length()));
             } else if (dataTS[counter].contains("TICKET_MODE")) {
                 int position = dataTS[counter].indexOf("~");
-                String tkt_mode = dataTS[counter].substring(position + 1, dataTS[counter].length());
-                temp.setTkt_mode(tkt_mode);
-            }
-            else if (dataTS[counter].contains("AssignedTime")) {
+                //String tkt_mode = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setTkt_mode(dataTS[counter].substring(position + 1, dataTS[counter].length()));
+            }else if (dataTS[counter].contains("AssignedTime")) {
                 int position = dataTS[counter].indexOf("~");
-                assignedTime = dataTS[counter].substring(position + 1, dataTS[counter].length());
-            }
-            else if (dataTS[counter].contains("Request Id")) {
+                temp.setScheduleDate(dataTS[counter].substring(position + 1, dataTS[counter].length()));
+                //assignedTime = dataTS[counter].substring(position + 1, dataTS[counter].length());
+            }else if (dataTS[counter].contains("Request Id")) {
                 int position = dataTS[counter].indexOf("~");
-                requestId = dataTS[counter].substring(position + 1, dataTS[counter].length());
-            }
-            else if (dataTS[counter].contains("Task")) {
+                temp.setTkt_id(dataTS[counter].substring(position + 1, dataTS[counter].length()));
+                //requestId = dataTS[counter].substring(position + 1, dataTS[counter].length());
+            }else if (dataTS[counter].contains("Task")) {
                 int position = dataTS[counter].indexOf("~");
-                task = dataTS[counter].substring(position + 1, dataTS[counter].length());
+                temp.setActivityType(dataTS[counter].substring(position + 1, dataTS[counter].length()));
+                //task = dataTS[counter].substring(position + 1, dataTS[counter].length());
             }
         }
 
-        if (notification_type.equalsIgnoreCase("1")) {
+        if (temp.getNotification_type().equalsIgnoreCase("1")) {
             temp.setNotification("TT Assignment Notification");
-        } else if (notification_type.equalsIgnoreCase("2")) {
+        } else if (temp.getNotification_type().equalsIgnoreCase("2")) {
             temp.setNotification("TT Update Notification");
-        } else if (notification_type.equalsIgnoreCase("3")) {
+        } else if (temp.getNotification_type().equalsIgnoreCase("3")) {
             temp.setNotification("TT Escalation Notification");
-        } else if (notification_type.equalsIgnoreCase("4")) {
+        } else if (temp.getNotification_type().equalsIgnoreCase("4")) {
             temp.setNotification("Site Activity Schedule Notification");
-        } else if (notification_type.equalsIgnoreCase("5")) {
+        } else if (temp.getNotification_type().equalsIgnoreCase("5")) {
             temp.setNotification("Site Activity Escalation Notification");
-        } else if (notification_type.equalsIgnoreCase("6")) {
+        } else if (temp.getNotification_type().equalsIgnoreCase("6")) {
             temp.setNotification("Filling Beat Plan Notification");
-        } else if (notification_type.equalsIgnoreCase("7")) {//0.2
-            temp.setNotification(subject);
-        } else if (notification_type.equalsIgnoreCase("8")) {
-            temp.setNotification(subject);
-        } else if (notification_type.equalsIgnoreCase("9")) {
+        } else if (temp.getNotification_type().equalsIgnoreCase("7")) {//0.2
+            temp.setNotification(temp.getNotification());
+        } else if (temp.getNotification_type().equalsIgnoreCase("8")) {
+            temp.setNotification(temp.getNotification());
+        } else if (temp.getNotification_type().equalsIgnoreCase("9")) {
             Intent userInfo = new Intent(this, NoDataPacket.class);
             this.startService(userInfo);
-        } else if (notification_type.equalsIgnoreCase("10")) {
+        } else if (temp.getNotification_type().equalsIgnoreCase("10")) {
             Intent userInfo = new Intent(this, GetUserInfoService.class);
             this.startService(userInfo);
-        } else if (notification_type.equalsIgnoreCase("11")) {
-            temp.setNotification("" + subject);
-        } else if (notification_type.equalsIgnoreCase("12")) {
+        } else if (temp.getNotification_type().equalsIgnoreCase("11")) {
+            temp.setNotification("" + temp.getNotification());
+        } else if (temp.getNotification_type().equalsIgnoreCase("12")) {
             temp.setNotification("Site Activity Rejected Notification");
-        } else if (notification_type.equalsIgnoreCase("13")) {
+        } else if (temp.getNotification_type().equalsIgnoreCase("13")) {
             temp.setNotification("Site Activity Done Notification");
         }
-        else if(notification_type.equalsIgnoreCase("20"))
-        {
-            NotificationListItem item = new NotificationListItem(notification_type,SiteId,requestId,assignedTime,task,subject);
-            Gson gson = new Gson();
-            if(mAppPreferences.getNotificationList()!=null) {
-                notificationListItem = gson.fromJson(mAppPreferences.getNotificationList(), new TypeToken<ArrayList<NotificationListItem>>() {
-                }.getType());
-            }
-            notificationListItem.add(item);
-            String data = new Gson().toJson(notificationListItem);
-            mAppPreferences.setNotificationList(data);
-        }
 
-        if (!(notification_type.equalsIgnoreCase("9")
-                || notification_type.equalsIgnoreCase("10"))) {
+        if (!(temp.getNotification_type().equalsIgnoreCase("9")
+                || temp.getNotification_type().equalsIgnoreCase("10"))) {
             onNotificationSetting();
         }
 
@@ -277,87 +265,102 @@ public class FirebaseMsgReceive extends FirebaseMessagingService {
         Intent resultIntent = null;
         String msg = "";
         ArrayList<String> list = new ArrayList<>();
+        data = new Gson().toJson(temp);
+
+        //Notification type = 20 to 40 is  for iLease application
+        if(temp.getNotification_type().equalsIgnoreCase("20")) {
+
+            NotificationPOJO notificationPOJO = new NotificationPOJO(Integer.parseInt(mAppPreferences.getUserId()),data,
+                    temp.getSiteId(), temp.getTkt_id(), temp.getActivityType(), temp.getScheduleDate(),
+                    "", "",Integer.parseInt(temp.getNotification_type()),temp.getNotification(),false,0l);
+
+            MyApp.getMyDatabase().notificationDao().insertNotifications(notificationPOJO);
+            List<NotificationPOJO> notificationPOJOList = MyApp.getMyDatabase().notificationDao().getUnreadNotifications();
+
+            if (notificationPOJOList != null) {
+                msg = "You've received " + notificationPOJOList.size() + " " + temp.getNotification();
+                if (notificationPOJOList.size() > 1) {
+                    msg = "You've received " + notificationPOJOList.size() + " iLease notification.";
+                    resultIntent = new Intent(this, LsmNotificationsFragment.class);
+                } else if (notificationPOJOList.size() == 1) {
+                    resultIntent = new Intent(this, NotificationDetailActivity.class);
+                    resultIntent.putExtra("subject", temp.getNotification());
+                    resultIntent.putExtra("siteid", temp.getSiteId());
+                    resultIntent.putExtra("requestid", temp.getTkt_id());
+                    resultIntent.putExtra("task", temp.getActivityType());
+                    resultIntent.putExtra("assignedTime", temp.getScheduleDate());
+                }
+            }
+        } else {
 
             db = new DataBaseHelper(this);
             db.open();
             temp.setDropTime(Utils.dateNotification());
             temp.setDisplayTime(Utils.CurrentDateTime());
-            data = new Gson().toJson(temp);
-        if(!notification_type.equalsIgnoreCase("20")) {
-            db.insertNotificationData(mAppPreferences.getUserId(), data);
-        }
-            list = db.getNotificationCount(mAppPreferences.getUserId(), "0");
-        if(!notification_type.equalsIgnoreCase("20")) {
+            db.insertNotificationData(mAppPreferences.getUserId(), data,temp.getNotification_type());
+            list = db.getNotificationCount(mAppPreferences.getUserId(), "0","all");
             msg = "You've received " + list.size() + " " + temp.getNotification();
-        }
-        else
-        {
-            msg = "You've received "+ " " + temp.getNotification();
-        }
 
             int flag = 0;
+
             if (list != null && list.size() > 1) {
                 mAppPreferences.setTicketFrmNtBr("1");
                 msg = "You've received " + list.size() + " iTower notification.";
                 flag = 1;
             }
 
-            if (flag == 0 && (notification_type.equalsIgnoreCase("1")
-                    || notification_type.equalsIgnoreCase("2")
-                    || notification_type.equalsIgnoreCase("3"))) {
+            if (flag == 0 && (temp.getNotification_type().equalsIgnoreCase("1")
+                    || temp.getNotification_type().equalsIgnoreCase("2")
+                    || temp.getNotification_type().equalsIgnoreCase("3"))) {
                 mAppPreferences.setTicketFrmNtBr(list.get(0).toString());
                 mAppPreferences.SetBackModeNotifi123(1);
                 resultIntent = new Intent(this, TicketDetailsTabs.class);
-                resultIntent.putExtra("id", tkt_id);
+                resultIntent.putExtra("id", temp.getTkt_id());
                 resultIntent.putExtra("rights",
                         db.getSubMenuRight("AssignedTab", "Incident"));
-            } else if (flag == 0 && (notification_type.equalsIgnoreCase("4")
-                    || notification_type.equalsIgnoreCase("12")
-                    || notification_type.equalsIgnoreCase("13"))) {
+            } else if (flag == 0 && (temp.getNotification_type().equalsIgnoreCase("4")
+                    || temp.getNotification_type().equalsIgnoreCase("12")
+                    || temp.getNotification_type().equalsIgnoreCase("13"))) {
                 mAppPreferences.setTicketFrmNtBr(list.get(0).toString());
                 mAppPreferences.SetBackModeNotifi45(1);
                 resultIntent = new Intent(this, PMTabs.class);
-            } else if (flag == 0 && (notification_type.equalsIgnoreCase("5"))) {
+            } else if (flag == 0 && (temp.getNotification_type().equalsIgnoreCase("5"))) {
                 mAppPreferences.setTicketFrmNtBr(list.get(0).toString());
                 mAppPreferences.SetBackModeNotifi45(1);
                 mAppPreferences.setPMTabs("N"); //default open Miss tab
                 resultIntent = new Intent(this, PMTabs.class);
-            } else if (flag == 0 && (notification_type.equalsIgnoreCase("6")
-                    || notification_type.equalsIgnoreCase("7")
-                    || notification_type.equalsIgnoreCase("14"))) {
+            } else if (flag == 0 && (temp.getNotification_type().equalsIgnoreCase("6")
+                    || temp.getNotification_type().equalsIgnoreCase("7")
+                    || temp.getNotification_type().equalsIgnoreCase("14"))) {
                 resultIntent = new Intent(this, NotificationList.class);
             } else if (flag == 1) {
                 resultIntent = new Intent(this, NotificationList.class);
-            } else if (notification_type.equalsIgnoreCase("8")) {
+            } else if (temp.getNotification_type().equalsIgnoreCase("8")) {
                 resultIntent = new Intent(Intent.ACTION_VIEW);
                 resultIntent.setData(Uri.parse("https://maps.google.com/maps?saddr=28.5335,77.2109&daddr=28.5857,77.311&z=17"));
                 resultIntent.setPackage("com.google.android.apps.maps");
-            } else if (notification_type.equalsIgnoreCase("11")) {
+            } else if (temp.getNotification_type().equalsIgnoreCase("11")) {
                 resultIntent = new Intent(this, FuelPurchaseGridRPT.class);
             }
-            else if (notification_type.equalsIgnoreCase("20")) {
-                resultIntent = new Intent(this, NotificationDetailActivity.class);
-                resultIntent.putExtra("subject",subject);
-                resultIntent.putExtra("siteid",SiteId);
-                resultIntent.putExtra("requestid",requestId);
-                resultIntent.putExtra("task",task);
-            }
+
             db.close();
-            PendingIntent resultPendingIntent = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                resultPendingIntent = PendingIntent.getActivity
-                        (this, 0, resultIntent, PendingIntent.FLAG_MUTABLE);
-            } else {
-                resultPendingIntent = PendingIntent.getActivity
-                        (this, 0, resultIntent, PendingIntent.FLAG_ONE_SHOT);
-            }
+        }
+
+        PendingIntent resultPendingIntent = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            resultPendingIntent = PendingIntent.getActivity
+                    (this, 0, resultIntent, PendingIntent.FLAG_MUTABLE);
+        } else {
+            resultPendingIntent = PendingIntent.getActivity
+                    (this, 0, resultIntent, PendingIntent.FLAG_ONE_SHOT);
+        }
 
         int icon = clientIcon(getApplicationContext().getPackageName());
         Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this,
-                default_notification_channel_id)
+                temp.getNotification_type().equalsIgnoreCase("20")?"iLease":default_notification_channel_id)
                 .setSmallIcon(icon)
-                .setContentTitle("iTower")
+                .setContentTitle(temp.getNotification_type().equalsIgnoreCase("20")?"iLease":"iTower")
                 .setSound(sound)
                 .setContentText(msg);
 

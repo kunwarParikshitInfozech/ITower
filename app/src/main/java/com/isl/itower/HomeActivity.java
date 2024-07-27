@@ -206,7 +206,7 @@ public class HomeActivity extends AppCompatActivity
             badge = new BadgeView(HomeActivity.this, notification);
             dbHelper.updateSparePartStatus();
             notification_list = new ArrayList<String>();
-            notification_list = dbHelper.getNotificationCount(mAppPreferences.getUserId(), "0");
+            notification_list = dbHelper.getNotificationCount(mAppPreferences.getUserId(), "0","onm");
             dbHelper.close();
             if (nsRight.contains("V") && notification_list != null && notification_list.size() > 0) {
                 badge.setText("" + notification_list.size());
@@ -335,7 +335,7 @@ public class HomeActivity extends AppCompatActivity
         } else {
             DataBaseHelper dbHelper = new DataBaseHelper(HomeActivity.this);
             dbHelper.open();
-            notification_list = dbHelper.getNotificationCount(mAppPreferences.getUserId(), "0");
+            notification_list = dbHelper.getNotificationCount(mAppPreferences.getUserId(), "0","onm");
             dbHelper.close();
             if (nsRight.contains("V")) {
                 notification.setVisibility(View.VISIBLE);
@@ -1928,7 +1928,7 @@ public class HomeActivity extends AppCompatActivity
     public void updateNotificationCount() {
         DataBaseHelper dbHelper = new DataBaseHelper(HomeActivity.this);
         dbHelper.open();
-        notification_list = dbHelper.getNotificationCount(mAppPreferences.getUserId(), "0");
+        notification_list = dbHelper.getNotificationCount(mAppPreferences.getUserId(), "0","onm");
         dbHelper.close();
         if (nsRight.contains("V")) {
             notification.setVisibility(View.VISIBLE);

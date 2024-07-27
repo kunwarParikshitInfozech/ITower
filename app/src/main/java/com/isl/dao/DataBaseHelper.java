@@ -1074,11 +1074,12 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         }
     }
 
-    public void insertNotificationData(String userId, String notification) {
+    public void insertNotificationData(String userId, String notification, String notificationType) {
         ContentValues values = new ContentValues();
         values.put( "userId", userId );
         values.put( "notification", notification );
         values.put( "readFlag", "0" );
+        values.put( "notificationType", notificationType);
         sqLiteDB.insert( "NOTIFICATION", null, values );
     }
 
@@ -2308,7 +2309,10 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         return notification_list;
     }
 
-    public ArrayList<String> getNotificationCount(String userId, String flag) {
+    /*
+    Posssibalues of module are all, onm ONM & iLease
+     */
+    public ArrayList<String> getNotificationCount(String userId, String flag,String module) {
         ArrayList<String> notification_list = null;
         Cursor c = sqLiteDB
                 .rawQuery(
@@ -2316,7 +2320,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
                                 + userId + "'AND readFlag ='" + flag
                                 + "'ORDER BY ID DESC", null );
         if (c != null) {
-            notification_list = new ArrayList<String>();
+                notification_list = new ArrayList<String>();
             while (c.moveToNext()) {
                 notification_list.add( c.getString( c
                         .getColumnIndex( "notification" ) ) );
