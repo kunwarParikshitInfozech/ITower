@@ -89,10 +89,13 @@ class BasicDetailsActivity : BaseActivity() {
                     responseData.sadadExpiryDate?.let { date ->
                         binding.sadadDocExpiryValue.text = Utilities.getDateFromISO8601(date)
                     }
+                    responseData.rentVATExpiryDate?.let { date ->
+                        binding.leaseRentExpiryValue.text = Utilities.getDateFromISO8601(date)
+                    }
                     when (responseData.paymentMethod) {
                         AppConstants.KeyWords.paymentTypeCheck -> {
                             paymentMethod = AppConstants.KeyWords.paymentTypeCheck
-                  //          binding.billerCodeEt.isEnabled = false
+                            //          binding.billerCodeEt.isEnabled = false
                             binding.sadadBillerCodeTv.visibility = View.GONE
                             binding.billerCodeEt.visibility = View.GONE
                             binding.accountNumberEt.isEnabled = false
@@ -115,7 +118,7 @@ class BasicDetailsActivity : BaseActivity() {
 
                         AppConstants.KeyWords.paymentTypeIban -> {
                             paymentMethod = AppConstants.KeyWords.paymentTypeIban
-             //               binding.billerCodeEt.isEnabled = false
+                            //               binding.billerCodeEt.isEnabled = false
                             binding.sadadBillerCodeTv.visibility = View.GONE
                             binding.billerCodeEt.visibility = View.GONE
                             binding.sadadDocExpiryTv.visibility = View.GONE

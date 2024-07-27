@@ -11,6 +11,7 @@ import android.view.Window
 import infozech.itower.R
 import java.math.BigInteger
 import java.text.SimpleDateFormat
+import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -28,7 +29,7 @@ object Utilities {
         val inputFormatter = DateTimeFormatter.ISO_DATE_TIME
         val outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
         val zonedDateTime = ZonedDateTime.parse(inputDate, inputFormatter)
-        val localDate = zonedDateTime.toLocalDate()
+        val localDate = zonedDateTime.withZoneSameInstant(ZoneId.systemDefault()).toLocalDate()
         return localDate.format(outputFormatter)
     }
 

@@ -4,8 +4,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:background="@color/white"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -93,17 +93,20 @@
                         android:id="@+id/accountNumberTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16sdp"
                         android:layout_marginTop="@dimen/_12sdp"
                         android:text="@string/account_number"
                         android:textColor="@color/color_606F8A"
                         android:textSize="@dimen/_12ssp"
-                        app:layout_constraintStart_toStartOf="@id/sadadBillerCodeTv"
+                        app:layout_constraintStart_toStartOf="parent"
+
                         app:layout_constraintTop_toBottomOf="@id/billerCodeEt" />
 
                     <EditText
                         android:id="@+id/accountNumberEt"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16sdp"
                         android:layout_marginTop="@dimen/_8sdp"
                         android:layout_marginEnd="@dimen/_16sdp"
                         android:background="@drawable/btn_light_grey_border_bg"
@@ -117,24 +120,26 @@
                         android:textColorHint="@color/color_B1B7C8"
                         android:textSize="@dimen/_12ssp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@id/sadadBillerCodeTv"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/accountNumberTv" />
 
                     <com.isl.leaseManagement.utils.CustomTextView
                         android:id="@+id/sadadDocExpiryTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16sdp"
                         android:layout_marginTop="@dimen/_12sdp"
                         android:text="@string/sadad_document_expiry_date"
                         android:textColor="@color/color_606F8A"
                         android:textSize="@dimen/_12ssp"
-                        app:layout_constraintStart_toStartOf="@id/sadadBillerCodeTv"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/accountNumberEt" />
 
                     <com.isl.leaseManagement.utils.CustomTextView
                         android:id="@+id/sadadDocExpiryValue"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16sdp"
                         android:layout_marginTop="@dimen/_8sdp"
                         android:layout_marginEnd="@dimen/_16sdp"
                         android:background="@drawable/btn_light_grey_border_bg"
@@ -149,24 +154,26 @@
                         android:textColorHint="@color/color_B1B7C8"
                         android:textSize="@dimen/_12ssp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@id/sadadBillerCodeTv"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/sadadDocExpiryTv" />
 
                     <com.isl.leaseManagement.utils.CustomTextView
                         android:id="@+id/leaseRentVatExpiryDateTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16sdp"
                         android:layout_marginTop="@dimen/_12sdp"
                         android:text="@string/lease_rent_vat_expiry_date"
                         android:textColor="@color/color_606F8A"
                         android:textSize="@dimen/_12ssp"
-                        app:layout_constraintStart_toStartOf="@id/sadadBillerCodeTv"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/sadadDocExpiryValue" />
 
                     <com.isl.leaseManagement.utils.CustomTextView
                         android:id="@+id/leaseRentExpiryValue"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16sdp"
                         android:layout_marginTop="@dimen/_8sdp"
                         android:layout_marginEnd="@dimen/_16sdp"
                         android:background="@drawable/btn_light_grey_border_bg"
@@ -178,21 +185,23 @@
                         android:paddingEnd="@dimen/_8sdp"
                         android:textAlignment="gravity"
                         android:textColor="@color/color_606F8A"
+
                         android:textColorHint="@color/color_B1B7C8"
                         android:textSize="@dimen/_12ssp"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@id/sadadBillerCodeTv"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/leaseRentVatExpiryDateTv" />
 
                     <com.isl.leaseManagement.utils.CustomTextView
                         android:id="@+id/sadadOrLeaseDocumentTv"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16sdp"
                         android:layout_marginTop="@dimen/_12sdp"
                         android:text="@string/sadad_document"
                         android:textColor="@color/color_606F8A"
                         android:textSize="@dimen/_12ssp"
-                        app:layout_constraintStart_toStartOf="@id/sadadBillerCodeTv"
+                        app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/leaseRentExpiryValue" />
 
                     <ImageView
