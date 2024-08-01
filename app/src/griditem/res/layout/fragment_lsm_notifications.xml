@@ -12,7 +12,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_8sdp">
+            android:layout_marginTop="@dimen/_24sdp">
 
             <com.isl.leaseManagement.utils.CustomTextView
                 android:layout_width="wrap_content"

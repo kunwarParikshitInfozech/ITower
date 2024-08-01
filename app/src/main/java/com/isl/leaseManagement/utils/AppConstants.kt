@@ -3,6 +3,8 @@ package com.isl.leaseManagement.utils
 object AppConstants {
     //   const val baseUrl = "https://ileasemvp.infozech.com/rest/mobileappservices/v1/"
     const val baseUrl = "https://ileasemvp-prod.infozech.com/rest/mobileappservices/v1/"
+    //const val baseUrl = "https://ilease-dev.tawal.com.sa/rest/mobileappservices/v1/"
+    //  const val baseUrl = "https://ilease-qa.tawal.com.sa/rest/mobileappservices/v1/"
 
     object IntentKeys {
         const val taskDetailIntentExtra = "TaskDetailIntentExtra"
