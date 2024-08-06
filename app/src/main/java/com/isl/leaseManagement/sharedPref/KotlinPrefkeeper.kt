@@ -3,9 +3,7 @@ package com.isl.leaseManagement.sharedPref
 import android.content.Context
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
-import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocument
 import com.isl.leaseManagement.utils.AppConstants
-import com.isl.workflow.constant.Constants.gson
 
 object KotlinPrefkeeper {
     private var prefs: SharedPreferences? = null

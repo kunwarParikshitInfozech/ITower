@@ -1,7 +1,7 @@
 package com.isl.leaseManagement.utils
 
-import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocument
-import com.isl.leaseManagement.dataClass.responses.TaskResponse
+import com.isl.leaseManagement.dataClasses.otherDataClasses.SaveAdditionalDocument
+import com.isl.leaseManagement.dataClasses.responses.TaskResponse
 
 object ClickInterfaces {
     interface MyTasks {

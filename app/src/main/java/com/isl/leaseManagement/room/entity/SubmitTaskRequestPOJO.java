@@ -7,7 +7,7 @@ import androidx.room.TypeConverters;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.isl.leaseManagement.dataClass.otherDataClasses.SaveAdditionalDocument;
+import com.isl.leaseManagement.dataClasses.otherDataClasses.SaveAdditionalDocument;
 
 import java.util.Collections;
 import java.util.List;
