@@ -6,7 +6,7 @@
         android:layout_height="match_parent"
         tools:background="@color/white"
         android:theme="@style/LightTheme"
-        tools:context="com.isl.leaseManagement.paymentProcess.fragments.home.LsmHomeFragment">
+        tools:context="com.isl.leaseManagement.common.fragments.home.LsmHomeFragment">
 
         <com.isl.leaseManagement.utils.CustomTextView
             android:layout_width="wrap_content"

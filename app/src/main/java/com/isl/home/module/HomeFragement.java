@@ -70,7 +70,7 @@ import com.isl.itower.CustomGrid;
 import com.isl.itower.ExpandableHeightGridView;
 import com.isl.itower.GPSTracker;
 import com.isl.itower.ValidateUDetails;
-import com.isl.leaseManagement.paymentProcess.activities.home.LsmHomeActivity;
+import com.isl.leaseManagement.common.activities.home.LsmHomeActivity;
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper;
 import com.isl.modal.HomeModule;
 import com.isl.modal.ResponceLoginList;

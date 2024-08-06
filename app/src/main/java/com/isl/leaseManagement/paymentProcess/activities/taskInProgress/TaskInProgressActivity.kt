@@ -7,8 +7,9 @@ import android.view.WindowManager
 import androidx.databinding.DataBindingUtil
 import com.isl.itower.MyApp
 import com.isl.leaseManagement.base.BaseActivity
+import com.isl.leaseManagement.common.activities.addAdditionalDoc.AddAdditionalDocumentActivity
 import com.isl.leaseManagement.dataClasses.responses.TaskResponse
-import com.isl.leaseManagement.paymentProcess.activities.addtionalDocs.AdditionalDocumentsActivity
+import com.isl.leaseManagement.common.activities.addtionalDocs.AdditionalDocumentsActivity
 import com.isl.leaseManagement.paymentProcess.activities.basicDetails.BasicDetailsActivity
 import com.isl.leaseManagement.paymentProcess.activities.requestDetails.RequestDetailsActivity
 import com.isl.leaseManagement.utils.AppConstants
@@ -90,7 +91,7 @@ class TaskInProgressActivity : BaseActivity() {
         binding.addAdditionalDocTv.setOnClickListener {
             dialog.dismiss()
             if (paymentMethod != AppConstants.KeyWords.paymentTypeCheck) {
-                launchActivity(com.isl.leaseManagement.paymentProcess.activities.addAdditionalDoc.AddAdditionalDocumentActivity::class.java)
+                launchActivity(AddAdditionalDocumentActivity::class.java)
             } else {
                 showToastMessage("Payment method is check!")
             }

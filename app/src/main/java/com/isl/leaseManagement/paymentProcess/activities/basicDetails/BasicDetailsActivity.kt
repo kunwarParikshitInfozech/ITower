@@ -25,7 +25,7 @@ import com.isl.leaseManagement.dataClasses.requests.SubmitTaskRequest
 import com.isl.leaseManagement.dataClasses.requests.SubmitTaskRequest.SubmitTaskData
 import com.isl.leaseManagement.dataClasses.requests.UploadDocumentRequest
 import com.isl.leaseManagement.dataClasses.responses.StartTaskResponse
-import com.isl.leaseManagement.paymentProcess.activities.home.LsmHomeActivity
+import com.isl.leaseManagement.common.activities.home.LsmHomeActivity
 import com.isl.leaseManagement.room.entity.SaveAdditionalDocumentPOJO
 import com.isl.leaseManagement.room.entity.StartTaskResponsePOJO
 import com.isl.leaseManagement.room.entity.SubmitTaskRequestPOJO

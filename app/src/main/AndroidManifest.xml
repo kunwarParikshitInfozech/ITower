@@ -79,11 +79,11 @@
         android:usesCleartextTraffic="false">
 
         <activity
-            android:name="com.isl.leaseManagement.paymentProcess.activities.notification.NotificationDetailActivity"
+            android:name="com.isl.leaseManagement.common.activities.notification.NotificationDetailActivity"
             android:exported="false"
             android:theme="@style/LightTheme" />
         <activity
-            android:name="com.isl.leaseManagement.paymentProcess.activities.filter.FilterTasksActivity"
+            android:name="com.isl.leaseManagement.common.activities.filter.FilterTasksActivity"
             android:exported="false"
             android:theme="@style/LightTheme" />
         <activity
@@ -95,13 +95,13 @@
             android:exported="true"
             android:theme="@style/LightTheme"></activity>
         <activity
-            android:name="com.isl.leaseManagement.paymentProcess.activities.addAdditionalDoc.AddAdditionalDocumentActivity"
+            android:name="com.isl.leaseManagement.common.activities.addAdditionalDoc.AddAdditionalDocumentActivity"
             android:exported="true"
             android:theme="@style/LightTheme">
 
         </activity>
         <activity
-            android:name="com.isl.leaseManagement.paymentProcess.activities.addtionalDocs.AdditionalDocumentsActivity"
+            android:name="com.isl.leaseManagement.common.activities.addtionalDocs.AdditionalDocumentsActivity"
             android:exported="false"
             android:theme="@style/LightTheme" />
 
@@ -568,7 +568,7 @@
             android:theme="@style/AppTheme.NoActionBar1"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity
-            android:name="com.isl.leaseManagement.paymentProcess.activities.startTask.StartTaskActivity"
+            android:name="com.isl.leaseManagement.common.activities.startTask.StartTaskActivity"
             android:exported="false"
             android:theme="@style/LightTheme" />
         <activity
@@ -580,7 +580,7 @@
             android:exported="false"
             android:windowSoftInputMode="stateVisible" />
         <activity
-            android:name="com.isl.leaseManagement.paymentProcess.activities.home.LsmHomeActivity"
+            android:name="com.isl.leaseManagement.common.activities.home.LsmHomeActivity"
             android:exported="true"
             android:theme="@style/LightTheme" />
         <!--
