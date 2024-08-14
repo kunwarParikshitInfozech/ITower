@@ -5,12 +5,15 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.isl.dao.cache.AppPreferences
-import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
+import com.isl.leaseManagement.roomCommon.db.CommonDatabase
 import infozech.itower.R
 
 open class BaseActivity : AppCompatActivity() {
+
     var appPreferences: AppPreferences? = null
+    lateinit var commonDatabase: CommonDatabase
     var userId: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_base)
@@ -19,6 +22,7 @@ open class BaseActivity : AppCompatActivity() {
 
     private fun init() {
         appPreferences = AppPreferences(this)
+        commonDatabase = CommonDatabase.getDatabase(this)
     }
 
     fun launchActivity(activityClass: Class<out BaseActivity>) {

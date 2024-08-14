@@ -185,7 +185,6 @@
                         android:paddingEnd="@dimen/_8sdp"
                         android:textAlignment="gravity"
                         android:textColor="@color/color_606F8A"
-
                         android:textColorHint="@color/color_B1B7C8"
                         android:textSize="@dimen/_12ssp"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -278,17 +277,6 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.core.widget.NestedScrollView>
 
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.35" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -331,5 +319,15 @@
                 android:textSize="@dimen/_12ssp"
                 app:layout_constraintTop_toBottomOf="@id/login" />
         </LinearLayout>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.35" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

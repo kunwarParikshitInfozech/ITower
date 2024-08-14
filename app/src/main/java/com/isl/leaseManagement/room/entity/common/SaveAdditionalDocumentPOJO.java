@@ -1,4 +1,4 @@
-package com.isl.leaseManagement.room.entity;
+package com.isl.leaseManagement.room.entity.common;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;

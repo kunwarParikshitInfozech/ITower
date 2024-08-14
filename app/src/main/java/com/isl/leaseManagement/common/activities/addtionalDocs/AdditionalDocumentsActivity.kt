@@ -26,7 +26,7 @@ import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.common.activities.addAdditionalDoc.AddAdditionalDocumentActivity
 import com.isl.leaseManagement.dataClasses.otherDataClasses.SaveAdditionalDocument
 import com.isl.leaseManagement.paymentProcess.activities.requestDetails.RequestDetailsActivity
-import com.isl.leaseManagement.room.entity.SaveAdditionalDocumentPOJO
+import com.isl.leaseManagement.room.entity.common.SaveAdditionalDocumentPOJO
 import com.isl.leaseManagement.utils.ClickInterfaces
 import com.isl.leaseManagement.utils.Utilities
 import com.isl.leaseManagement.utils.Utilities.getLastChars
@@ -241,7 +241,7 @@ class AdditionalDocumentsActivity : BaseActivity() {
             binding.documentNameValue.text= getLastChars(it, 28)
         }
         binding.uploadDateTimeValue.text = saveAdditionalDocument.dateOfSaving ?: ""
-        MyApp.localTempVarStore?.startTaskResponse?.data?.paymentMethod?.let {
+        MyApp.localTempVarStore?.paymentStartTaskResponse?.data?.paymentMethod?.let {
             binding.documentTypeValue.text = it
         }
     }

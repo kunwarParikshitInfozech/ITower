@@ -1,0 +1,118 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingBottom="@dimen/_16sdp"
+        tools:context="com.isl.leaseManagement.common.fragments.home.LsmHomeFragment">
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/docTypeTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_16sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:text="@string/document_type"
+            android:textColor="@color/color_606F8A"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/attachDocumentIv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:contentDescription="@string/image"
+            android:src="@drawable/add_attachment_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/docTypeTv" />
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/deleteDocCl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_12sdp"
+            android:background="@drawable/btn_light_grey_border_bg"
+            android:paddingVertical="@dimen/_8sdp"
+            app:layout_constraintTop_toBottomOf="@id/attachDocumentIv">
+
+            <ImageView
+                android:id="@+id/docImage"
+                android:layout_width="@dimen/_32sdp"
+                android:layout_height="@dimen/_32sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:contentDescription="@string/image"
+                android:src="@drawable/additional_doc_icon"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/docName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/docImage"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_toEndOf="@id/docImage"
+                android:maxLength="24"
+                android:text="@string/no_document_selected"
+                android:textColor="@color/color_001E60"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintStart_toEndOf="@id/docImage"
+                app:layout_constraintTop_toTopOf="@id/docImage" />
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/docSize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/docImage"
+                android:layout_toEndOf="@id/docImage"
+                android:maxLength="18"
+                android:text="@string/size"
+                android:textColor="@color/color_A2A9C7"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintStart_toStartOf="@id/docName"
+                app:layout_constraintTop_toBottomOf="@id/docName" />
+
+            <ImageView
+                android:id="@+id/deleteIcon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:layout_toStartOf="@id/downloadIv"
+                android:contentDescription="@string/image"
+                android:src="@drawable/small_delete_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/downloadIv"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/downloadIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:contentDescription="@string/image"
+                android:src="@drawable/download_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.35" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

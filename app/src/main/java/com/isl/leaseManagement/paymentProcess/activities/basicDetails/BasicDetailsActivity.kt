@@ -20,20 +20,20 @@ import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.isl.itower.MyApp
 import com.isl.leaseManagement.base.BaseActivity
+import com.isl.leaseManagement.common.activities.home.LsmHomeActivity
 import com.isl.leaseManagement.dataClasses.otherDataClasses.SaveAdditionalDocument
 import com.isl.leaseManagement.dataClasses.requests.SubmitTaskRequest
 import com.isl.leaseManagement.dataClasses.requests.SubmitTaskRequest.SubmitTaskData
 import com.isl.leaseManagement.dataClasses.requests.UploadDocumentRequest
-import com.isl.leaseManagement.dataClasses.responses.StartTaskResponse
-import com.isl.leaseManagement.common.activities.home.LsmHomeActivity
-import com.isl.leaseManagement.room.entity.SaveAdditionalDocumentPOJO
-import com.isl.leaseManagement.room.entity.StartTaskResponsePOJO
-import com.isl.leaseManagement.room.entity.SubmitTaskRequestPOJO
+import com.isl.leaseManagement.dataClasses.responses.PaymentStartTaskResponse
+import com.isl.leaseManagement.room.entity.common.SaveAdditionalDocumentPOJO
+import com.isl.leaseManagement.room.entity.paymentProcess.StartTaskPaymentPOJO
+import com.isl.leaseManagement.room.entity.paymentProcess.SubmitTaskRequestPOJO
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
 import com.isl.leaseManagement.utils.AppConstants
 import com.isl.leaseManagement.utils.ClickInterfaces
 import com.isl.leaseManagement.utils.Utilities
-import com.isl.leaseManagement.utils.Utilities.showDatePickerFromCurrentDate
+import com.isl.leaseManagement.utils.Utilities.showDatePickerAndFillDate
 import com.isl.leaseManagement.utils.Utilities.toIsoString
 import infozech.itower.R
 import infozech.itower.databinding.ActivityBasicDetailsBinding
@@ -43,8 +43,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 class BasicDetailsActivity : BaseActivity() {
 
@@ -76,12 +74,12 @@ class BasicDetailsActivity : BaseActivity() {
         getAdditionalDocListOfThisTask()   //calling it at start to give enough time
     }
 
-    private var docFromStartTask: StartTaskResponse.StartTaskData.StartTaskDocument? = null
+    private var docFromStartTask: PaymentStartTaskResponse.StartTaskData.StartTaskDocument? = null
     private var shouldWeUpdateSubmitDocFromStart = false
 
     private fun fillDataOfStartApiAndApplyValidations() {
         MyApp.localTempVarStore?.let { tempVarStorage ->
-            tempVarStorage.startTaskResponse?.let { response ->
+            tempVarStorage.paymentStartTaskResponse?.let { response ->
                 response.data?.let { responseData ->
                     responseData.sadadBillerCode?.let { binding.billerCodeEt.setText(it) }
                     responseData.accountNumber?.let { binding.accountNumberEt.setText(it) }
@@ -93,8 +91,8 @@ class BasicDetailsActivity : BaseActivity() {
                         binding.leaseRentExpiryValue.text = Utilities.getDateFromISO8601(date)
                     }
                     when (responseData.paymentMethod) {
-                        AppConstants.KeyWords.paymentTypeCheck -> {
-                            paymentMethod = AppConstants.KeyWords.paymentTypeCheck
+                        AppConstants.PaymentType.paymentTypeCheck -> {
+                            paymentMethod = AppConstants.PaymentType.paymentTypeCheck
                             //          binding.billerCodeEt.isEnabled = false
                             binding.sadadBillerCodeTv.visibility = View.GONE
                             binding.billerCodeEt.visibility = View.GONE
@@ -108,16 +106,16 @@ class BasicDetailsActivity : BaseActivity() {
                             binding.clBasicDetails.visibility = View.GONE
                         }
 
-                        AppConstants.KeyWords.paymentTypeSadad -> {
-                            paymentMethod = AppConstants.KeyWords.paymentTypeSadad
+                        AppConstants.PaymentType.paymentTypeSadad -> {
+                            paymentMethod = AppConstants.PaymentType.paymentTypeSadad
                             binding.leaseRentVatExpiryDateTv.visibility = View.GONE
                             binding.leaseRentExpiryValue.visibility = View.GONE
                             binding.sadadOrLeaseDocumentTv.text = getString(R.string.sadad_document)
-                            tagName = AppConstants.KeyWords.sadadDocumentTagName
+                            tagName = AppConstants.DocsTagNames.sadadDocumentTagName
                         }
 
-                        AppConstants.KeyWords.paymentTypeIban -> {
-                            paymentMethod = AppConstants.KeyWords.paymentTypeIban
+                        AppConstants.PaymentType.paymentTypeIban -> {
+                            paymentMethod = AppConstants.PaymentType.paymentTypeIban
                             //               binding.billerCodeEt.isEnabled = false
                             binding.sadadBillerCodeTv.visibility = View.GONE
                             binding.billerCodeEt.visibility = View.GONE
@@ -125,7 +123,7 @@ class BasicDetailsActivity : BaseActivity() {
                             binding.sadadDocExpiryValue.visibility = View.GONE
                             binding.sadadOrLeaseDocumentTv.text =
                                 getString(R.string.lease_rent_vat_document)
-                            tagName = AppConstants.KeyWords.leaseRentDocTagName
+                            tagName = AppConstants.DocsTagNames.leaseRentDocTagName
                         }
 
                         else -> { // when case ends
@@ -154,7 +152,7 @@ class BasicDetailsActivity : BaseActivity() {
         }
     }
 
-    private fun uploadStartTaskDocGetDocID(docFromStartTask: StartTaskResponse.StartTaskData.StartTaskDocument) {
+    private fun uploadStartTaskDocGetDocID(docFromStartTask: PaymentStartTaskResponse.StartTaskData.StartTaskDocument) {
 
         if (docFromStartTask.content == null || docFromStartTask.content!!.isEmpty() || tagName.isEmpty() || KotlinPrefkeeper.lsmUserId == null || KotlinPrefkeeper.lsmUserId!!.isEmpty()
             || processId == 0
@@ -205,7 +203,7 @@ class BasicDetailsActivity : BaseActivity() {
                                     startDataClass.data?.documents?.get(0)?.fileName = ""
                                     startDataClass.data?.shouldUpdateSubmitDocFromStart =
                                         2 // now, it wouldn't update
-                                    MyApp.localTempVarStore.startTaskResponse?.data?.shouldUpdateSubmitDocFromStart =
+                                    MyApp.localTempVarStore.paymentStartTaskResponse?.data?.shouldUpdateSubmitDocFromStart =
                                         2// for this session that is no need to get updated value from start task
                                     val startTaskPojo =
                                         convertToStartTaskResponsePOJO(startDataClass)
@@ -233,26 +231,26 @@ class BasicDetailsActivity : BaseActivity() {
         )
     }
 
-    private fun convertToStartTaskResponsePOJO(startTaskResponse: StartTaskResponse): StartTaskResponsePOJO {
+    private fun convertToStartTaskResponsePOJO(paymentStartTaskResponse: PaymentStartTaskResponse): StartTaskPaymentPOJO {
         val gson = Gson()
-        val dataJson = gson.toJson(startTaskResponse.data)
-        return StartTaskResponsePOJO(
+        val dataJson = gson.toJson(paymentStartTaskResponse.data)
+        return StartTaskPaymentPOJO(
             currentTaskId,
             dataJson,
-            startTaskResponse.processId
+            paymentStartTaskResponse.processId
         )
     }
 
-    private fun convertStartTaskPOJOtoDataClass(pojo: StartTaskResponsePOJO): StartTaskResponse {
+    private fun convertStartTaskPOJOtoDataClass(pojo: StartTaskPaymentPOJO): PaymentStartTaskResponse {
         val dataJson = pojo.dataJson
         val processId = pojo.processId
         val gson = Gson()
-        val startTaskData: StartTaskResponse.StartTaskData? = if (dataJson.isEmpty()) {
+        val startTaskData: PaymentStartTaskResponse.StartTaskData? = if (dataJson.isEmpty()) {
             null
         } else {
-            gson.fromJson(dataJson, StartTaskResponse.StartTaskData::class.java)
+            gson.fromJson(dataJson, PaymentStartTaskResponse.StartTaskData::class.java)
         }
-        return StartTaskResponse(startTaskData, processId)
+        return PaymentStartTaskResponse(startTaskData, processId)
     }
 
 
@@ -273,7 +271,7 @@ class BasicDetailsActivity : BaseActivity() {
                     binding.sadadDocExpiryValue.text = data.sadadExpiryDate ?: ""
                     binding.leaseRentExpiryValue.text = data.rentVATExpiryDate ?: ""
                     if (data.document != null && data.document.fileName != null) {
-                        if (paymentMethod != AppConstants.KeyWords.paymentTypeCheck) { //filling delete layout
+                        if (paymentMethod != AppConstants.PaymentType.paymentTypeCheck) { //filling delete layout
                             binding.docName.text = getLastChars(data.document!!.fileName!!, 14)
                             if (data.document.docSize != null) {
                                 binding.docSize.text = getLastChars(data.document.docSize!!, 12)
@@ -297,21 +295,20 @@ class BasicDetailsActivity : BaseActivity() {
             showToastMessage("Submit Data Saved!")
             saveSubmitDetails()
         }
-        binding.sadadDocExpiryValue.setOnClickListener { showDatePickerAndFillDate(it as TextView) }
-        binding.leaseRentExpiryValue.setOnClickListener { showDatePickerAndFillDate(it as TextView) }
+        binding.sadadDocExpiryValue.setOnClickListener {
+            showDatePickerAndFillDate(
+                it as TextView,
+                this
+            )
+        }
+        binding.leaseRentExpiryValue.setOnClickListener {
+            showDatePickerAndFillDate(
+                it as TextView,
+                this
+            )
+        }
         binding.attachDocumentIv.setOnClickListener { openCameraDocPopup() }
         binding.deleteDocBtn.setOnClickListener { deleteDocumentClicked() }
-    }
-
-    private fun showDatePickerAndFillDate(view: TextView) {
-        showDatePickerFromCurrentDate(this@BasicDetailsActivity) { selectedDate ->
-            val formatter = SimpleDateFormat(
-                "dd.MM.yyyy",
-                Locale.getDefault()
-            ) // Set format with MMM for 3-letter month
-            val formattedDate = formatter.format(selectedDate.time)
-            view.text = formattedDate
-        }
     }
 
     private fun openCameraDocPopup() {
@@ -531,11 +528,11 @@ class BasicDetailsActivity : BaseActivity() {
     private fun submitDataToAPI() {   //note -  submitTaskRequest already have process id and document
         if (paymentMethod != null) {
             when (paymentMethod) {
-                AppConstants.KeyWords.paymentTypeCheck -> {
+                AppConstants.PaymentType.paymentTypeCheck -> {
                     submitInCheckCase()
                 }
 
-                AppConstants.KeyWords.paymentTypeSadad -> {
+                AppConstants.PaymentType.paymentTypeSadad -> {
                     //for additional doc
                     val additionalDocList = ArrayList<SubmitTaskData.Document>()
                     saveAdditionalDocumentList.let {
@@ -546,7 +543,7 @@ class BasicDetailsActivity : BaseActivity() {
                     submitInSADADCase(additionalDocList)
                 }
 
-                AppConstants.KeyWords.paymentTypeIban -> {
+                AppConstants.PaymentType.paymentTypeIban -> {
                     //for additional doc
                     val additionalDocList = ArrayList<SubmitTaskData.Document>()
                     saveAdditionalDocumentList.let {
@@ -741,7 +738,11 @@ class BasicDetailsActivity : BaseActivity() {
         )
 
         val submitTaskRequestPOJO =
-            SubmitTaskRequestPOJO(currentTaskId, submitTaskData, null) // processId can be null
+            SubmitTaskRequestPOJO(
+                currentTaskId,
+                submitTaskData,
+                null
+            ) // processId can be null
 
         lifecycleScope.launch(Dispatchers.IO) {
             MyApp.getMyDatabase().submitTaskDao().insertSubmitTask(submitTaskRequestPOJO)

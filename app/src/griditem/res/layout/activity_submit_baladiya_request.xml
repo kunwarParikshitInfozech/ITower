@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:context="com.isl.leaseManagement.activities.taskInProgress.TaskInProgressActivity">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/rlBasicDetailsText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/light_sky_blue"
+                android:paddingBottom="@dimen/_20sdp"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageView
+                    android:id="@+id/backIv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_12sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:contentDescription="@string/image"
+                    android:src="@drawable/back_icon_vector"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/submitBaladiyaRequestTv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@id/backIv"
+                    android:layout_marginTop="@dimen/_24sdp"
+                    android:text="@string/submit_baladiya_request"
+                    android:textColor="@color/color_001E60"
+                    android:textSize="@dimen/_14ssp"
+                    app:layout_constraintStart_toStartOf="@id/backIv"
+                    app:layout_constraintTop_toBottomOf="@id/backIv" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true"
+                app:layout_constraintTop_toBottomOf="@id/rlBasicDetailsText">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/clBasicDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.isl.leaseManagement.utils.CustomTextView
+                        android:id="@+id/baladiyaNameTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:text="@string/baladiya_name"
+                        android:textColor="@color/color_606F8A"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.isl.leaseManagement.utils.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_1sdp"
+                        android:text="@string/asterisk_symbol"
+                        android:textColor="@color/color_FF4D4F"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintStart_toEndOf="@id/baladiyaNameTv"
+                        app:layout_constraintTop_toTopOf="@id/baladiyaNameTv" />
+
+                    <Spinner
+                        android:id="@+id/baladiyaNameSelection"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_44sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_16sdp"
+                        android:background="@drawable/btn_light_grey_border_bg"
+                        android:drawableEnd="@drawable/notification_forward_icon"
+                        android:hint="@string/choose_an_option"
+                        android:paddingVertical="@dimen/_14sdp"
+                        android:paddingStart="@dimen/_8sdp"
+                        android:paddingEnd="@dimen/_8sdp"
+                        android:textColor="@color/color_606F8A"
+                        android:textColorHint="@color/color_B1B7C8"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="@id/baladiyaNameTv"
+                        app:layout_constraintTop_toBottomOf="@id/baladiyaNameTv" />
+
+                    <com.isl.leaseManagement.utils.CustomTextView
+                        android:id="@+id/baladiyaApplicationSubmittedTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:text="@string/baladiya_application_submitted"
+                        android:textColor="@color/color_606F8A"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/baladiyaNameSelection" />
+
+                    <com.isl.leaseManagement.utils.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_1sdp"
+                        android:text="@string/asterisk_symbol"
+                        android:textColor="@color/color_FF4D4F"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintStart_toEndOf="@id/baladiyaApplicationSubmittedTv"
+                        app:layout_constraintTop_toTopOf="@id/baladiyaApplicationSubmittedTv" />
+
+
+                    <Spinner
+                        android:id="@+id/applicationSubmittedSelection"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_44sdp"
+                        android:layout_marginStart="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_16sdp"
+                        android:background="@drawable/btn_light_grey_border_bg"
+                        android:gravity="top"
+                        android:hint="@string/enter_alphanumeric"
+                        android:paddingVertical="@dimen/_14sdp"
+                        android:paddingStart="@dimen/_8sdp"
+                        android:paddingEnd="@dimen/_8sdp"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/color_606F8A"
+                        android:textColorHint="@color/color_B1B7C8"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/baladiyaApplicationSubmittedTv" />
+
+                    <com.isl.leaseManagement.utils.CustomTextView
+                        android:id="@+id/baladiyaRequestNumberTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:text="@string/baladiya_request_number"
+                        android:textColor="@color/color_606F8A"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/applicationSubmittedSelection" />
+
+                    <com.isl.leaseManagement.utils.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_1sdp"
+                        android:text="@string/asterisk_symbol"
+                        android:textColor="@color/color_FF4D4F"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintStart_toEndOf="@id/baladiyaRequestNumberTv"
+                        app:layout_constraintTop_toTopOf="@id/baladiyaRequestNumberTv" />
+
+
+                    <com.isl.util.CustomEditText
+                        android:id="@+id/baladiyaRequestNumberTvValue"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_44sdp"
+                        android:layout_marginStart="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_16sdp"
+                        android:background="@drawable/bg_filled_grey_rounded"
+                        android:gravity="center_vertical"
+                        android:hint="@string/enter_alphanumeric"
+                        android:paddingVertical="@dimen/_14sdp"
+                        android:paddingStart="@dimen/_8sdp"
+                        android:paddingEnd="@dimen/_8sdp"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/color_606F8A"
+                        android:textColorHint="@color/color_B1B7C8"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/baladiyaRequestNumberTv" />
+
+                    <com.isl.leaseManagement.utils.CustomTextView
+                        android:id="@+id/trackingNumberTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:text="@string/tracking_number"
+                        android:textColor="@color/color_606F8A"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/baladiyaRequestNumberTvValue" />
+
+                    <com.isl.util.CustomEditText
+                        android:id="@+id/trackingNumberTvValue"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_44sdp"
+                        android:layout_marginStart="@dimen/_16sdp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginEnd="@dimen/_16sdp"
+                        android:background="@drawable/bg_filled_grey_rounded"
+                        android:gravity="center_vertical"
+                        android:hint="@string/enter_alphanumeric"
+                        android:paddingVertical="@dimen/_14sdp"
+                        android:paddingStart="@dimen/_8sdp"
+                        android:paddingEnd="@dimen/_8sdp"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/color_606F8A"
+                        android:textColorHint="@color/color_B1B7C8"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/trackingNumberTv" />
+
+                    <com.isl.leaseManagement.utils.CustomTextView
+                        android:id="@+id/applicationSubmissionDateTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:text="Application Submission Date"
+                        android:textColor="@color/color_606F8A"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/trackingNumberTvValue" />
+
+                    <com.isl.leaseManagement.utils.CustomTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/_1sdp"
+                        android:text="@string/asterisk_symbol"
+                        android:textColor="@color/color_FF4D4F"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintStart_toEndOf="@id/applicationSubmissionDateTv"
+                        app:layout_constraintTop_toTopOf="@id/applicationSubmissionDateTv" />
+
+
+                    <com.isl.leaseManagement.utils.CustomTextView
+                        android:id="@+id/applicationSubmissionDateTvValue"
+                        android:layout_width="0dp"
+                        android:layout_height="@dimen/_44sdp"
+                        android:layout_marginStart="@dimen/_16sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginEnd="@dimen/_16sdp"
+                        android:background="@drawable/bg_filled_grey_rounded"
+                        android:drawableEnd="@drawable/calendar_small_icon"
+                        android:gravity="center_vertical"
+                        android:hint="@string/dd_mm_yyyy"
+                        android:paddingVertical="@dimen/_14sdp"
+                        android:paddingStart="@dimen/_8sdp"
+                        android:paddingEnd="@dimen/_8sdp"
+                        android:textAlignment="gravity"
+                        android:textColor="@color/color_606F8A"
+                        android:textColorHint="@color/color_B1B7C8"
+                        android:textSize="@dimen/_12ssp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/applicationSubmissionDateTv" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.core.widget.NestedScrollView>
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.35" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <LinearLayout
+            android:id="@+id/llSubmitSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/_16sdp"
+            android:paddingBottom="@dimen/_16sdp"
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/saveToApiAndDraft"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_orange_rect_bg"
+                android:gravity="center"
+                android:text="@string/save"
+                android:textAlignment="gravity"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/saveAsDraftBtn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_grey_border_bg"
+                android:gravity="center"
+                android:text="@string/save_as_draft"
+                android:textAlignment="gravity"
+                android:textColor="@color/color_606F8A"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintTop_toBottomOf="@id/login" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/actionBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/image"
+            android:src="@drawable/lsm_actions_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.90" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

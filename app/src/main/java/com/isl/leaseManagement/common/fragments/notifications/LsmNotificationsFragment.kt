@@ -12,7 +12,7 @@ import com.isl.itower.MyApp
 import com.isl.leaseManagement.common.adapters.NotificationListAdapter
 import com.isl.leaseManagement.base.BaseFragment
 import com.isl.leaseManagement.room.db.MyDatabase
-import com.isl.leaseManagement.room.entity.NotificationPOJO
+import com.isl.leaseManagement.room.entity.common.NotificationPOJO
 import com.isl.modal.NotificationListItem
 import infozech.itower.R
 import kotlinx.coroutines.Dispatchers

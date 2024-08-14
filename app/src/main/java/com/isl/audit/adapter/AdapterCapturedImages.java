@@ -18,7 +18,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.isl.app.auth.GlideApp;
+//import com.isl.app.auth.GlideApp;
 import com.isl.audit.model.ImageModel;
 import com.isl.audit.util.ImageRemoveListener;
 import com.isl.util.Utils;
@@ -67,9 +67,9 @@ public class AdapterCapturedImages extends RecyclerView.Adapter<AdapterCapturedI
             path=imgBaseUrl+path;
             Log.d("IMAGE_URL---",path);
 
-            GlideApp.with(activity).
-                    load(path)
-                    .into(holder.ivCaptured);
+//            GlideApp.with(activity).
+//                    load(path)
+//                    .into(holder.ivCaptured);
 
 
         }
@@ -108,9 +108,9 @@ public class AdapterCapturedImages extends RecyclerView.Adapter<AdapterCapturedI
             } else {
                 ivFullImage.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.GONE);
-                GlideApp.with(activity).
-                        load(path)
-                        .into(ivFullImage);
+//                GlideApp.with(activity).
+//                        load(path)
+//                        .into(ivFullImage);
                // imageView.setBackgroundColor( Color.parseColor( "#000000" ) );
             }
             btnClose.setOnClickListener(arg0 -> nagDialog.dismiss());

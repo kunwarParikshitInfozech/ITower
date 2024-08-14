@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/spinnerItem"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_32sdp"
+    android:gravity="center_vertical"
+    android:textAlignment="gravity"
+    android:padding="@dimen/_2sdp"
+    android:textColor="@android:color/black"
+    android:textSize="16sp"
+    app:layout_constraintTop_toTopOf="parent" />

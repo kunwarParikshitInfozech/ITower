@@ -3,9 +3,12 @@ import com.isl.leaseManagement.dataClasses.requests.StartTaskRequest
 import com.isl.leaseManagement.dataClasses.requests.SubmitTaskRequest
 import com.isl.leaseManagement.dataClasses.requests.UploadDocumentRequest
 import com.isl.leaseManagement.dataClasses.responses.ApiSuccessFlagResponse
+import com.isl.leaseManagement.dataClasses.responses.BaladiyaNamesListResponse
 import com.isl.leaseManagement.dataClasses.responses.FetchUserIdResponse
+import com.isl.leaseManagement.dataClasses.responses.FieldWorkStartTaskResponse
+import com.isl.leaseManagement.dataClasses.responses.PaymentStartTaskResponse
 import com.isl.leaseManagement.dataClasses.responses.RequestDetailsResponse
-import com.isl.leaseManagement.dataClasses.responses.StartTaskResponse
+import com.isl.leaseManagement.dataClasses.responses.SubmitBaladiyaFWRequest
 import com.isl.leaseManagement.dataClasses.responses.TaskResponse
 import com.isl.leaseManagement.dataClasses.responses.TasksSummaryResponse
 import com.isl.leaseManagement.dataClasses.responses.UploadDocumentResponse
@@ -38,11 +41,11 @@ interface IApiRequest {
 
     @Headers("Content-Type: application/json")
     @PUT("leasemanagement/1/users/{userId}/tasks/{taskId}/start")
-    fun startTask(
+    fun startTaskPayment(
         @Path("userId") userId: String,
         @Path("taskId") taskId: Int,
         @Body body: StartTaskRequest
-    ): Observable<StartTaskResponse>
+    ): Observable<PaymentStartTaskResponse>
 
     @Headers("Content-Type: application/json")
     @PUT("leasemanagement/1/users/{userId}/tasks/{taskId}/submit")
@@ -67,6 +70,31 @@ interface IApiRequest {
     @POST("usertracking/1/users/deviceId")
     fun fetchDeviceID(
         @Body body: FetchDeviceIDRequest
-    ): Observable<FetchUserIdResponse>   //response is also same
+    ): Observable<FetchUserIdResponse>
+
+    @Headers("Content-Type: application/json")
+    @PUT("leasemanagement/1/users/{userId}/baladiya/tasks/{taskId}/start")
+    fun startTaskFieldWork(
+        @Path("userId") userId: String,
+        @Path("taskId") taskId: Int,
+        @Body body: StartTaskRequest
+    ): Observable<FieldWorkStartTaskResponse>
+
+    @GET("leasemanagement/1/baladiyalist")
+    fun getBaladiyaNameList(): Observable<BaladiyaNamesListResponse>
+
+    @PUT("leasemanagement/1/users/{userId}/baladiya/tasks/{taskId}")
+    fun updateBaladiyaResponse(      //common for all 3 baladiya response
+        @Path("userId") userId: String,
+        @Path("taskId") taskId: Int,
+        @Body body: FieldWorkStartTaskResponse
+    ): Observable<ApiSuccessFlagResponse>
+
+    @PUT("leasemanagement/1/users/{userId}/baladiya/tasks/{taskId}/submit")
+    fun submitBaladiyaFieldWork(
+        @Path("userId") userId: String,
+        @Path("taskId") taskId: Int,
+        @Body body: SubmitBaladiyaFWRequest
+    ): Observable<ApiSuccessFlagResponse>
 
 }

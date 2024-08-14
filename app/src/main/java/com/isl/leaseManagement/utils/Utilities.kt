@@ -7,12 +7,22 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
+import android.view.WindowManager
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.TextView
+import com.google.gson.Gson
+import com.isl.leaseManagement.base.BaseActivity
+import com.isl.leaseManagement.common.activities.addAdditionalDoc.AddAdditionalDocumentActivity
+import com.isl.leaseManagement.paymentProcess.activities.requestDetails.RequestDetailsActivity
 import infozech.itower.R
+import infozech.itower.databinding.ActionsPopupBinding
 import java.math.BigInteger
 import java.text.SimpleDateFormat
 import java.time.ZoneId
-import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Calendar
@@ -156,9 +166,195 @@ object Utilities {
         }
     }
 
-    fun getLastChars(str: String, maxLength: Int): String {
+    fun getLastChars(str: String?, maxLength: Int): String? {
+        if (str == null) return null
         val length = str.length
         return if (length <= maxLength) str else str.substring(length - maxLength)
+    }
+
+//    fun initializeDropDownWithStringAndIdArray(
+//        firstHintText: String = "Choose an option",
+//        context: BaseActivity,
+//        stringsArray: Array<String>,
+//        spinner: Spinner,
+//        commonInterface: ClickInterfaces.CommonInterface
+//    ) {
+////        val adapter =
+////            ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, stringsArray){
+////
+////            }
+//
+//
+//        val adapter = object : ArrayAdapter<String>(.layout.spinner_item_layout, stringsArray) {
+//            override fun isEnabled(position: Int): Boolean {
+//                // Disable the first item from being selected (it acts as a placeholder)
+//                return position != 0
+//            }
+//
+//            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+//                val view = super.getDropDownView(position, convertView, parent)
+//                val textView = view.findViewById<TextView>(R.id.spinnerItem)
+//
+//                // Set the color for the placeholder text
+//                if (position == 0) {
+//                    textView.setTextColor(Color.GRAY)
+//                } else {
+//                    textView.setTextColor(Color.BLACK)
+//                }
+//
+//                return view
+//            }
+//        }
+//
+//
+//        spinner.adapter = adapter
+//
+//        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(
+//                parent: AdapterView<*>,
+//                view: View?,
+//                position: Int,
+//                id: Long
+//            ) {
+//                val selectedItem = parent.getItemAtPosition(position) as String
+//                commonInterface.triggerWithInt(position)
+//                commonInterface.triggerWithString(selectedItem)
+//            }
+//
+//            override fun onNothingSelected(parent: AdapterView<*>) {//-
+//            }
+//
+//
+//        }
+//    }
+
+    fun initializeDropDownWithStringAndIdArray(
+        firstHintText: String = "Choose an option",
+        context: BaseActivity,
+        stringsArray: Array<String>,
+        spinner: Spinner,
+        commonInterface: ClickInterfaces.CommonInterface
+    ) {
+        // Create a new list with the hint text as the first item
+        val items = listOf(firstHintText) + stringsArray
+
+        // Define a custom ArrayAdapter
+        val adapter = object : ArrayAdapter<String>(context, R.layout.spinner_item_layout, items) {
+
+            // Override to display the selected item in the Spinner
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getView(position, convertView, parent)
+                val textView = view.findViewById<TextView>(R.id.spinnerItem)
+
+                // Set the color for the selected text
+                if (position == 0) {
+                    textView.setTextColor(Color.GRAY)
+                } else {
+                    textView.setTextColor(Color.BLACK)
+                }
+
+                return view
+            }
+
+            override fun isEnabled(position: Int): Boolean {
+                // Disable the first item from being selected (it acts as a placeholder)
+                return position != 0
+            }
+
+            override fun getDropDownView(
+                position: Int,
+                convertView: View?,
+                parent: ViewGroup
+            ): View {
+                val view = super.getDropDownView(position, convertView, parent)
+                val textView = view.findViewById<TextView>(R.id.spinnerItem)
+
+                // Set the color for the placeholder text
+                if (position == 0) {
+                    textView.setTextColor(Color.GRAY)
+                } else {
+                    textView.setTextColor(Color.BLACK)
+                }
+
+                return view
+            }
+        }
+
+        // Set the adapter to the spinner
+        spinner.adapter = adapter
+
+        // Set an item selected listener on the spinner
+        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (position != 0) {
+                    val selectedItem = parent.getItemAtPosition(position) as String
+                    commonInterface.triggerWithInt(position)
+                    commonInterface.triggerWithString(selectedItem)
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                // No action needed when nothing is selected
+            }
+        }
+    }
+
+
+    fun showActionPopup(context: BaseActivity) {
+        val dialog = Dialog(context)
+        val binding = ActionsPopupBinding.inflate(context.layoutInflater)
+        dialog.setContentView(binding.root)
+        dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(dialog.window!!.attributes)
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+        val heightInPixels = Utilities.dpToPx(context, 480)
+        layoutParams.height = heightInPixels
+        layoutParams.gravity = Gravity.BOTTOM
+        dialog.window!!.attributes = layoutParams
+        dialog.show()
+        binding.closeTv.setOnClickListener {
+            dialog.dismiss()
+        }
+        binding.requestDetailsTv.setOnClickListener {
+            dialog.dismiss()
+            context.launchActivity(RequestDetailsActivity::class.java)
+        }
+        binding.addAdditionalDocTv.setOnClickListener {
+            dialog.dismiss()
+            context.launchActivity(AddAdditionalDocumentActivity::class.java)
+        }
+    }
+
+    fun showDatePickerAndFillDate(view: TextView, context: BaseActivity) {
+        showDatePickerFromCurrentDate(context) { selectedDate ->
+            val formatter = SimpleDateFormat(
+                "dd.MM.yyyy",
+                Locale.getDefault()
+            ) // Set format with MMM for 3-letter month
+            val formattedDate = formatter.format(selectedDate.time)
+            view.text = formattedDate
+        }
+    }
+
+    fun getJsonFromDataClass(dataClass: Any): String {
+        val gson = Gson()
+        return gson.toJson(dataClass)
+    }
+
+    inline fun <reified T> getDataClassFromJson(dataJson: String?): T? {
+        return if (dataJson != null) {
+            try {
+                Gson().fromJson(dataJson, T::class.java)
+            } catch (e: Exception) {
+                return null
+            }
+        } else null
     }
 
 }

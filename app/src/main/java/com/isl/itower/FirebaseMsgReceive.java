@@ -26,7 +26,7 @@ import com.isl.home.module.NotificationUpdate;
 import com.isl.incident.TicketDetailsTabs;
 import com.isl.leaseManagement.common.activities.notification.NotificationDetailActivity;
 import com.isl.leaseManagement.common.fragments.notifications.LsmNotificationsFragment;
-import com.isl.leaseManagement.room.entity.NotificationPOJO;
+import com.isl.leaseManagement.room.entity.common.NotificationPOJO;
 import com.isl.modal.BeanAddNotification;
 import com.isl.modal.NotificationListItem;
 import com.isl.notification.ShortcutBadger;

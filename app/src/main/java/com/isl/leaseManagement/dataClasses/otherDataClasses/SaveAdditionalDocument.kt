@@ -6,14 +6,16 @@ import java.util.Locale
 
 data class SaveAdditionalDocument(
     var taskId: Int,
+    var documentTypeName: String? = "",
     var fileName: String? = "Camera Image",
     var docSize: String? = "Unknown",
     var docContentString64: String? = "",
     var docId: String? = "",
+    var tagName: String? = "",
     var dateOfSaving: String = getCurrentDateInCustomFormat()
 )
 
-fun getCurrentDateInCustomFormat(): String {
+private fun getCurrentDateInCustomFormat(): String {
     val calendar = Calendar.getInstance()
     val formatter = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
     return formatter.format(calendar.time)

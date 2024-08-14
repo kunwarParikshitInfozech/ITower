@@ -95,5 +95,33 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="mark_all_as_read">Mark all as read</string>
     <string name="update_date">Update Date</string>
+    <string name="submit_baladiya_request">Submit Baladiya Request</string>
+    <string name="baladiya_name">Baladiya Name</string>
+    <string name="choose_an_option">Choose an option</string>
+    <string name="asterisk_symbol">*</string>
+    <string name="step_1_submit_baladiya_request">Step 1 : Submit Baladiya Request</string>
+    <string name="step_2_baladiya_permit_checklist">Step 2 : Baladiya Permit Checklist</string>
+    <string name="remarks">Remarks</string>
+    <string name="baladiya_application_submitted">Baladiya Application Submitted?</string>
+    <string name="baladiya_request_number">Baladiya Request Number</string>
+    <string name="tracking_number">Tracking Number</string>
+    <string name="save_as_draft">Save as Draft</string>
+    <string name="baladiya_permit_checklist">Baladiya Permit Checklist</string>
+    <string name="is_the_follow_up_with_baladiya_completed">Is the follow-up with Baladiya completed?</string>
+    <string name="is_the_baladiyah_permit_acquired">Is the Baladiyah Permit acquired?</string>
+    <string name="enter_number">Enter Number</string>
+    <string name="payment_period_in_days">Payment Period (in days)</string>
+    <string name="size">size</string>
+    <string name="empty_string" />
+    <string name="no_document_selected">No Document Selected</string>
+    <string-array name="yes_no_drop_down">
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+
+    <string-array name="approved_rejected_dropdown">
+        <item>Approved</item>
+        <item>Rejected</item>
+    </string-array>
 
 </resources>

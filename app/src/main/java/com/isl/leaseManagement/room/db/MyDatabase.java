@@ -7,19 +7,19 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
 
-import com.isl.leaseManagement.room.dao.NotificationDao;
-import com.isl.leaseManagement.room.dao.SaveAdditionalDocumentDao;
-import com.isl.leaseManagement.room.dao.StartTaskDao;
-import com.isl.leaseManagement.room.dao.SubmitTaskDao;
-import com.isl.leaseManagement.room.dao.TaskResponseDao;
-import com.isl.leaseManagement.room.entity.NotificationPOJO;
-import com.isl.leaseManagement.room.entity.SaveAdditionalDocumentPOJO;
-import com.isl.leaseManagement.room.entity.StartTaskResponsePOJO;
-import com.isl.leaseManagement.room.entity.SubmitTaskRequestPOJO;
-import com.isl.leaseManagement.room.entity.TaskResponsePOJO;
+import com.isl.leaseManagement.room.dao.common.NotificationDao;
+import com.isl.leaseManagement.room.dao.common.SaveAdditionalDocumentDao;
+import com.isl.leaseManagement.room.dao.paymentProcess.StartTaskPaymentDao;
+import com.isl.leaseManagement.room.dao.paymentProcess.SubmitTaskDao;
+import com.isl.leaseManagement.room.dao.common.TaskResponseDao;
+import com.isl.leaseManagement.room.entity.paymentProcess.StartTaskPaymentPOJO;
+import com.isl.leaseManagement.room.entity.common.NotificationPOJO;
+import com.isl.leaseManagement.room.entity.common.SaveAdditionalDocumentPOJO;
+import com.isl.leaseManagement.room.entity.paymentProcess.SubmitTaskRequestPOJO;
+import com.isl.leaseManagement.room.entity.common.TaskResponsePOJO;
 
 @Database(
-        entities = {TaskResponsePOJO.class, StartTaskResponsePOJO.class, SaveAdditionalDocumentPOJO.class, SubmitTaskRequestPOJO.class,
+        entities = {TaskResponsePOJO.class, StartTaskPaymentPOJO.class, SaveAdditionalDocumentPOJO.class, SubmitTaskRequestPOJO.class,
                         NotificationPOJO.class},
         version = 1,
         exportSchema = false
@@ -44,7 +44,7 @@ public abstract class MyDatabase extends RoomDatabase {
 
     public abstract TaskResponseDao taskResponseDao();
 
-    public abstract StartTaskDao startTaskDao();
+    public abstract StartTaskPaymentDao startTaskDao();
 
     public abstract SaveAdditionalDocumentDao saveAdditionalDocumentDao();
 

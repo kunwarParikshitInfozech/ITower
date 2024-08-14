@@ -1,4 +1,4 @@
-package com.isl.leaseManagement.room.dao;
+package com.isl.leaseManagement.room.dao.common;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -7,7 +7,7 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
-import com.isl.leaseManagement.room.entity.NotificationPOJO;
+import com.isl.leaseManagement.room.entity.common.NotificationPOJO;
 
 import java.util.List;
 

@@ -20,7 +20,7 @@ public class MyApp extends Application {
 
     private static Context appContext;
     public static LocalTempVarStore localTempVarStore = LocalTempVarStore.INSTANCE;
-    private static MyDatabase myDatabase;
+    private static MyDatabase paymentDatabase;
 
     @Override
     public void onCreate() {
@@ -35,7 +35,7 @@ public class MyApp extends Application {
         registerReceiver(myReceiver, filter);
         ApiClient.INSTANCE.init();
         KotlinPrefkeeper.init(this);
-        myDatabase = MyDatabase.getInstance(this.getApplicationContext());
+        paymentDatabase = MyDatabase.getInstance(this.getApplicationContext());
 
     }
 
@@ -43,7 +43,7 @@ public class MyApp extends Application {
         return appContext;
     }
 
-    public static MyDatabase  getMyDatabase() {
-        return myDatabase;
+    public static MyDatabase getMyDatabase() {
+        return paymentDatabase;
     }
 }

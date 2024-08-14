@@ -18,7 +18,7 @@ import infozech.itower.R
 import infozech.itower.databinding.ActionsPopupBinding
 import infozech.itower.databinding.ActivityTaskInProgressBinding
 
-class TaskInProgressActivity : BaseActivity() {
+class PaymentTaskInProgressActivity : BaseActivity() {
     private lateinit var binding: ActivityTaskInProgressBinding
     private var paymentMethod: String? = null
 
@@ -38,7 +38,7 @@ class TaskInProgressActivity : BaseActivity() {
 
     private fun checkPaymentType() {
         MyApp.localTempVarStore?.let { tempVarStorage ->
-            tempVarStorage.startTaskResponse?.let { response ->
+            tempVarStorage.paymentStartTaskResponse?.let { response ->
                 response.data?.let { data ->
                     paymentMethod = data.paymentMethod
                 }
@@ -59,7 +59,7 @@ class TaskInProgressActivity : BaseActivity() {
         binding.backIv.setOnClickListener { finish() }
         binding.basicDetailsTv.setOnClickListener { launchActivity(BasicDetailsActivity::class.java) }
         binding.additionalDocuments.setOnClickListener {
-            if (paymentMethod != AppConstants.KeyWords.paymentTypeCheck) {
+            if (paymentMethod != AppConstants.PaymentType.paymentTypeCheck) {
                 launchActivity(AdditionalDocumentsActivity::class.java)
             } else {
                 showToastMessage("Payment method is check!")
@@ -90,7 +90,7 @@ class TaskInProgressActivity : BaseActivity() {
         }
         binding.addAdditionalDocTv.setOnClickListener {
             dialog.dismiss()
-            if (paymentMethod != AppConstants.KeyWords.paymentTypeCheck) {
+            if (paymentMethod != AppConstants.PaymentType.paymentTypeCheck) {
                 launchActivity(AddAdditionalDocumentActivity::class.java)
             } else {
                 showToastMessage("Payment method is check!")

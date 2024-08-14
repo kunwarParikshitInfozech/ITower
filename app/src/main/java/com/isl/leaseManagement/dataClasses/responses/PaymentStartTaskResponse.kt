@@ -1,6 +1,6 @@
 package com.isl.leaseManagement.dataClasses.responses
 
-data class StartTaskResponse(
+data class PaymentStartTaskResponse(
     val data: StartTaskData?,
     val processId: Int?
 ) {

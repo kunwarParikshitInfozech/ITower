@@ -4,6 +4,16 @@ import com.isl.leaseManagement.dataClasses.otherDataClasses.SaveAdditionalDocume
 import com.isl.leaseManagement.dataClasses.responses.TaskResponse
 
 object ClickInterfaces {
+    interface CommonInterface {
+        fun triggerWithString(string: String)
+        fun triggerWithInt(int: Int)
+    }
+
+    interface CommonDataCallBack<T> {
+        fun onSuccess(data: T?)
+        fun onError(error: Throwable)
+    }
+
     interface MyTasks {
         fun myTaskClicked(taskResponse: TaskResponse)
     }

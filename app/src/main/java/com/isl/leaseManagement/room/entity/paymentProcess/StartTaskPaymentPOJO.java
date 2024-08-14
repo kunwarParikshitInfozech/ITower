@@ -1,4 +1,4 @@
-package com.isl.leaseManagement.room.entity;
+package com.isl.leaseManagement.room.entity.paymentProcess;
 
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -6,8 +6,8 @@ import androidx.room.TypeConverter;
 
 import com.google.gson.Gson; // Import Gson from Gson library
 
-@Entity(tableName = "start_task_table")
-public class StartTaskResponsePOJO {
+@Entity(tableName = "start_task_payment_table")
+public class StartTaskPaymentPOJO {
 
     @PrimaryKey
     private final int taskId;
@@ -15,7 +15,7 @@ public class StartTaskResponsePOJO {
     private final String dataJson; // Store data as JSON string
     private final Integer processId; // Use Integer for nullable int
 
-    public StartTaskResponsePOJO(int taskId, String dataJson, Integer processId) {
+    public StartTaskPaymentPOJO(int taskId, String dataJson, Integer processId) {
         this.taskId = taskId;
         this.dataJson = dataJson;
         this.processId = processId;

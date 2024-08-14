@@ -26,7 +26,7 @@ import com.isl.leaseManagement.common.activities.filter.FilterTasksActivity
 import com.isl.leaseManagement.common.activities.home.LsmHomeActivity
 import com.isl.leaseManagement.common.activities.startTask.StartTaskActivity
 import com.isl.leaseManagement.room.db.MyDatabase
-import com.isl.leaseManagement.room.entity.TaskResponsePOJO
+import com.isl.leaseManagement.room.entity.common.TaskResponsePOJO
 import com.isl.leaseManagement.utils.AppConstants
 import com.isl.leaseManagement.utils.ClickInterfaces
 import com.isl.leaseManagement.utils.Utilities

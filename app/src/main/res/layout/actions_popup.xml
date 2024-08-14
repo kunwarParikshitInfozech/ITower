@@ -56,8 +56,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
-                android:background="@color/white"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@color/white">
 
                 <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/requestDetailsTv"
@@ -78,6 +78,24 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.isl.leaseManagement.utils.CustomTextView
+                    android:id="@+id/taskDetailTv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_12sdp"
+                    android:drawableStart="@drawable/add_additional_doc"
+                    android:drawablePadding="@dimen/_8sdp"
+                    android:paddingVertical="@dimen/_14sdp"
+                    android:paddingStart="@dimen/_8sdp"
+                    android:paddingEnd="@dimen/_8sdp"
+                    android:text="@string/task_details"
+                    android:textColor="@color/color_253746"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/requestDetailsTv" />
+
+                <com.isl.leaseManagement.utils.CustomTextView
                     android:id="@+id/addAdditionalDocTv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -93,7 +111,7 @@
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/requestDetailsTv" />
+                    app:layout_constraintTop_toBottomOf="@id/taskDetailTv" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

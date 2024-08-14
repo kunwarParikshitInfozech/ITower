@@ -4,6 +4,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -327,6 +328,28 @@
                         android:textColorHint="@color/color_B1B7C8"
                         android:textSize="@dimen/_12ssp" />
 
+                    <com.isl.leaseManagement.utils.CustomTextView
+                        android:id="@+id/remarksTextTv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_12sdp"
+                        android:text="@string/remarks"
+                        android:textColor="@color/color_505F6B"
+                        android:textSize="@dimen/_12ssp" />
+
+                    <com.isl.leaseManagement.utils.CustomTextView
+                        android:id="@+id/remarksValueTv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:minHeight="@dimen/_96sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:background="@drawable/bg_filled_grey_rounded"
+                        android:paddingVertical="@dimen/_14sdp"
+                        android:paddingStart="@dimen/_8sdp"
+                        android:paddingEnd="@dimen/_8sdp"
+                        android:textColorHint="@color/color_B1B7C8"
+                        android:textSize="@dimen/_12ssp" />
+
                 </LinearLayout>
 
 
@@ -338,7 +361,7 @@
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-         android:layout_centerInParent="true"/>
+            android:layout_centerInParent="true" />
     </RelativeLayout>
 
 </layout>

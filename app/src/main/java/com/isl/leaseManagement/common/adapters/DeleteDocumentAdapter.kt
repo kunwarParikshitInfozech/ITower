@@ -49,10 +49,10 @@ class DeleteDocumentAdapter(
         fun bindItems(item: SaveAdditionalDocument?) {
             item ?: return
             item.fileName?.let {
-                binding.docName.text = getLastChars(it, 16)
+                binding.docName.text = getLastChars(it, 20)
             }
             item.docSize?.let {
-                binding.docSize.text = getLastChars(it, 10)
+                binding.docSize.text = getLastChars(it, 8)
             }
             binding.deleteDoc.setOnClickListener { clickListener.deleteDocument(item) }
         }

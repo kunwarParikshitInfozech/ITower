@@ -22,7 +22,7 @@ import com.isl.leaseManagement.common.adapters.DeleteDocumentAdapter
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.dataClasses.otherDataClasses.SaveAdditionalDocument
 import com.isl.leaseManagement.dataClasses.requests.UploadDocumentRequest
-import com.isl.leaseManagement.room.entity.SaveAdditionalDocumentPOJO
+import com.isl.leaseManagement.room.entity.common.SaveAdditionalDocumentPOJO
 import com.isl.leaseManagement.utils.AppConstants
 import com.isl.leaseManagement.utils.ClickInterfaces
 import com.isl.leaseManagement.utils.Utilities.showYesNoDialog
@@ -287,7 +287,7 @@ class AddAdditionalDocumentActivity : BaseActivity() {
                 latitude = 0,
                 longitude = 0,
                 requestId = MyApp.localTempVarStore.taskResponse?.requestId,
-                tagName = AppConstants.KeyWords.additionalDocumentTagName,
+                tagName = AppConstants.DocsTagNames.additionalDocumentTagName,
                 timeStamp = "",
                 userId = 123
             )
