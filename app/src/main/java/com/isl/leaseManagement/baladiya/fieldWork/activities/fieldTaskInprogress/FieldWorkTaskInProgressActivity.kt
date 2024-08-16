@@ -177,7 +177,8 @@ class FieldWorkTaskInProgressActivity : BaseActivity() {
             taskId = MyApp.localTempVarStore.taskId,
             submitBaladiyaFWRequest = SubmitBaladiyaFWRequest(
                 processId = MyApp.localTempVarStore.taskResponse?.processId,
-                additionalDocuments = additionalDocuments
+                requestId = MyApp.localTempVarStore.taskResponse?.requestId,
+                additionalDocs = additionalDocuments
             ),
             successCallback = { response ->
                 hideProgressBar()

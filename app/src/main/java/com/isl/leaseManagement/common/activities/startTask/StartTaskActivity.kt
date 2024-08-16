@@ -17,6 +17,7 @@ import com.isl.leaseManagement.dataClasses.responses.PaymentStartTaskResponse
 import com.isl.leaseManagement.dataClasses.responses.TaskResponse
 import com.isl.leaseManagement.paymentProcess.activities.taskInProgress.PaymentTaskInProgressActivity
 import com.isl.leaseManagement.room.db.MyDatabase
+import com.isl.leaseManagement.room.entity.common.SaveAdditionalDocumentPOJO
 import com.isl.leaseManagement.room.entity.paymentProcess.StartTaskPaymentPOJO
 import com.isl.leaseManagement.utils.AppConstants
 import com.isl.leaseManagement.utils.AppConstants.IntentKeys.isStartCalledFromRoom
@@ -26,6 +27,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class StartTaskActivity : BaseActivity() {                   // all lsm modules are common till here
@@ -95,7 +97,7 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
                         .subscribe({ baladiyaStartResponse ->   //from room
                             proceedToFieldWorkTaskInProgress(baladiyaStartResponse)
                         }, { error ->//
-                            showToastMessage(error.message.toString())
+           //                 showToastMessage(error.message.toString())
                         })
             }
         }
@@ -104,16 +106,39 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
     private fun proceedToFieldWorkTaskInProgress(fieldWorkStartTaskResponse: FieldWorkStartTaskResponse) {
         fieldWorkStartTaskResponse.taskId = currentTaskId
         val d = commonDatabase.fieldWorkStartDao().insert(response = fieldWorkStartTaskResponse)
-            .subscribeOn(Schedulers.io())
+            .subscribeOn(Schedulers.io())                 //saving irrespective of if data fetched from room or api as even with room, only same data will override so not an issue
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
+                MyApp.localTempVarStore.requestRemarkFieldData =
+                    fieldWorkStartTaskResponse.data?.remarks
+                saveAdditionalDocReceivedFromStartAndProceed(fieldWorkStartTaskResponse)
+
             }, {
                 // Handle error
             })
-        MyApp.localTempVarStore.requestRemarkFieldData = fieldWorkStartTaskResponse.data?.remarks
-        //saving irrespective of if data fetched from room or api as even with room, only same data will override so not an issue
-        finish()
-        launchActivity(FieldWorkTaskInProgressActivity::class.java)
+
+    }
+
+    private fun saveAdditionalDocReceivedFromStartAndProceed(fieldWorkStartTaskResponse: FieldWorkStartTaskResponse) {
+        lifecycleScope.launch(Dispatchers.IO) {
+            fieldWorkStartTaskResponse.additionalDocuments?.let { additionalDocList ->
+                for (document in additionalDocList) {
+                    val saveAdditionalDocumentPOJO = SaveAdditionalDocumentPOJO(
+                        document.content,
+                        document.fileName,
+                        "",
+                        document.docId,
+                        currentTaskId
+                    )
+                    MyApp.getMyDatabase().saveAdditionalDocumentDao()
+                        .insertDocument(saveAdditionalDocumentPOJO)
+                    delay(100)
+                }
+            }
+            delay(600)
+            finish()
+            launchActivity(FieldWorkTaskInProgressActivity::class.java)
+        }
     }
 
     private fun convertStartTaskPOJOtoDataClass(pojo: StartTaskPaymentPOJO): PaymentStartTaskResponse {

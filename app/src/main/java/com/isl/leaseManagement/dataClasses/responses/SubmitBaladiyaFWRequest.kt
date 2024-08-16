@@ -7,7 +7,7 @@ data class SubmitBaladiyaFWRequest(
     val requestId: String? = "",
     val source: String? = "",
     val timestamp: String? = "",
-    val additionalDocuments: List<AdditionalDocument?>?
+    val additionalDocs: List<AdditionalDocument?>?
 
 ) {
     data class AdditionalDocument(

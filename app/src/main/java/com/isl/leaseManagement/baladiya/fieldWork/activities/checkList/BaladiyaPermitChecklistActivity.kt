@@ -1,6 +1,7 @@
 package com.isl.leaseManagement.baladiya.fieldWork.activities.checkList
 
 import android.os.Bundle
+import android.view.View
 import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -167,13 +168,41 @@ class BaladiyaPermitChecklistActivity : BaseActivity() {
     }
 
     private fun saveResponseToBaladiyaApi(fieldWorkResponse: FieldWorkStartTaskResponse) {
+        if (binding.isFollowUpCompletedSpinner.selectedItem.toString() == "Yes" && binding.isTheBaladiyaPermitAcquiredSpinner.selectedItem.toString()
+                .contains("oose")
+        ) {   //still choose an option is selected, user should select approved or rejected to proceed further
+            showToastMessage("Select Permit Acquired")
+            return
+        }
+        if (binding.isTheBaladiyaPermitAcquiredSpinner.selectedItem.toString() == "Approved") {  // need sadad docs and other validation
+            if (binding.sadadBillerCodeValue.text.toString() == "") {
+                showToastMessage("Enter Sadad Biller Code!")
+                return
+            }
+            if (sadadDocument.value?.docId == null || sadadDocument.value?.docId == "") {
+                showToastMessage("Select SADAD Document")
+                return
+            }
+        } else if (binding.isTheBaladiyaPermitAcquiredSpinner.selectedItem.toString() == "Rejected") {  // only need evidence document
+            if (provideEvidenceDoc.value?.docId == null || provideEvidenceDoc.value?.docId == "") {
+                showToastMessage("Select Provide Evidence Document")
+                return
+            }
+        }
+        fieldWorkResponse.additionalDocuments =
+            null   // to avoid uploading it here as it cause error due to old doc
+        if (fieldWorkResponse.data?.baladiyaPermitAcquired == "") {   //since API not accepting "" , accepting null
+            fieldWorkResponse.data.baladiyaPermitAcquired = null
+        }
         fieldWorkResponse.data?.taskFlag = AppConstants.TaskFlags.taskBaladiyaCheckList
         val lsmUserId = KotlinPrefkeeper.lsmUserId ?: ""
+        showProgressBar()
         viewModel.updateBaladiyaResponse(
             userId = lsmUserId,
             taskId = MyApp.localTempVarStore.taskId,
             fieldWorkStartTaskResponse = fieldWorkResponse,
             { response ->
+                hideProgressBar()
                 response?.flag?.let {
                     if (it == "0") {
                         fieldWorkResponse.data?.isSecondFormSubmitted =
@@ -189,6 +218,7 @@ class BaladiyaPermitChecklistActivity : BaseActivity() {
                     }
                 }
             }, {
+                hideProgressBar()
                 showToastMessage("Unable to save to API")
             }
         )
@@ -402,5 +432,13 @@ class BaladiyaPermitChecklistActivity : BaseActivity() {
                 }
             }
         }
+    }
+
+    private fun showProgressBar() {
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        binding.progressBar.visibility = View.GONE
     }
 }

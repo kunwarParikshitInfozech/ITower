@@ -1,6 +1,7 @@
 package com.isl.leaseManagement.baladiya.fieldWork.activities.submit
 
 import android.os.Bundle
+import android.view.View
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -115,14 +116,16 @@ class SubmitBaladiyaRequestActivity : BaseActivity() {
                 return
             }
         }
-
+        fieldWorkResponse.additionalDocuments = null   // to avoid uploading it here as it cause error due to old doc
         fieldWorkResponse.data?.taskFlag = AppConstants.TaskFlags.taskBaladiyaRequest
         val lsmUserId = KotlinPrefkeeper.lsmUserId ?: ""
+        showProgressBar()
         viewModel.updateBaladiyaResponse(
             userId = lsmUserId,
             taskId = MyApp.localTempVarStore.taskId,
             fieldWorkStartTaskResponse = fieldWorkResponse,
             { response ->
+                hideProgressBar()
                 response?.flag?.let {
                     if (it == "0") {
                         showToastMessage("Data Saved To API")
@@ -131,6 +134,7 @@ class SubmitBaladiyaRequestActivity : BaseActivity() {
                     }
                 }
             }, {
+                hideProgressBar()
                 showToastMessage("Unable to save to API")
             }
         )
@@ -293,5 +297,13 @@ class SubmitBaladiyaRequestActivity : BaseActivity() {
             }
         }
 
+    }
+
+    private fun showProgressBar() {
+        binding.progressBar.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar() {
+        binding.progressBar.visibility = View.GONE
     }
 }

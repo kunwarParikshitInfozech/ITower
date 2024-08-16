@@ -1,3 +1,4 @@
+import com.isl.leaseManagement.dataClasses.requests.DeleteDocumentRequest
 import com.isl.leaseManagement.dataClasses.requests.FetchDeviceIDRequest
 import com.isl.leaseManagement.dataClasses.requests.StartTaskRequest
 import com.isl.leaseManagement.dataClasses.requests.SubmitTaskRequest
@@ -95,6 +96,14 @@ interface IApiRequest {
         @Path("userId") userId: String,
         @Path("taskId") taskId: Int,
         @Body body: SubmitBaladiyaFWRequest
+    ): Observable<ApiSuccessFlagResponse>
+
+
+    @DELETE("leasemanagement/1/users/{userId}/document/{documentID}")
+    fun deleteDocument(
+        @Path("userId") userId: String,
+        @Path("documentID") documentID: Int,
+        @Body body: DeleteDocumentRequest
     ): Observable<ApiSuccessFlagResponse>
 
 }

@@ -19,7 +19,7 @@ import java.util.Locale
 data class FieldWorkStartTaskResponse(
     @PrimaryKey
     var taskId: Int = 0,    //task id is used for room,and not fetched by API
-    val additionalDocuments: List<FieldWorkAdditionalDocument>?,
+    var additionalDocuments: List<FieldWorkAdditionalDocument>?,
     @TypeConverters(FieldWorkDataConverter::class)
     val data: FieldWorkData?,
     val processId: Int?

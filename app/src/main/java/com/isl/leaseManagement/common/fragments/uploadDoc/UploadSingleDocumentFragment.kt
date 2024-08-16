@@ -28,7 +28,9 @@ import com.isl.itower.MyApp
 import com.isl.leaseManagement.api.ApiClient
 import com.isl.leaseManagement.base.BaseFragment
 import com.isl.leaseManagement.dataClasses.otherDataClasses.SaveAdditionalDocument
+import com.isl.leaseManagement.dataClasses.requests.DeleteDocumentRequest
 import com.isl.leaseManagement.dataClasses.requests.UploadDocumentRequest
+import com.isl.leaseManagement.dataClasses.responses.ApiSuccessFlagResponse
 import com.isl.leaseManagement.dataClasses.responses.UploadDocumentResponse
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
 import com.isl.leaseManagement.utils.ClickInterfaces
@@ -94,8 +96,54 @@ class UploadSingleDocumentFragment(
     }
 
     private fun deleteDocumentFromApi() {
-        // first call delete document Api than on it's success, call below code
+        val docId = saveAdditionalDocument.value?.docId?.toIntOrNull()
+        if (docId == null) {
+            baseActivity.showToastMessage("Unable to delete task ID is empty!")
+            return
+        }
+        val requestId = MyApp.localTempVarStore?.taskResponse?.requestId
+        requestId ?: return
 
+        val tagName = saveAdditionalDocument.value?.tagName
+        tagName ?: return
+
+        val taskId = MyApp.localTempVarStore?.taskId
+        taskId ?: return
+
+        val lsmUserId = KotlinPrefkeeper.lsmUserId ?: ""
+        val api = ApiClient.request
+        val observable: Observable<ApiSuccessFlagResponse> =
+            api!!.deleteDocument(
+                userId = lsmUserId,
+                documentID = docId,
+                body = DeleteDocumentRequest(
+                    requestId = requestId,
+                    tagName = tagName,
+                    taskId = taskId
+                )
+            )
+        observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : Observer<ApiSuccessFlagResponse> {
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onNext(t: ApiSuccessFlagResponse) {
+                    baseActivity.showToastMessage("Document Deleted from API")
+                    deleteDocFromPhoneAndUpdateUI()
+                }
+
+                override fun onError(e: Throwable) {
+                    baseActivity.showToastMessage("Unable to delete document from API")
+                }
+
+                override fun onComplete() {
+                }
+            })
+
+        // first call delete document Api than on it's success, call below code
+    }
+
+    private fun deleteDocFromPhoneAndUpdateUI() {
         saveAdditionalDocument.value?.docId = null
         saveAdditionalDocument.value?.docContentString64 = null
         saveAdditionalDocument.value?.fileName = null
