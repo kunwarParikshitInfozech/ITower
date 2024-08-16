@@ -52,6 +52,7 @@ class SubmitBaladiyaRequestActivity : BaseActivity() {
         binding.backIv.setOnClickListener { finish() }
         binding.saveAsDraftBtn.setOnClickListener { getDataFromRoomUpdateAndSave(saveToApiAsWell = false) }
         binding.saveToApiAndDraft.setOnClickListener { getDataFromRoomUpdateAndSave(saveToApiAsWell = true) }
+        binding.actionBtn.setOnClickListener { Utilities.showActionPopup(this) }
     }
 
 
@@ -278,5 +279,19 @@ class SubmitBaladiyaRequestActivity : BaseActivity() {
             }
 
         }
+
+        baladiyaStartResponse.data?.baladiyaName?.let {
+            val baladiyaNameObjectList = MyApp.localTempVarStore.baladiyaNameList
+            baladiyaNameObjectList ?: return
+            val nameArray = getBaladiyaNames(baladiyaNameObjectList)
+
+            try {
+                val position = nameArray.indexOf(it)
+                binding.baladiyaNameSelection.setSelection(position + 1)
+            } catch (e: Exception) {
+                // no need
+            }
+        }
+
     }
 }

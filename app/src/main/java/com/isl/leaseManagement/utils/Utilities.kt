@@ -15,11 +15,14 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
 import com.google.gson.Gson
+import com.isl.itower.MyApp
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.common.activities.addAdditionalDoc.AddAdditionalDocumentActivity
+import com.isl.leaseManagement.dataClasses.responses.TaskResponse
 import com.isl.leaseManagement.paymentProcess.activities.requestDetails.RequestDetailsActivity
 import infozech.itower.R
 import infozech.itower.databinding.ActionsPopupBinding
+import infozech.itower.databinding.TaskDetailsPopupBinding
 import java.math.BigInteger
 import java.text.SimpleDateFormat
 import java.time.ZoneId
@@ -325,11 +328,112 @@ object Utilities {
             dialog.dismiss()
             context.launchActivity(RequestDetailsActivity::class.java)
         }
+        binding.taskDetailTv.setOnClickListener {
+            dialog.dismiss()
+            MyApp.localTempVarStore.taskResponse?.let { it1 ->
+                showTaskDetailsPopupWithoutStart(
+                    context,
+                    it1
+                )
+            }
+        }
         binding.addAdditionalDocTv.setOnClickListener {
             dialog.dismiss()
             context.launchActivity(AddAdditionalDocumentActivity::class.java)
         }
     }
+
+    private fun showTaskDetailsPopupWithoutStart(
+        context: BaseActivity,
+        taskResponse: TaskResponse
+    ) {
+        context ?: return
+        val dialog = Dialog(context)
+        val binding = TaskDetailsPopupBinding.inflate(context.layoutInflater)
+        dialog.setContentView(binding.root)
+        dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.copyFrom(dialog.window!!.attributes)
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+        val heightInPixels = dpToPx(context, 480)
+        layoutParams.height = heightInPixels
+        layoutParams.gravity = Gravity.BOTTOM
+        dialog.window!!.attributes = layoutParams
+        fillDataInTaskDetailsPopupAndAttachClicks(context = context, taskResponse, binding, dialog)
+        dialog.show()
+    }
+
+    private fun fillDataInTaskDetailsPopupAndAttachClicks(
+        context: BaseActivity,
+        taskResponse: TaskResponse,
+        binding: TaskDetailsPopupBinding,
+        dialog: Dialog
+    ) {
+        binding.taskNumber.text = (taskResponse.siteId ?: "").toString()
+        binding.taskName.text = taskResponse.taskName ?: ""
+        binding.forecastStartDateValue.text =
+            taskResponse.forecastStartDate?.let { Utilities.getDateFromISO8601(it) }
+        binding.taskPriority.text =
+            taskResponse.requestPriority ?: "".also { binding.taskPriority.visibility = View.GONE }
+        binding.forecastEndDateValue.text =
+            taskResponse.forecastEndDate?.let { Utilities.getDateFromISO8601(it) }
+        binding.taskStatusValue.text = taskResponse.taskStatus ?: ""
+        binding.slaStatusValue.text = taskResponse.slaStatus ?: ""
+        binding.customerSiteIdValue.text = taskResponse.customerSiteId ?: ""
+        binding.tawalSiteIdValue.text = taskResponse.siteId ?: ""
+        binding.planStartDateValue.text =
+            taskResponse.forecastStartDate?.let { Utilities.getDateFromISO8601(it) }
+        binding.planEndDateValue.text =
+            taskResponse.forecastStartDate?.let { Utilities.getDateFromISO8601(it) }
+
+        binding.requesterValue.text = taskResponse.requester ?: ""
+        binding.regionTypeValue.text = taskResponse.region ?: ""
+        binding.districtValue.text = taskResponse.district ?: ""
+        binding.cityValue.text = taskResponse.city ?: ""
+
+        taskResponse.taskStatus?.let {
+            if (it != "Assigned") {
+                binding.llStartActivity.visibility = View.GONE
+            }
+        }
+        binding.closeTv.setOnClickListener {
+            dialog.dismiss()
+        }
+        binding.startActivity.visibility = View.GONE
+        binding.unAssign.visibility = View.GONE
+        taskResponse.taskId?.let { taskId ->
+            binding.unAssign.setOnClickListener {
+//                callUnAssignAPi(taskId,context)
+            }
+        }
+    }
+
+//    private fun callUnAssignAPi(taskId: Int, context: BaseActivity) {
+//        val api = ApiClient.request
+//        val lsmUserId = KotlinPrefkeeper.lsmUserId ?: ""
+//        val json = "{\"key\":\"value\"}"
+//        val body: RequestBody = RequestBody.create(MediaType.parse("application/json"), json)
+//        val observable: Observable<ApiSuccessFlagResponse> =
+//            api!!.updateTaskStatus(userId = lsmUserId, taskId, "unassign", body)
+//        observable.subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe(object : Observer<ApiSuccessFlagResponse> {
+//                override fun onSubscribe(d: Disposable) {
+//                }
+//
+//                override fun onNext(t: ApiSuccessFlagResponse) {
+//                    context.showToastMessage("Unassigned!")
+//                    context.launchNewActivityCloseAllOther(LsmHomeActivity::class.java)
+//                }
+//
+//                override fun onError(e: Throwable) {
+//                    context.showToastMessage("Unable to unassign!")
+//                }
+//
+//                override fun onComplete() {
+//                }
+//            })
+//    }
 
     fun showDatePickerAndFillDate(view: TextView, context: BaseActivity) {
         showDatePickerFromCurrentDate(context) { selectedDate ->

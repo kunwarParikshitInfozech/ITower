@@ -124,4 +124,6 @@
         <item>Rejected</item>
     </string-array>
 
+    <string name="alpha_numeric_values">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789</string>
+
 </resources>

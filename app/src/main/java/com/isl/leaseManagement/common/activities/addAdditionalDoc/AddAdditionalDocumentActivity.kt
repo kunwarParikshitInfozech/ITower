@@ -194,7 +194,8 @@ class AddAdditionalDocumentActivity : BaseActivity() {
                 SaveAdditionalDocument(
                     taskId = MyApp.localTempVarStore.taskId,
                     docContentString64 = base64String,
-                    docSize = "$imageSize KB"
+                    docSize = "$imageSize KB",
+                    fileName = "Camera Image"
                 )
             )
         }

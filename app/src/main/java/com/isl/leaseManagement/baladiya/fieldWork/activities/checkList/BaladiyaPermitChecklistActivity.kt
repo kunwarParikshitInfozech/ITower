@@ -58,11 +58,24 @@ class BaladiyaPermitChecklistActivity : BaseActivity() {
 
     private fun setClickListeners() {
         binding.backIv.setOnClickListener { finish() }
-        binding.saveAsDraftBtn.setOnClickListener { getDataFromRoomUpdateAndSave(saveToApiAsWell = false) }
-        binding.saveToApiAndDraft.setOnClickListener { getDataFromRoomUpdateAndSave(saveToApiAsWell = true) }
+        binding.saveAsDraftBtn.setOnClickListener {
+            getDataFromRoomUpdateItAndSave(
+                saveToApiAsWell = false,
+                shouldShowPhoneSaveSuccessToast = true
+            )
+        }
+        binding.saveToApiAndDraft.setOnClickListener {
+            getDataFromRoomUpdateItAndSave(
+                saveToApiAsWell = true, shouldShowPhoneSaveSuccessToast = false
+            )
+        }
+        binding.actionBtn.setOnClickListener { Utilities.showActionPopup(this) }
     }
 
-    private fun getDataFromRoomUpdateAndSave(saveToApiAsWell: Boolean) {
+    private fun getDataFromRoomUpdateItAndSave(
+        saveToApiAsWell: Boolean,
+        shouldShowPhoneSaveSuccessToast: Boolean
+    ) {
         disposable = commonDatabase.fieldWorkStartDao()
             .getFieldWorkStartResponseByID(MyApp.localTempVarStore.taskId)
             .subscribeOn(Schedulers.io())
@@ -121,7 +134,11 @@ class BaladiyaPermitChecklistActivity : BaseActivity() {
 
                     response.data.documents = documents
 
-                    saveBackToRoom(response, saveToApiAsWell)
+                    saveBackToRoom(
+                        response,
+                        saveToApiAsWell,
+                        shouldShowPhoneSaveSuccessToast = shouldShowPhoneSaveSuccessToast
+                    )
                 }
             }, { error ->//
                 showToastMessage(error.message.toString())
@@ -131,13 +148,16 @@ class BaladiyaPermitChecklistActivity : BaseActivity() {
 
     private fun saveBackToRoom(
         fieldWorkResponse: FieldWorkStartTaskResponse,
-        saveToApiAsWell: Boolean
+        saveToApiAsWell: Boolean,
+        shouldShowPhoneSaveSuccessToast: Boolean
     ) {
         val d = commonDatabase.fieldWorkStartDao().insert(response = fieldWorkResponse)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                showToastMessage("Saved Successfully to Phone!")
+                if (shouldShowPhoneSaveSuccessToast) {
+                    showToastMessage("Saved Successfully to Phone!")
+                }
                 if (saveToApiAsWell) {
                     saveResponseToBaladiyaApi(fieldWorkResponse)
                 }
@@ -156,6 +176,13 @@ class BaladiyaPermitChecklistActivity : BaseActivity() {
             { response ->
                 response?.flag?.let {
                     if (it == "0") {
+                        fieldWorkResponse.data?.isSecondFormSubmitted =
+                            true  //updated that now 2nd form is submitted
+                        saveBackToRoom(
+                            fieldWorkResponse,
+                            false,
+                            shouldShowPhoneSaveSuccessToast = false
+                        )
                         showToastMessage("Data Saved To API")
                     } else {
                         showToastMessage("Unable to save to API")
@@ -280,7 +307,16 @@ class BaladiyaPermitChecklistActivity : BaseActivity() {
         document: MutableLiveData<SaveAdditionalDocument>
     ) {
         val fragment: Fragment =
-            UploadSingleDocumentFragment(document)
+            UploadSingleDocumentFragment(document, object : ClickInterfaces.CommonInterface {
+                override fun triggerWithString(string: String) {  //for saving deleted data instance
+                    getDataFromRoomUpdateItAndSave(false, shouldShowPhoneSaveSuccessToast = true)
+                }
+
+                override fun triggerWithInt(int: Int) {
+                    //no need
+                }
+
+            })
         supportFragmentManager.beginTransaction()
             .replace(fragmentLayout.id, fragment)
             .commit()

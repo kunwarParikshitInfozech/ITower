@@ -73,7 +73,7 @@ interface IApiRequest {
     ): Observable<FetchUserIdResponse>
 
     @Headers("Content-Type: application/json")
-    @PUT("leasemanagement/1/users/{userId}/baladiya/tasks/{taskId}/start")
+    @PUT("leasemanagement/1/users/{userId}/tasks/{taskId}/starttask")
     fun startTaskFieldWork(
         @Path("userId") userId: String,
         @Path("taskId") taskId: Int,

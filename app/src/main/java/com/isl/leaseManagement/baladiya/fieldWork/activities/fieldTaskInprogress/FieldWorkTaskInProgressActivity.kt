@@ -24,6 +24,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FieldWorkTaskInProgressActivity : BaseActivity() {
 
@@ -117,21 +118,66 @@ class FieldWorkTaskInProgressActivity : BaseActivity() {
         binding.additionalDocuments.setOnClickListener {
             launchActivity(AdditionalDocumentsActivity::class.java)
         }
-        binding.actionBtn.setOnClickListener { showActionPopup(this@FieldWorkTaskInProgressActivity) }
+        binding.actionBtn.setOnClickListener { showActionPopup(this) }
 
         binding.submitApiBtn.setOnClickListener {
-            callSubmitApi()
+            checkIfSecondFormNeedsToBeSubmittedAndCallSubmitApi()
+        }
+    }
+
+    private fun checkIfSecondFormNeedsToBeSubmittedAndCallSubmitApi() {
+        disposable = commonDatabase.fieldWorkStartDao()
+            .getFieldWorkStartResponseByID(MyApp.localTempVarStore.taskId)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { response ->     //from room
+                response.data?.let {
+                    if (it.baladiyaApplicationSubmitted == "Yes") {
+                        if (it.isSecondFormSubmitted) {
+                            getAdditionalDocsAndCallSubmitApi()
+                        } else {
+                            showToastMessage("Mandatory Fields are required")
+                        }
+                    } else {
+                        getAdditionalDocsAndCallSubmitApi()
+                    }
+                }
+            }
+    }
+
+
+    private var additionalDocIds = mutableListOf<String>()
+    private fun getAdditionalDocsAndCallSubmitApi() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val documentsList =
+                MyApp.getMyDatabase().saveAdditionalDocumentDao()
+                    .getAllSavedDocumentsOfATask(MyApp.localTempVarStore.taskId.toString())
+            documentsList?.let { list ->
+                for (item in list) {
+                    item.docUploadId?.let {
+                        additionalDocIds.add(it)
+                    }
+                }
+                withContext(Dispatchers.Main) {
+                    callSubmitApi()
+                }
+            }
         }
     }
 
     private fun callSubmitApi() {
         showProgressBar()
         val lsmUserId = KotlinPrefkeeper.lsmUserId ?: ""
+        val additionalDocuments = mutableListOf<SubmitBaladiyaFWRequest.AdditionalDocument?>()
+        for (docId in additionalDocIds) {
+            additionalDocuments.add(SubmitBaladiyaFWRequest.AdditionalDocument(docId))
+        }
         viewModel.submitBaladiyaFW(
             userId = lsmUserId,
             taskId = MyApp.localTempVarStore.taskId,
             submitBaladiyaFWRequest = SubmitBaladiyaFWRequest(
-                processId = MyApp.localTempVarStore.taskResponse?.processId
+                processId = MyApp.localTempVarStore.taskResponse?.processId,
+                additionalDocuments = additionalDocuments
             ),
             successCallback = { response ->
                 hideProgressBar()
@@ -160,7 +206,9 @@ class FieldWorkTaskInProgressActivity : BaseActivity() {
                     MyApp.getMyDatabase()
                         .taskResponseDao()    //deleting task response  data
                         .deleteTaskResponseByTaskId(MyApp.localTempVarStore.taskId)
-
+                    delay(50)
+                    MyApp.getMyDatabase().saveAdditionalDocumentDao()
+                        .deleteAllDocumentsOfTask(MyApp.localTempVarStore.taskId)
                     delay(100)
                     launchNewActivityCloseAllOther(LsmHomeActivity::class.java)
                 }

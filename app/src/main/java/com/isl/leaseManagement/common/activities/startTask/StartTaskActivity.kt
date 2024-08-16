@@ -88,14 +88,15 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
                         proceedToPaymentTaskInProgress(convertStartTaskPOJOtoDataClass(startTaskPOJO))
                     }
             } else if (processId == AppConstants.ProcessIds.baladiyaFieldWork) {  //baladiya field work
-                disposable = commonDatabase.fieldWorkStartDao().getFieldWorkStartResponseByID(currentTaskId)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ baladiyaStartResponse ->   //from room
-                        proceedToFieldWorkTaskInProgress(baladiyaStartResponse)
-                    }, { error ->//
-                        showToastMessage(error.message.toString())
-                    })
+                disposable =
+                    commonDatabase.fieldWorkStartDao().getFieldWorkStartResponseByID(currentTaskId)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ baladiyaStartResponse ->   //from room
+                            proceedToFieldWorkTaskInProgress(baladiyaStartResponse)
+                        }, { error ->//
+                            showToastMessage(error.message.toString())
+                        })
             }
         }
     }
@@ -109,8 +110,9 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
             }, {
                 // Handle error
             })
-
+        MyApp.localTempVarStore.requestRemarkFieldData = fieldWorkStartTaskResponse.data?.remarks
         //saving irrespective of if data fetched from room or api as even with room, only same data will override so not an issue
+        finish()
         launchActivity(FieldWorkTaskInProgressActivity::class.java)
     }
 
@@ -152,7 +154,8 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
             timestamp = ""
         )
         viewModel.startTaskForPayment(
-            {  hideProgressBar()
+            {
+                hideProgressBar()
                 if (it?.processId == null) {
                     showToastMessage("Process ID is empty!")
                     finish()
@@ -183,14 +186,14 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
             timestamp = ""
         )
         viewModel.startTaskForFieldWork(
-            {  hideProgressBar()
+            {
+                hideProgressBar()
                 if (it?.processId == null) {
                     showToastMessage("Process ID is empty!")
                     finish()
                 }
                 when (it?.processId) {
                     AppConstants.ProcessIds.baladiyaFieldWork -> {
-                        showToastMessage("From Api")
                         proceedToFieldWorkTaskInProgress(it)
                     }
                 }

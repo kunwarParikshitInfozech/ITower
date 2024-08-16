@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import com.isl.itower.MyApp
 import com.isl.leaseManagement.base.BaseActivity
+import com.isl.leaseManagement.utils.LocalTempVarStore.requestRemarkFieldData
 import infozech.itower.R
 import infozech.itower.databinding.ActivityRequestDetailsBinding
 
@@ -64,6 +65,9 @@ class RequestDetailsActivity : BaseActivity() {
                     binding.commercialRegNumberEt.text =
                         requestDetails.commercialRegistrationNumber ?: ""
                     binding.isVatApplicableEt.text = requestDetails.isVATApplicable ?: ""
+
+                    binding.remarksValueTv.text = requestRemarkFieldData
+                        ?: ""  //only for baladiya, getting from start task baladiya
                 }
                 hideProgressBar()
             },

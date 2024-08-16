@@ -8,6 +8,6 @@ object LocalTempVarStore {
     var taskId: Int = 0
     var paymentStartTaskResponse: PaymentStartTaskResponse? = null
     var taskResponse: TaskResponse? = null
-    var requestRemarkFieldData: TaskResponse? = null
+    var requestRemarkFieldData: String? = null   //only with baladiya, not payment
     var baladiyaNameList: BaladiyaNamesListResponse? = null
 }

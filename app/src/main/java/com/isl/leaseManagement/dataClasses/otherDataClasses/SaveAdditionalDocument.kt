@@ -7,12 +7,12 @@ import java.util.Locale
 data class SaveAdditionalDocument(
     var taskId: Int,
     var documentTypeName: String? = "",
-    var fileName: String? = "Camera Image",
-    var docSize: String? = "Unknown",
+    var fileName: String? = "No Document Selected",
+    var docSize: String? = "Size",
     var docContentString64: String? = "",
     var docId: String? = "",
     var tagName: String? = "",
-    var dateOfSaving: String = getCurrentDateInCustomFormat()
+    var dateOfSaving: String? = getCurrentDateInCustomFormat()
 )
 
 private fun getCurrentDateInCustomFormat(): String {

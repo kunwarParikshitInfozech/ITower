@@ -28,7 +28,7 @@ data class FieldWorkStartTaskResponse(
         val content: String?,
         val fileName: String?,
         val tagName: String?,
-        val docId: String?         //this is only used in save response for baladiya, all other 3 in this dta class will be null in that case
+        val docId: String?
     )
 
     data class FieldWorkData(
@@ -45,7 +45,8 @@ data class FieldWorkStartTaskResponse(
         var paymentPeriodDays: Int?,
         var sadadBillerCode: Int?,
         var trackingNumber: String?,
-        var remarks: String?
+        var remarks: String?,
+        var isSecondFormSubmitted: Boolean = false    //not from API, just to check if 2nd form is submitted or not
     ) {
         data class FieldWorkDocument(
             val content: String?,          // getting from start API
