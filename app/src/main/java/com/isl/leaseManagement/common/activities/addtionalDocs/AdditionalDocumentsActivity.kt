@@ -83,7 +83,7 @@ class AdditionalDocumentsActivity : BaseActivity() {
                 taskId = pojo.taskId ?: 0, // Handle potential null taskId
                 fileName = pojo.docName,
                 docSize = pojo.docSize,
-                docContentString64 = pojo.docContentString64,
+                content = pojo.docContentString64,
                 docId = pojo.docUploadId
             )
             documentList.add(document)
@@ -101,9 +101,9 @@ class AdditionalDocumentsActivity : BaseActivity() {
                     }
 
                     override fun docDownload(saveAdditionalDocument: SaveAdditionalDocument) {
-                        if (saveAdditionalDocument.docContentString64 != null && saveAdditionalDocument.fileName != null) {
+                        if (saveAdditionalDocument.content != null && saveAdditionalDocument.fileName != null) {
                             downloadFileFromBase64(
-                                saveAdditionalDocument.docContentString64!!,
+                                saveAdditionalDocument.content!!,
                                 saveAdditionalDocument.fileName!!
                             )
                         } else {

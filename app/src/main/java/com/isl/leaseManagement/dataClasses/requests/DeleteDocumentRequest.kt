@@ -6,5 +6,6 @@ data class DeleteDocumentRequest(
     val requestId: String?,
     val tagName: String?,
     val taskId: Int?,
-    val timestamp: String? = ""
+    val timestamp: String? = "",
+    val isDocIdPermanent: Boolean = false
 )

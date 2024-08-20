@@ -5,10 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.isl.leaseManagement.dataClasses.otherDataClasses.SaveAdditionalDocumentListConverter
 import com.isl.leaseManagement.dataClasses.responses.BaladiyaNamesListResponse
-import com.isl.leaseManagement.dataClasses.responses.FieldWorkAdditionalDocumentConverter
 import com.isl.leaseManagement.dataClasses.responses.FieldWorkDataConverter
-import com.isl.leaseManagement.dataClasses.responses.FieldWorkDocumentConverter
 import com.isl.leaseManagement.dataClasses.responses.FieldWorkStartTaskResponse
 import com.isl.leaseManagement.roomCommon.dao.BaladiyaNamesDao
 import com.isl.leaseManagement.roomCommon.dao.FieldWorkStartTaskResponseDao
@@ -19,9 +18,8 @@ import com.isl.leaseManagement.roomCommon.dao.FieldWorkStartTaskResponseDao
     exportSchema = false
 )
 @TypeConverters(
-    FieldWorkAdditionalDocumentConverter::class,
-    FieldWorkDocumentConverter::class,
-    FieldWorkDataConverter::class
+    FieldWorkDataConverter::class,
+    SaveAdditionalDocumentListConverter::class
 )
 abstract class CommonDatabase : RoomDatabase() {
 

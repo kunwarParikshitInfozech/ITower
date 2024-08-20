@@ -27,12 +27,14 @@ class BaladiyaPermitChecklistActivity : BaseActivity() {
 
     private lateinit var binding: ActivityBaladiyaPermitChecklistBinding
     private var disposable: Disposable? = null
+
     private var provideEvidenceDoc =
         MutableLiveData(SaveAdditionalDocument(taskId = MyApp.localTempVarStore.taskId))
-    private lateinit var viewModel: BaladiyaPermitChecklistViewModel
 
     private var sadadDocument =
         MutableLiveData(SaveAdditionalDocument(taskId = MyApp.localTempVarStore.taskId))
+
+    private lateinit var viewModel: BaladiyaPermitChecklistViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,40 +98,17 @@ class BaladiyaPermitChecklistActivity : BaseActivity() {
                     it.accountNumber = binding.accountNumberValue.text.toString()
                     it.paymentPeriodDays = (binding.paymentDaysValue.text.toString()).toIntOrNull()
 
-                    val documents: MutableList<FieldWorkStartTaskResponse.FieldWorkData.FieldWorkDocument?> =
+                    val documents: MutableList<SaveAdditionalDocument?> =
                         mutableListOf()
                     provideEvidenceDoc.value?.let { doc ->
-                        if (doc.tagName?.isNotEmpty() == true && doc.docContentString64?.isNotEmpty() == true
-                            && doc.docSize?.isNotEmpty() == true && doc.fileName?.isNotEmpty() == true &&
-                            doc.docId?.isNotEmpty() == true
-                        ) {
-                            val document =
-                                FieldWorkStartTaskResponse.FieldWorkData.FieldWorkDocument(
-                                    content = doc.docContentString64!!,
-                                    fileName = doc.fileName!!,
-                                    tagName = doc.tagName!!,
-                                    docId = doc.docId,
-                                    documentTypeName = doc.documentTypeName,
-                                    docSize = doc.docSize,
-                                )
-                            documents.add(document)
+                        if (doc.tagName != null && doc.tagName != "") {
+                            documents.add(doc)
                         }
+
                     }
                     sadadDocument.value?.let { doc ->
-                        if (doc.tagName?.isNotEmpty() == true && doc.docContentString64?.isNotEmpty() == true
-                            && doc.docSize?.isNotEmpty() == true && doc.fileName?.isNotEmpty() == true &&
-                            doc.docId?.isNotEmpty() == true
-                        ) {
-                            val document =
-                                FieldWorkStartTaskResponse.FieldWorkData.FieldWorkDocument(
-                                    content = doc.docContentString64!!,
-                                    fileName = doc.fileName!!,
-                                    tagName = doc.tagName!!,
-                                    docId = doc.docId,
-                                    documentTypeName = doc.documentTypeName,
-                                    docSize = doc.docSize,
-                                )
-                            documents.add(document)
+                        if (doc.tagName != null && doc.tagName != "") {
+                            documents.add(doc)
                         }
                     }
 
@@ -191,22 +170,44 @@ class BaladiyaPermitChecklistActivity : BaseActivity() {
         }
         fieldWorkResponse.additionalDocuments =
             null   // to avoid uploading it here as it cause error due to old doc
-        if (fieldWorkResponse.data?.baladiyaPermitAcquired == "") {   //since API not accepting "" , accepting null
-            fieldWorkResponse.data.baladiyaPermitAcquired = null
-        }
+
         fieldWorkResponse.data?.taskFlag = AppConstants.TaskFlags.taskBaladiyaCheckList
+
+        val newResponseForApi =
+            fieldWorkResponse.copy()  //creating new to avoid sending already uploaded document
+
+        val updatedDocumentList = fieldWorkResponse.data?.documents?.filterNotNull()
+            ?.filter { !it.isDocumentUploadedToAPI }
+            ?.toMutableList() ?: mutableListOf()
         val lsmUserId = KotlinPrefkeeper.lsmUserId ?: ""
+
+        newResponseForApi.data?.documents = updatedDocumentList
+
         showProgressBar()
         viewModel.updateBaladiyaResponse(
             userId = lsmUserId,
             taskId = MyApp.localTempVarStore.taskId,
-            fieldWorkStartTaskResponse = fieldWorkResponse,
+            fieldWorkStartTaskResponse = newResponseForApi,
             { response ->
                 hideProgressBar()
                 response?.flag?.let {
                     if (it == "0") {
                         fieldWorkResponse.data?.isSecondFormSubmitted =
                             true  //updated that now 2nd form is submitted
+
+                        fieldWorkResponse.data?.documents?.let { docs ->
+                            for ((index) in docs.withIndex()) {
+                                fieldWorkResponse.data.documents?.get(index)?.isDocumentUploadedToAPI =
+                                    true  //to avoid uploading doc when user comes back to this screen
+                                if (docs[index]?.tagName == AppConstants.DocsTagNames.fieldWorkProvideEvidence) {
+                                    provideEvidenceDoc.value?.isDocumentUploadedToAPI = true
+                                }
+                                if (docs[index]?.tagName == AppConstants.DocsTagNames.fieldWorkSadadDocument) {
+                                    sadadDocument.value?.isDocumentUploadedToAPI = true
+                                }
+                            }
+                        }
+
                         saveBackToRoom(
                             fieldWorkResponse,
                             false,
@@ -406,25 +407,11 @@ class BaladiyaPermitChecklistActivity : BaseActivity() {
                     if (document!!.tagName?.isNotEmpty() == true) {
                         when (document.tagName) {
                             AppConstants.DocsTagNames.fieldWorkProvideEvidence -> {
-                                provideEvidenceDoc.value?.docContentString64 = document.content
-                                provideEvidenceDoc.value?.fileName = document.fileName
-                                provideEvidenceDoc.value?.tagName = document.tagName
-                                provideEvidenceDoc.value?.documentTypeName =
-                                    document.documentTypeName
-                                provideEvidenceDoc.value?.docSize = document.docSize
-                                provideEvidenceDoc.value?.dateOfSaving = document.dateOfSaving
-                                provideEvidenceDoc.value?.docId = document.docId
+                                provideEvidenceDoc.value = document
                             }
 
                             AppConstants.DocsTagNames.fieldWorkSadadDocument -> {
-                                sadadDocument.value?.docContentString64 = document.content
-                                sadadDocument.value?.fileName = document.fileName
-                                sadadDocument.value?.tagName = document.tagName
-                                sadadDocument.value?.documentTypeName =
-                                    document.documentTypeName
-                                sadadDocument.value?.docSize = document.docSize
-                                sadadDocument.value?.dateOfSaving = document.dateOfSaving
-                                sadadDocument.value?.docId = document.docId
+                                sadadDocument.value = document
                             }
                         }
                         showDocumentUploadFragUI()

@@ -377,7 +377,9 @@ object Utilities {
             taskResponse.requestPriority ?: "".also { binding.taskPriority.visibility = View.GONE }
         binding.forecastEndDateValue.text =
             taskResponse.forecastEndDate?.let { Utilities.getDateFromISO8601(it) }
-        binding.taskStatusValue.text = taskResponse.taskStatus ?: ""
+        //     binding.taskStatusValue.text = taskResponse.taskStatus ?: ""
+        binding.taskStatusValue.text =
+            "In-Progress" // as the task would always be in progress state and this change is not saved while saving in room , to getupdated status we have to call api again.
         binding.slaStatusValue.text = taskResponse.slaStatus ?: ""
         binding.customerSiteIdValue.text = taskResponse.customerSiteId ?: ""
         binding.tawalSiteIdValue.text = taskResponse.siteId ?: ""
@@ -390,6 +392,7 @@ object Utilities {
         binding.regionTypeValue.text = taskResponse.region ?: ""
         binding.districtValue.text = taskResponse.district ?: ""
         binding.cityValue.text = taskResponse.city ?: ""
+        binding.siteTowerTypeValue.text = taskResponse.towerType ?: ""
 
         taskResponse.taskStatus?.let {
             if (it != "Assigned") {

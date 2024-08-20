@@ -186,7 +186,7 @@ class BasicDetailsActivity : BaseActivity() {
                                 )
                                 submitTaskCompleteDocumentForRoom?.fileName =
                                     docFromStartTask.fileName
-                                submitTaskCompleteDocumentForRoom?.docContentString64 =
+                                submitTaskCompleteDocumentForRoom?.content =
                                     docFromStartTask.content
                                 submitTaskCompleteDocumentForRoom?.docId = response.docId
                                 withContext(Dispatchers.Main) {
@@ -368,7 +368,20 @@ class BasicDetailsActivity : BaseActivity() {
     private fun selectDocAndGetBase64() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
-            type = "*/*"
+            type = "*/*" // Set to a generic type that supports multiple file types
+            putExtra(
+                Intent.EXTRA_MIME_TYPES, arrayOf(
+                    "image/jpeg",
+                    "image/png",
+                    "application/pdf",
+                    "application/msword",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "application/vnd.ms-excel",
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "text/csv",
+                    "image/svg+xml"
+                )
+            )
         }
         startActivityForResult(intent, pickDocumentCode)
     }
@@ -386,7 +399,7 @@ class BasicDetailsActivity : BaseActivity() {
             callUploadDocumentAndUpdateAll3Places(
                 SaveAdditionalDocument(
                     taskId = MyApp.localTempVarStore.taskId,
-                    docContentString64 = base64String,
+                    content = base64String,
                     docSize = "$imageSize KB"
                 )
             )
@@ -434,7 +447,7 @@ class BasicDetailsActivity : BaseActivity() {
                     stringBase64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
                     val saveAdditionalDocument = SaveAdditionalDocument(
                         taskId = MyApp.localTempVarStore.taskId,
-                        docContentString64 = stringBase64,
+                        content = stringBase64,
                         fileName = fileName,
                         docSize = (((fileSize / 1024.0).toInt()).toString() + " KB"),
                         docId = ""  //id not available yet, need to upload the doc to API
@@ -454,7 +467,7 @@ class BasicDetailsActivity : BaseActivity() {
     }
 
     private fun callUploadDocumentAndUpdateAll3Places(saveAdditionalDocument: SaveAdditionalDocument) {
-        if (saveAdditionalDocument.docContentString64 == null) {
+        if (saveAdditionalDocument.content == null) {
             showToastMessage("Please select document before uploading!")
             return
         }
@@ -466,7 +479,7 @@ class BasicDetailsActivity : BaseActivity() {
 
         val uploadDocumentRequest =
             UploadDocumentRequest(
-                content = saveAdditionalDocument.docContentString64,
+                content = saveAdditionalDocument.content,
                 fileName = saveAdditionalDocument.fileName,
                 latitude = 0,
                 longitude = 0,
@@ -576,7 +589,7 @@ class BasicDetailsActivity : BaseActivity() {
                 taskId = pojo.taskId ?: 0,
                 fileName = pojo.docName,
                 docSize = pojo.docSize,
-                docContentString64 = pojo.docContentString64,
+                content = pojo.docContentString64,
                 docId = pojo.docUploadId
             )
             documentList.add(document)

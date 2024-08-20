@@ -14,13 +14,16 @@ public class SaveAdditionalDocumentPOJO {
     private final String docSize;
     private final String docUploadId;
     private final Integer taskId; // Use Integer for nullable int
+    private Boolean isDocumentUploadedToAPI;   //for ensuring that only those doc ids are sent to api which are not already saved
 
-    public SaveAdditionalDocumentPOJO(String docContentString64, String docName, String docSize, String docUploadId, Integer taskId) {
+    public SaveAdditionalDocumentPOJO(String docContentString64, String docName, String docSize, String docUploadId, Integer taskId,
+                                      Boolean isDocumentUploadedToAPI) {
         this.docContentString64 = docContentString64;
         this.docName = docName;
         this.docSize = docSize;
         this.docUploadId = docUploadId;
         this.taskId = taskId;
+        this.isDocumentUploadedToAPI = isDocumentUploadedToAPI;
     }
 
     // Getters for all fields
@@ -42,5 +45,13 @@ public class SaveAdditionalDocumentPOJO {
 
     public Integer getTaskId() {
         return taskId;
+    }
+
+    public Boolean getDocumentUploadedToAPI() {
+        return isDocumentUploadedToAPI;
+    }
+
+    public void setDocumentUploadedToAPI(Boolean documentUploadedToAPI) {
+        isDocumentUploadedToAPI = documentUploadedToAPI;
     }
 }

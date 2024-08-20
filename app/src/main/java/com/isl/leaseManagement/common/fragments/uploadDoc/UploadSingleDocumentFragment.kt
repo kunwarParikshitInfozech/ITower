@@ -111,6 +111,10 @@ class UploadSingleDocumentFragment(
         taskId ?: return
 
         val lsmUserId = KotlinPrefkeeper.lsmUserId ?: ""
+
+        val isDocIdPermanent = saveAdditionalDocument.value?.isDocIdPermanent
+        isDocIdPermanent ?: return
+
         val api = ApiClient.request
         val observable: Observable<ApiSuccessFlagResponse> =
             api!!.deleteDocument(
@@ -119,7 +123,8 @@ class UploadSingleDocumentFragment(
                 body = DeleteDocumentRequest(
                     requestId = requestId,
                     tagName = tagName,
-                    taskId = taskId
+                    taskId = taskId,
+                    isDocIdPermanent = isDocIdPermanent
                 )
             )
         observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -145,7 +150,7 @@ class UploadSingleDocumentFragment(
 
     private fun deleteDocFromPhoneAndUpdateUI() {
         saveAdditionalDocument.value?.docId = null
-        saveAdditionalDocument.value?.docContentString64 = null
+        saveAdditionalDocument.value?.content = null
         saveAdditionalDocument.value?.fileName = null
         saveAdditionalDocument.value?.docSize = null
         docDeletedUpdateToPhone.triggerWithString("")// passing empty as just need to trigger callback for saving data after this doc data is deleted
@@ -163,9 +168,9 @@ class UploadSingleDocumentFragment(
     }
 
     private fun downloadDocument() {
-        if (saveAdditionalDocument.value?.docContentString64 != null && saveAdditionalDocument.value?.fileName != null) {
+        if (saveAdditionalDocument.value?.content != null && saveAdditionalDocument.value?.fileName != null) {
             downloadFileFromBase64(
-                saveAdditionalDocument.value!!.docContentString64!!,
+                saveAdditionalDocument.value!!.content!!,
                 saveAdditionalDocument.value!!.fileName!!
             )
         } else {
@@ -334,9 +339,31 @@ class UploadSingleDocumentFragment(
     }
 
     private fun selectDocAndGetBase64() {
+//        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+//            addCategory(Intent.CATEGORY_OPENABLE)
+//            type =
+//                "image/*|application/msword|application/vnd.openxmlformats-officedocument.wordprocessingml.document|" +
+//                        "application/pdf|image/svg+xml|application/vnd.ms-excel|application/vnd.openxmlformats-officedocument.spreadsheetml.sheet|" +
+//                        "text/csv"
+//        }
+//        startActivityForResult(intent, pickDocumentCode)
+
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
-            type = "*/*"
+            type = "*/*" // Set to a generic type that supports multiple file types
+            putExtra(
+                Intent.EXTRA_MIME_TYPES, arrayOf(
+                    "image/jpeg",
+                    "image/png",
+                    "application/pdf",
+                    "application/msword",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "application/vnd.ms-excel",
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "text/csv",
+                    "image/svg+xml"
+                )
+            )
         }
         startActivityForResult(intent, pickDocumentCode)
     }
@@ -353,7 +380,7 @@ class UploadSingleDocumentFragment(
             val (base64String, imageSize) = result
             saveAdditionalDocument.value ?: return
             saveAdditionalDocument.value!!.taskId = MyApp.localTempVarStore.taskId
-            saveAdditionalDocument.value!!.docContentString64 = base64String
+            saveAdditionalDocument.value!!.content = base64String
             saveAdditionalDocument.value!!.docSize = "$imageSize KB"
             saveAdditionalDocument.value!!.docId = ""  // need to upload first
             saveAdditionalDocument.value!!.fileName = "Camera Image"  // need to upload first
@@ -396,7 +423,7 @@ class UploadSingleDocumentFragment(
                     }
                     saveAdditionalDocument.value!!.taskId =
                         MyApp.localTempVarStore.taskId
-                    saveAdditionalDocument.value!!.docContentString64 =
+                    saveAdditionalDocument.value!!.content =
                         Base64.encodeToString(bytes, Base64.NO_WRAP)
                     saveAdditionalDocument.value!!.fileName =
                         fileName
@@ -424,7 +451,7 @@ class UploadSingleDocumentFragment(
             baseActivity.showToastMessage("Unable to upload document")
             return
         }
-        if (uploadDoc.value!!.docContentString64 == null) {
+        if (uploadDoc.value!!.content == null) {
             baseActivity.showToastMessage("Please select document before uploading!")
             return
         }
@@ -436,7 +463,7 @@ class UploadSingleDocumentFragment(
 
         val uploadDocumentRequest =
             UploadDocumentRequest(
-                content = uploadDoc.value!!.docContentString64,
+                content = uploadDoc.value!!.content,
                 fileName = uploadDoc.value!!.fileName,
                 latitude = 0,
                 longitude = 0,
@@ -466,6 +493,10 @@ class UploadSingleDocumentFragment(
                         binding.docName.text =
                             Utilities.getLastChars(saveAdditionalDocument.value?.fileName, 20) ?: ""
                         binding.docSize.text = saveAdditionalDocument.value?.docSize ?: ""
+                        saveAdditionalDocument.value?.isDocumentUploadedToAPI =
+                            false  //means new Doc
+                        saveAdditionalDocument.value?.isDocIdPermanent =
+                            false  // used for deleting doc
                     } ?: {
                         baseActivity.showToastMessage("Document ID is blank!")
                     }

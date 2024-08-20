@@ -22,5 +22,6 @@ data class TaskResponse(
     val requester: String? = null,
     val region: String?,
     val district: String?,
-    val city: String?
+    val city: String?,
+    val towerType: String?
 ):Serializable

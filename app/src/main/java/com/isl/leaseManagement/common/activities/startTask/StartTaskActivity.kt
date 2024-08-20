@@ -97,7 +97,7 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
                         .subscribe({ baladiyaStartResponse ->   //from room
                             proceedToFieldWorkTaskInProgress(baladiyaStartResponse)
                         }, { error ->//
-           //                 showToastMessage(error.message.toString())
+                            //                 showToastMessage(error.message.toString())
                         })
             }
         }
@@ -105,6 +105,12 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
 
     private fun proceedToFieldWorkTaskInProgress(fieldWorkStartTaskResponse: FieldWorkStartTaskResponse) {
         fieldWorkStartTaskResponse.taskId = currentTaskId
+        fieldWorkStartTaskResponse.data?.documents?.let { docs ->
+            for ((index) in docs.withIndex()) {
+                fieldWorkStartTaskResponse.data.documents?.get(index)?.isDocIdPermanent =
+                    true //since getting from API
+            }
+        }
         val d = commonDatabase.fieldWorkStartDao().insert(response = fieldWorkStartTaskResponse)
             .subscribeOn(Schedulers.io())                 //saving irrespective of if data fetched from room or api as even with room, only same data will override so not an issue
             .observeOn(AndroidSchedulers.mainThread())
@@ -128,7 +134,8 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
                         document.fileName,
                         "",
                         document.docId,
-                        currentTaskId
+                        currentTaskId,
+                        true    // passing true as this is received from API from web so already updated
                     )
                     MyApp.getMyDatabase().saveAdditionalDocumentDao()
                         .insertDocument(saveAdditionalDocumentPOJO)

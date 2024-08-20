@@ -18,8 +18,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.isl.itower.MyApp
-import com.isl.leaseManagement.common.adapters.DeleteDocumentAdapter
 import com.isl.leaseManagement.base.BaseActivity
+import com.isl.leaseManagement.common.adapters.DeleteDocumentAdapter
 import com.isl.leaseManagement.dataClasses.otherDataClasses.SaveAdditionalDocument
 import com.isl.leaseManagement.dataClasses.requests.UploadDocumentRequest
 import com.isl.leaseManagement.room.entity.common.SaveAdditionalDocumentPOJO
@@ -118,11 +118,12 @@ class AddAdditionalDocumentActivity : BaseActivity() {
         val docUploadId = document.docId ?: ""
 
         return SaveAdditionalDocumentPOJO(
-            document.docContentString64!!,
+            document.content!!,
             docName,
             document.docSize ?: "",
             docUploadId,
-            document.taskId
+            document.taskId,
+            false // as this is new doc, not uploaded to any response
         )
     }
 
@@ -193,7 +194,7 @@ class AddAdditionalDocumentActivity : BaseActivity() {
             callUploadDocumentAndShowDeleteRv(
                 SaveAdditionalDocument(
                     taskId = MyApp.localTempVarStore.taskId,
-                    docContentString64 = base64String,
+                    content = base64String,
                     docSize = "$imageSize KB",
                     fileName = "Camera Image"
                 )
@@ -220,7 +221,20 @@ class AddAdditionalDocumentActivity : BaseActivity() {
     private fun pickDocumentAndGetBase64() {
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
             addCategory(Intent.CATEGORY_OPENABLE)
-            type = "*/*"
+            type = "*/*" // Set to a generic type that supports multiple file types
+            putExtra(
+                Intent.EXTRA_MIME_TYPES, arrayOf(
+                    "image/jpeg",
+                    "image/png",
+                    "application/pdf",
+                    "application/msword",
+                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    "application/vnd.ms-excel",
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "text/csv",
+                    "image/svg+xml"
+                )
+            )
         }
         startActivityForResult(intent, pickDocumentCode)
     }
@@ -255,7 +269,7 @@ class AddAdditionalDocumentActivity : BaseActivity() {
                     stringBase64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
                     val saveAdditionalDocument = SaveAdditionalDocument(
                         taskId = MyApp.localTempVarStore.taskId,
-                        docContentString64 = stringBase64,
+                        content = stringBase64,
                         fileName = fileName,
                         docSize = (((fileSize / 1024.0).toInt()).toString() + " KB"),
                         docId = ""  //id not available yet, need to upload the doc to API
@@ -277,13 +291,13 @@ class AddAdditionalDocumentActivity : BaseActivity() {
 
     private fun callUploadDocumentAndShowDeleteRv(saveAdditionalDocument: SaveAdditionalDocument) {
         val taskId = MyApp.localTempVarStore.taskId
-        if (saveAdditionalDocument.docContentString64 == null) {
+        if (saveAdditionalDocument.content == null) {
             showToastMessage("Please select document before uploading!")
             return
         }
         val uploadDocumentRequest =
             UploadDocumentRequest(
-                content = saveAdditionalDocument.docContentString64,
+                content = saveAdditionalDocument.content,
                 fileName = saveAdditionalDocument.fileName,
                 latitude = 0,
                 longitude = 0,

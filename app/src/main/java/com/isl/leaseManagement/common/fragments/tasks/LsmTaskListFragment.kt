@@ -17,14 +17,14 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.isl.itower.MyApp
-import com.isl.leaseManagement.common.adapters.SavedTasksAdapter
-import com.isl.leaseManagement.common.adapters.TasksAdapter
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.base.BaseFragment
-import com.isl.leaseManagement.dataClasses.responses.TaskResponse
 import com.isl.leaseManagement.common.activities.filter.FilterTasksActivity
 import com.isl.leaseManagement.common.activities.home.LsmHomeActivity
 import com.isl.leaseManagement.common.activities.startTask.StartTaskActivity
+import com.isl.leaseManagement.common.adapters.SavedTasksAdapter
+import com.isl.leaseManagement.common.adapters.TasksAdapter
+import com.isl.leaseManagement.dataClasses.responses.TaskResponse
 import com.isl.leaseManagement.room.db.MyDatabase
 import com.isl.leaseManagement.room.entity.common.TaskResponsePOJO
 import com.isl.leaseManagement.utils.AppConstants
@@ -231,6 +231,7 @@ class LsmTaskListFragment : BaseFragment() {
         binding.regionTypeValue.text = taskResponse.region ?: ""
         binding.districtValue.text = taskResponse.district ?: ""
         binding.cityValue.text = taskResponse.city ?: ""
+        binding.siteTowerTypeValue.text = taskResponse.towerType ?: ""
 
         taskResponse.taskStatus?.let {
             if (it != "Assigned") {
@@ -278,7 +279,8 @@ class LsmTaskListFragment : BaseFragment() {
             requester = taskResponsePOJO.requester,
             region = taskResponsePOJO.region,
             district = taskResponsePOJO.district,
-            city = taskResponsePOJO.city
+            city = taskResponsePOJO.city,
+            towerType = taskResponsePOJO.towerType
         )
     }
 
@@ -303,7 +305,8 @@ class LsmTaskListFragment : BaseFragment() {
             taskResponse.requester,
             taskResponse.region,
             taskResponse.district,
-            taskResponse.city
+            taskResponse.city,
+            taskResponse.towerType
         )
     }
 

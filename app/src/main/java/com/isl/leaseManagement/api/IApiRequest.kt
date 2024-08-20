@@ -99,7 +99,7 @@ interface IApiRequest {
     ): Observable<ApiSuccessFlagResponse>
 
 
-    @DELETE("leasemanagement/1/users/{userId}/document/{documentID}")
+    @POST("leasemanagement/1/users/{userId}/document/{documentID}/delete")
     fun deleteDocument(
         @Path("userId") userId: String,
         @Path("documentID") documentID: Int,

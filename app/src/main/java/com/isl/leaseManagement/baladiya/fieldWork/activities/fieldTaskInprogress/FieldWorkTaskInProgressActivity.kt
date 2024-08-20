@@ -154,9 +154,12 @@ class FieldWorkTaskInProgressActivity : BaseActivity() {
                     .getAllSavedDocumentsOfATask(MyApp.localTempVarStore.taskId.toString())
             documentsList?.let { list ->
                 for (item in list) {
-                    item.docUploadId?.let {
-                        additionalDocIds.add(it)
+                    if (!item.documentUploadedToAPI){  //if not uploaded , only than we will save these IDs
+                        item.docUploadId?.let {
+                            additionalDocIds.add(it)
+                        }
                     }
+
                 }
                 withContext(Dispatchers.Main) {
                     callSubmitApi()
