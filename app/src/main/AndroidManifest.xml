@@ -77,6 +77,14 @@
         android:theme="@android:style/Theme.NoTitleBar"
         android:usesCleartextTraffic="false">
         <activity
+            android:name="com.isl.leaseManagement.baladiya.uploadPermit.activities.uploadPermitCertificate.UploadBaladiyaPermitActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
+            android:name="com.isl.leaseManagement.baladiya.uploadPermit.activities.uploadPermitTaskInProgress.UploadPermitTaskInProgressActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
             android:name="com.isl.leaseManagement.baladiya.fieldWork.activities.checkList.BaladiyaPermitChecklistActivity"
             android:exported="false"
             android:theme="@style/LightTheme" />

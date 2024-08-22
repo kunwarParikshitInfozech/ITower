@@ -39,7 +39,7 @@ data class FieldWorkStartTaskResponse(
         var sadadBillerCode: Int?,
         var trackingNumber: String?,
         var remarks: String?,
-        var isSecondFormSubmitted: Boolean = false    //not from API, just to check if 2nd form is submitted or not
+        var isSecondFormSubmittedOnFieldWork: Boolean = false,    //not from API, just to check if 2nd form is submitted or not
     )
 }
 

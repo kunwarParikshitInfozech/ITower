@@ -125,5 +125,7 @@
     </string-array>
 
     <string name="alpha_numeric_values">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789</string>
+    <string name="upload_baladiya_permit">Upload Baladiya Permit</string>
+    <string name="baladiya_certificate">Baladiya Certificate</string>
 
 </resources>

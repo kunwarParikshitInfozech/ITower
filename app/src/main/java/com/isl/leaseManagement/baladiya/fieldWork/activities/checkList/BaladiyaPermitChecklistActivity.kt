@@ -192,7 +192,7 @@ class BaladiyaPermitChecklistActivity : BaseActivity() {
                 hideProgressBar()
                 response?.flag?.let {
                     if (it == "0") {
-                        fieldWorkResponse.data?.isSecondFormSubmitted =
+                        fieldWorkResponse.data?.isSecondFormSubmittedOnFieldWork =
                             true  //updated that now 2nd form is submitted
 
                         fieldWorkResponse.data?.documents?.let { docs ->

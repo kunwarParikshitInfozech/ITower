@@ -42,6 +42,7 @@ object AppConstants {
     object DocTypeNames {
         const val provideEvidence = "ProvideEvidence"
         const val sadadDocument = "SADAD Document"
+        const val baladiyaCertificate = "Baladiya Certificate"
     }
 
     object TaskFlags {
@@ -65,4 +66,8 @@ object AppConstants {
         const val baladiyaFieldWork = 2
     }
 
+    object TaskNames {
+        const val completeRequiredDetails = "Complete Required Details"
+        const val uploadBaladiyaPermit = "Upload Baladiya Permit"
+    }
 }

@@ -39,6 +39,9 @@ object Utilities {
     }
 
     fun getDateFromISO8601(inputDate: String): String {
+        if (inputDate.isEmpty()) {
+            return ""
+        }
         val inputFormatter = DateTimeFormatter.ISO_DATE_TIME
         val outputFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
         val zonedDateTime = ZonedDateTime.parse(inputDate, inputFormatter)
@@ -47,6 +50,9 @@ object Utilities {
     }
 
     fun toIsoString(dateString: String): String? {
+        if (dateString.isEmpty()) {
+            return ""
+        }
         val formatter = SimpleDateFormat(
             "dd.MM.yyyy",
             Locale.getDefault()

@@ -9,6 +9,7 @@ import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.isl.itower.MyApp
 import com.isl.leaseManagement.baladiya.fieldWork.activities.fieldTaskInprogress.FieldWorkTaskInProgressActivity
+import com.isl.leaseManagement.baladiya.uploadPermit.activities.uploadPermitTaskInProgress.UploadPermitTaskInProgressActivity
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.common.activities.home.LsmHomeActivity
 import com.isl.leaseManagement.dataClasses.requests.StartTaskRequest
@@ -21,6 +22,8 @@ import com.isl.leaseManagement.room.entity.common.SaveAdditionalDocumentPOJO
 import com.isl.leaseManagement.room.entity.paymentProcess.StartTaskPaymentPOJO
 import com.isl.leaseManagement.utils.AppConstants
 import com.isl.leaseManagement.utils.AppConstants.IntentKeys.isStartCalledFromRoom
+import com.isl.leaseManagement.utils.AppConstants.TaskNames.completeRequiredDetails
+import com.isl.leaseManagement.utils.AppConstants.TaskNames.uploadBaladiyaPermit
 import infozech.itower.R
 import infozech.itower.databinding.ActivityGetStartDataBinding
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -95,7 +98,7 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe({ baladiyaStartResponse ->   //from room
-                            proceedToFieldWorkTaskInProgress(baladiyaStartResponse)
+                            proceedToFieldWorkOrUploadPermitTaskInProgress(baladiyaStartResponse)
                         }, { error ->//
                             //                 showToastMessage(error.message.toString())
                         })
@@ -103,7 +106,7 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
         }
     }
 
-    private fun proceedToFieldWorkTaskInProgress(fieldWorkStartTaskResponse: FieldWorkStartTaskResponse) {
+    private fun proceedToFieldWorkOrUploadPermitTaskInProgress(fieldWorkStartTaskResponse: FieldWorkStartTaskResponse) {
         fieldWorkStartTaskResponse.taskId = currentTaskId
         fieldWorkStartTaskResponse.data?.documents?.let { docs ->
             for ((index) in docs.withIndex()) {
@@ -144,7 +147,13 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
             }
             delay(600)
             finish()
-            launchActivity(FieldWorkTaskInProgressActivity::class.java)
+            MyApp.localTempVarStore.taskResponse?.taskName?.let {
+                if (it == completeRequiredDetails) {
+                    launchActivity(FieldWorkTaskInProgressActivity::class.java)
+                } else if (it == uploadBaladiyaPermit) {
+                    launchActivity(UploadPermitTaskInProgressActivity::class.java)
+                }
+            }
         }
     }
 
@@ -226,7 +235,7 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
                 }
                 when (it?.processId) {
                     AppConstants.ProcessIds.baladiyaFieldWork -> {
-                        proceedToFieldWorkTaskInProgress(it)
+                        proceedToFieldWorkOrUploadPermitTaskInProgress(it)
                     }
                 }
             },
