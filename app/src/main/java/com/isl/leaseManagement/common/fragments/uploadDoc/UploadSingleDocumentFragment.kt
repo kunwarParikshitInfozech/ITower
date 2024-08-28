@@ -158,6 +158,7 @@ class UploadSingleDocumentFragment(
     }
 
     private fun documentIsUneditable() {
+        binding.mandatoryIcon.visibility = View.GONE
         binding.deleteDocCl.visibility = View.GONE
         binding.docTypeTv.setTextColor(
             ContextCompat.getColor(

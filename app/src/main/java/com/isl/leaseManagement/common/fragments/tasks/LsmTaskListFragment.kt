@@ -216,6 +216,11 @@ class LsmTaskListFragment : BaseFragment() {
             taskResponse.forecastStartDate?.let { Utilities.getDateFromISO8601(it) }
         binding.taskPriority.text =
             taskResponse.requestPriority ?: "".also { binding.taskPriority.visibility = View.GONE }
+        if (taskResponse.requestPriority != null && taskResponse.requestPriority == "Low") {
+            binding.taskPriority.setTextColor(baseActivity.getColor(R.color.color_34C759))
+            binding.taskPriority.background =
+                baseActivity.getDrawable(R.drawable.rounded_bg_tv_green)
+        }
         binding.forecastEndDateValue.text =
             taskResponse.forecastEndDate?.let { Utilities.getDateFromISO8601(it) }
         binding.taskStatusValue.text = taskResponse.taskStatus ?: ""

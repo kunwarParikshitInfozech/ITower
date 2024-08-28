@@ -158,6 +158,11 @@ class UploadBaladiyaPermitActivity : BaseActivity() {
         val newResponseForApi =
             fieldWorkResponse.copy()  //creating new to avoid sending already uploaded document
 
+        if (baladiyaCertificateDoc.value==null||baladiyaCertificateDoc.value!!.content==null||baladiyaCertificateDoc.value!!.content==""){
+            showToastMessage("Select Baladiya Document")
+            return
+        }
+
         val updatedDocumentList = fieldWorkResponse.data?.documents?.filterNotNull()
             ?.filter { !it.isDocumentUploadedToAPI }
             ?.toMutableList() ?: mutableListOf()

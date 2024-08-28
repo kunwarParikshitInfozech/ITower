@@ -69,7 +69,7 @@
             android:id="@+id/dueByValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginStart="@dimen/_3sdp"
             android:layout_marginTop="@dimen/_8sdp"
             android:textColor="@color/black"
             android:textSize="@dimen/_12ssp"
@@ -163,7 +163,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.85" />
+                app:layout_constraintVertical_bias="0.70" />
 
             <com.isl.leaseManagement.utils.CustomTextView
                 android:id="@+id/submitApiBtn"

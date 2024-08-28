@@ -21,9 +21,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.isl.itower.MyApp
-import com.isl.leaseManagement.common.adapters.AdditionalDocumentsListAdapter
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.common.activities.addAdditionalDoc.AddAdditionalDocumentActivity
+import com.isl.leaseManagement.common.adapters.AdditionalDocumentsListAdapter
 import com.isl.leaseManagement.dataClasses.otherDataClasses.SaveAdditionalDocument
 import com.isl.leaseManagement.paymentProcess.activities.requestDetails.RequestDetailsActivity
 import com.isl.leaseManagement.room.entity.common.SaveAdditionalDocumentPOJO
@@ -238,7 +238,7 @@ class AdditionalDocumentsActivity : BaseActivity() {
             dialog.dismiss()
         }
         saveAdditionalDocument.fileName?.let {
-            binding.documentNameValue.text= getLastChars(it, 28)
+            binding.documentNameValue.text = getLastChars(it, 28)
         }
         binding.uploadDateTimeValue.text = saveAdditionalDocument.dateOfSaving ?: ""
         MyApp.localTempVarStore?.paymentStartTaskResponse?.data?.paymentMethod?.let {
@@ -265,6 +265,15 @@ class AdditionalDocumentsActivity : BaseActivity() {
         binding.requestDetailsTv.setOnClickListener {
             dialog.dismiss()
             launchActivity(RequestDetailsActivity::class.java)
+        }
+        binding.taskDetailTv.setOnClickListener {
+            dialog.dismiss()
+            MyApp.localTempVarStore.taskResponse?.let { it1 ->
+                Utilities.showTaskDetailsPopupWithoutStart(
+                    this,
+                    it1
+                )
+            }
         }
         binding.addAdditionalDocTv.setOnClickListener {
             dialog.dismiss()

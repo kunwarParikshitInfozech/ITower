@@ -80,7 +80,9 @@ class UploadPermitTaskInProgressActivity : BaseActivity() {
                     var isBaladiyaCertificateUploaded = false
                     it.documents?.let { docs ->
                         for (doc in docs) {
-                            if (doc?.tagName?.equals(AppConstants.DocsTagNames.fieldWorkBaladiyaCertificate) == true) {
+                            if (doc?.tagName?.equals(AppConstants.DocsTagNames.fieldWorkBaladiyaCertificate) == true
+                                && doc.content != null && doc.content != ""
+                            ) {
                                 isBaladiyaCertificateUploaded = true
                             }
                         }

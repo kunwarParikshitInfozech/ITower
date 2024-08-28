@@ -26,7 +26,7 @@
                 android:text="@string/close"
                 android:textAlignment="center"
                 android:textColor="@color/color_253746"
-                android:textSize="@dimen/_14ssp" />
+                android:textSize="@dimen/_13ssp" />
 
 
             <com.isl.leaseManagement.utils.CustomTextView
@@ -34,11 +34,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_12sdp"
                 android:text="@string/document_information"
                 android:textAlignment="center"
                 android:textColor="@color/color_001E60"
-                android:textSize="@dimen/_16ssp"
+                android:textSize="@dimen/_14ssp"
                 app:layout_constraintEnd_toEndOf="parent" />
         </RelativeLayout>
 

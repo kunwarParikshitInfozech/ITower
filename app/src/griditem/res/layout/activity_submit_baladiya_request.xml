@@ -92,6 +92,7 @@
                         android:paddingVertical="@dimen/_14sdp"
                         android:paddingStart="@dimen/_8sdp"
                         android:paddingEnd="@dimen/_8sdp"
+                        style="@style/LightTheme"
                         android:textColor="@color/color_606F8A"
                         android:textColorHint="@color/color_B1B7C8"
                         android:textSize="@dimen/_12ssp"

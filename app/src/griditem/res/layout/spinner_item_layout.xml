@@ -6,8 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/_32sdp"
     android:gravity="center_vertical"
-    android:textAlignment="gravity"
     android:padding="@dimen/_2sdp"
-    android:textColor="@android:color/black"
+    android:paddingStart="@dimen/_8sdp"
+    android:textAlignment="gravity"
+    android:textColor="@color/color_606F8A"
     android:textSize="16sp"
     app:layout_constraintTop_toTopOf="parent" />

@@ -21,6 +21,17 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/mandatoryIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_1sdp"
+            android:text="@string/asterisk_symbol"
+            android:textColor="@color/color_FF4D4F"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintStart_toEndOf="@id/docTypeTv"
+            app:layout_constraintTop_toTopOf="@id/docTypeTv" />
+
         <ImageView
             android:id="@+id/attachDocumentIv"
             android:layout_width="wrap_content"

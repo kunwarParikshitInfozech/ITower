@@ -86,7 +86,7 @@ object Utilities {
                 onDateSelected(selectedDate)
             }, year, month, day
         )
-        datePickerDialog.datePicker.minDate = calendar.timeInMillis
+  //      datePickerDialog.datePicker.minDate = calendar.timeInMillis
         datePickerDialog.show()
     }
 
@@ -259,7 +259,7 @@ object Utilities {
                 if (position == 0) {
                     textView.setTextColor(Color.GRAY)
                 } else {
-                    textView.setTextColor(Color.BLACK)
+                    textView.setTextColor(context.getColor(R.color.color_606F8A))
                 }
 
                 return view
@@ -282,7 +282,7 @@ object Utilities {
                 if (position == 0) {
                     textView.setTextColor(Color.GRAY)
                 } else {
-                    textView.setTextColor(Color.BLACK)
+                    textView.setTextColor(context.getColor(R.color.color_606F8A))
                 }
 
                 return view
@@ -290,6 +290,7 @@ object Utilities {
         }
 
         // Set the adapter to the spinner
+
         spinner.adapter = adapter
 
         // Set an item selected listener on the spinner
@@ -349,7 +350,7 @@ object Utilities {
         }
     }
 
-    private fun showTaskDetailsPopupWithoutStart(
+     fun showTaskDetailsPopupWithoutStart(
         context: BaseActivity,
         taskResponse: TaskResponse
     ) {
@@ -381,6 +382,11 @@ object Utilities {
             taskResponse.forecastStartDate?.let { Utilities.getDateFromISO8601(it) }
         binding.taskPriority.text =
             taskResponse.requestPriority ?: "".also { binding.taskPriority.visibility = View.GONE }
+        if (taskResponse.requestPriority != null && taskResponse.requestPriority == "Low") {
+            binding.taskPriority.setTextColor(context.getColor(R.color.color_34C759))
+            binding.taskPriority.background =
+                context.getDrawable(R.drawable.rounded_bg_tv_green)
+        }
         binding.forecastEndDateValue.text =
             taskResponse.forecastEndDate?.let { Utilities.getDateFromISO8601(it) }
         //     binding.taskStatusValue.text = taskResponse.taskStatus ?: ""
