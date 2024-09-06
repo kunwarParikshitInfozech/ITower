@@ -1,7 +1,7 @@
 import okhttp3.Interceptor
 import okhttp3.Response
 
-class ApiInterceptor : Interceptor {
+class ApiInterceptor : Interceptor {   //this class is for passing auth token
 
     private val headerAuthToken = "Authorization"
 

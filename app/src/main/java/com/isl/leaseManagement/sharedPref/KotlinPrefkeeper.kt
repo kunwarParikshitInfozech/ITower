@@ -5,7 +5,7 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.isl.leaseManagement.utils.AppConstants
 
-object KotlinPrefkeeper {
+object KotlinPrefkeeper {    //this class is used for saving data to shared preference
     private var prefs: SharedPreferences? = null
 
     @JvmStatic
@@ -24,6 +24,11 @@ object KotlinPrefkeeper {
     var lsmUserId: String?
         get() = prefs!!.getString(AppConstants.PrefsName.lsmUserId, "")
         set(lsmUserId) = prefs!!.edit().putString(AppConstants.PrefsName.lsmUserId, lsmUserId)
+            .apply()
+
+    var leaseManagementUserID: String?
+        get() = prefs!!.getString(AppConstants.PrefsName.leaseManagementUserId, "1")
+        set(leaseManagementUserId) = prefs!!.edit().putString(AppConstants.PrefsName.leaseManagementUserId, leaseManagementUserId)
             .apply()
 
     var deviceUUID: String?

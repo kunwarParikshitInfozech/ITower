@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.dataClasses.responses.TaskResponse
 import com.isl.leaseManagement.utils.ClickInterfaces
+import com.isl.leaseManagement.utils.Utilities
 import com.isl.leaseManagement.utils.Utilities.getDateFromISO8601
 import infozech.itower.R
 import infozech.itower.databinding.SavedTasksListLayoutBinding
@@ -63,6 +64,19 @@ class SavedTasksAdapter(
                     binding.taskPriority.setTextColor(ctx.getColor(R.color.color_34C759))
                     binding.taskPriority.background =
                         ctx.getDrawable(R.drawable.rounded_bg_tv_green)
+                }
+            }
+            item.slaStatus?.let {
+                binding.slaStatus.text = it
+                if (it == "On Time") {
+                    binding.slaStatus.setTextColor(ctx.getColor(R.color.color_34C759))
+                    binding.taskDays.setTextColor(ctx.getColor(R.color.color_34C759))
+                    ctx.getDrawable(R.drawable.calendar_small_icon_green)?.let { it1 ->
+                        Utilities.setDrawableStartToTextView(
+                            binding.taskDays,
+                            it1
+                        )
+                    }
                 }
             }
             item.actualStartDate?.let { binding.taskDate.text = getDateFromISO8601(it) }

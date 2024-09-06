@@ -15,3 +15,4 @@ data class RequestDetailsResponse(
     val landlordType: String?,
     val isVATApplicable:String?
 )
+

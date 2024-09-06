@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clCaptureCandidateText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_sky_blue"
+            android:paddingBottom="@dimen/_20sdp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/backIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:contentDescription="@string/image"
+                android:src="@drawable/back_icon_vector"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/captureCandidateTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/backIv"
+                android:layout_marginTop="@dimen/_24sdp"
+                android:text="@string/capture_new_candidate"
+                android:textColor="@color/color_001E60"
+                android:textSize="@dimen/_14ssp"
+                app:layout_constraintStart_toStartOf="@id/backIv"
+                app:layout_constraintTop_toBottomOf="@id/backIv" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/clCaptureCandidateText"
+            tools:context="com.isl.leaseManagement.activities.taskInProgress.TaskInProgressActivity">
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/btn_light_grey_border_bg"
+                android:drawableEnd="@drawable/forward_arrow_icon"
+                android:paddingVertical="@dimen/_14sdp"
+                android:paddingStart="@dimen/_8sdp"
+                android:paddingEnd="@dimen/_8sdp"
+                android:text="@string/_1_property_details"
+                android:textColor="@color/color_253746"
+                android:textSize="@dimen/_12ssp" />
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/btn_light_grey_border_bg"
+                android:drawableEnd="@drawable/forward_arrow_icon"
+                android:paddingVertical="@dimen/_14sdp"
+                android:paddingStart="@dimen/_8sdp"
+                android:paddingEnd="@dimen/_8sdp"
+                android:text="@string/_2_landlord_details"
+                android:textColor="@color/color_253746"
+                android:textSize="@dimen/_12ssp" />
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/btn_light_grey_border_bg"
+                android:drawableEnd="@drawable/forward_arrow_icon"
+                android:paddingVertical="@dimen/_14sdp"
+                android:paddingStart="@dimen/_8sdp"
+                android:paddingEnd="@dimen/_8sdp"
+                android:text="@string/_3_delegate_details"
+                android:textColor="@color/color_253746"
+                android:textSize="@dimen/_12ssp" />
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/btn_light_grey_border_bg"
+                android:drawableEnd="@drawable/forward_arrow_icon"
+                android:paddingVertical="@dimen/_14sdp"
+                android:paddingStart="@dimen/_8sdp"
+                android:paddingEnd="@dimen/_8sdp"
+                android:text="@string/_4_account_details"
+                android:textColor="@color/color_253746"
+                android:textSize="@dimen/_12ssp" />
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:background="@drawable/btn_light_grey_border_bg"
+                android:drawableEnd="@drawable/forward_arrow_icon"
+                android:paddingVertical="@dimen/_14sdp"
+                android:paddingStart="@dimen/_8sdp"
+                android:paddingEnd="@dimen/_8sdp"
+                android:text="@string/_5_upload_documents"
+                android:textColor="@color/color_253746"
+                android:textSize="@dimen/_12ssp" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/actionBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/image"
+            android:src="@drawable/lsm_actions_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.90" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

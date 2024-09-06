@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.isl.itower.MyApp
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.base.BaseFragment
+import com.isl.leaseManagement.common.activities.btsStartTask.BTSStartTaskActivity
 import com.isl.leaseManagement.common.activities.filter.FilterTasksActivity
 import com.isl.leaseManagement.common.activities.home.LsmHomeActivity
 import com.isl.leaseManagement.common.activities.startTask.StartTaskActivity
@@ -71,18 +72,16 @@ class LsmTaskListFragment : BaseFragment() {
         getTaskListData()  //to avoid overriding data of filter data
     }
 
-    override fun onResume() {
-        super.onResume()
-    }
-
     private fun getTaskListData() {
         if (LsmHomeActivity.taskIsAssigned) {
             callTasksListApi(taskStatus = "Assigned")
             getSavedTaskList()
+            binding.myTasksText.text = getString(R.string.assigned_task)
         } else {
             callTasksListApi(taskStatus = "Unassigned")
             binding.resumeText.visibility = View.GONE
             binding.scheduledText.visibility = View.GONE
+            binding.myTasksText.text = getString(R.string.unassigned_task)
         }
     }
 
@@ -221,6 +220,10 @@ class LsmTaskListFragment : BaseFragment() {
             binding.taskPriority.background =
                 baseActivity.getDrawable(R.drawable.rounded_bg_tv_green)
         }
+        if (taskResponse.slaStatus != null && taskResponse.slaStatus == "On Time") {
+            binding.slaStatusValue.setTextColor(baseActivity.getColor(R.color.color_34C759))
+        }
+
         binding.forecastEndDateValue.text =
             taskResponse.forecastEndDate?.let { Utilities.getDateFromISO8601(it) }
         binding.taskStatusValue.text = taskResponse.taskStatus ?: ""
@@ -228,10 +231,11 @@ class LsmTaskListFragment : BaseFragment() {
         binding.customerSiteIdValue.text = taskResponse.customerSiteId ?: ""
         binding.tawalSiteIdValue.text = taskResponse.siteId ?: ""
         binding.planStartDateValue.text =
-            taskResponse.forecastStartDate?.let { Utilities.getDateFromISO8601(it) }
+            taskResponse.startDate?.let { Utilities.getDateFromISO8601(it) }
         binding.planEndDateValue.text =
-            taskResponse.forecastStartDate?.let { Utilities.getDateFromISO8601(it) }
-
+            taskResponse.endDate?.let { Utilities.getDateFromISO8601(it) }
+        binding.actualStartDateValue.text =
+            taskResponse.actualStartDate?.let { Utilities.getDateFromISO8601(it) }
         binding.requesterValue.text = taskResponse.requester ?: ""
         binding.regionTypeValue.text = taskResponse.region ?: ""
         binding.districtValue.text = taskResponse.district ?: ""
@@ -251,7 +255,16 @@ class LsmTaskListFragment : BaseFragment() {
             lifecycleScope.launch(Dispatchers.IO) {
                 taskResponseDao?.insertTaskResponse(createTaskResponsePojo(taskResponse))
             }
-            val intent = Intent(requireActivity(), StartTaskActivity::class.java)
+            var intent = Intent(requireActivity(), StartTaskActivity::class.java)
+            if (taskResponse.processId == 4) {
+                intent = Intent(requireActivity(), BTSStartTaskActivity::class.java)
+            }
+            taskResponse.taskId?.let {
+                MyApp.localTempVarStore.taskId = it
+                MyApp.localTempVarStore.taskResponse = taskResponse
+                MyApp.localTempVarStore.isStartCalledFromRoom = false
+            } ?: return@setOnClickListener
+
             intent.putExtra(AppConstants.IntentKeys.taskDetailIntentExtra, taskResponse)
             dialog.dismiss()
             baseActivity.launchActivityWithIntent(intent)
@@ -285,7 +298,9 @@ class LsmTaskListFragment : BaseFragment() {
             region = taskResponsePOJO.region,
             district = taskResponsePOJO.district,
             city = taskResponsePOJO.city,
-            towerType = taskResponsePOJO.towerType
+            towerType = taskResponsePOJO.towerType,
+            startDate = taskResponsePOJO.startDate,
+            endDate = taskResponsePOJO.endDate,
         )
     }
 
@@ -311,7 +326,9 @@ class LsmTaskListFragment : BaseFragment() {
             taskResponse.region,
             taskResponse.district,
             taskResponse.city,
-            taskResponse.towerType
+            taskResponse.towerType,
+            taskResponse.startDate,
+            taskResponse.endDate
         )
     }
 
@@ -375,7 +392,15 @@ class LsmTaskListFragment : BaseFragment() {
     }
 
     private fun openStartTaskActivityWithRoomData(taskResponse: TaskResponse) {
-        val intent = Intent(requireActivity(), StartTaskActivity::class.java)
+        var intent = Intent(requireActivity(), StartTaskActivity::class.java)
+        if (taskResponse.processId == 4) {
+            intent = Intent(requireActivity(), BTSStartTaskActivity::class.java)
+        }
+        taskResponse.taskId?.let {
+            MyApp.localTempVarStore.taskId = it
+            MyApp.localTempVarStore.taskResponse = taskResponse
+            MyApp.localTempVarStore.isStartCalledFromRoom = true
+        } ?: return
         intent.putExtra(AppConstants.IntentKeys.taskDetailIntentExtra, taskResponse)
         intent.putExtra(AppConstants.IntentKeys.isStartCalledFromRoom, true)
         baseActivity.launchActivityWithIntent(intent)

@@ -29,11 +29,13 @@ public class TaskResponsePOJO {
     private final String district;
     private final String city;
     private final String towerType;
+    private final String startDate;
+    private final String endDate;
 
     public TaskResponsePOJO(int taskId, String requestId, String siteId, String customerSiteId, String taskName,
                             String taskStatus, String requestPriority, String forecastStartDate, String forecastEndDate,
                             String actualStartDate, Integer slaDuration, String slaUnit, String processName, Integer processId,
-                            String requestStatus, String slaStatus, String requester, String region, String district, String city,String towerType) {
+                            String requestStatus, String slaStatus, String requester, String region, String district, String city, String towerType, String startDate, String endDate) {
         this.taskId = taskId;
         this.requestId = requestId;
         this.siteId = siteId;
@@ -55,6 +57,8 @@ public class TaskResponsePOJO {
         this.district = district;
         this.city = city;
         this.towerType = towerType;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
     // Getters for all fields
@@ -140,5 +144,13 @@ public class TaskResponsePOJO {
 
     public String getTowerType() {
         return towerType;
+    }
+
+    public String getStartDate() {
+        return startDate;
+    }
+
+    public String getEndDate() {
+        return endDate;
     }
 }

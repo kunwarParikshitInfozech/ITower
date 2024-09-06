@@ -127,5 +127,34 @@
     <string name="alpha_numeric_values">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789</string>
     <string name="upload_baladiya_permit">Upload Baladiya Permit</string>
     <string name="baladiya_certificate">Baladiya Certificate</string>
+    <string name="capture_candidate_details">Capture Candidate Details</string>
+    <string name="add_new_candidate">Add new Candidate</string>
+    <string name="select_existing_candidate">Select Existing Candidate</string>
+    <string name="site_district">Site District</string>
+    <string name="site_city">Site City</string>
+    <string name="site_district_arabic">Site District (Arabic)</string>
+    <string name="site_city_arabic">Site City (Arabic)</string>
+    <string name="geo_type_location_type_cluster">Geo type/ Location Type/ Cluster</string>
+    <string name="longitude_of_nominal_point">Longitude of Nominal Point</string>
+    <string name="latitude_of_nominal_point">Latitude of Nominal point</string>
+    <string name="search_ring_radius_in_meter">Search ring radius (in Meter)*</string>
+    <string name="project_name">Project Name</string>
+    <string name="bss_request_no">BSS Request No.</string>
+    <string name="requesting_customer">Requesting Customer</string>
+    <string name="iproject_request_id">iProject Request ID</string>
+    <string name="is_it_a_vip_request">Is it a VIP Request?</string>
+    <string name="customer_commercial_agreement_no_or_reference">Customer Commercial Agreement No or Reference</string>
+    <string name="expected_number_of_colocation_on_site">Expected No. of Colocation</string>
+    <string name="dp_proposed_tower_height_for_gf_in_mtr">DP Proposed Tower Height for GF (Meters)</string>
+    <string name="potential_customer">Potential Customer</string>
+    <string name="expected_packages">Expected Package</string>
+    <string name="forecast_date_for_colocation">Forecast Date for Colocation</string>
+    <string name="version">Version</string>
+    <string name="capture_new_candidate">Capture New Candidate</string>
+    <string name="_1_property_details">1. Property Details</string>
+    <string name="_2_landlord_details">2. Landlord Details</string>
+    <string name="_3_delegate_details">3. Delegate Details</string>
+    <string name="_4_account_details">4. Account Details</string>
+    <string name="_5_upload_documents">5. Upload Documents</string>
 
 </resources>

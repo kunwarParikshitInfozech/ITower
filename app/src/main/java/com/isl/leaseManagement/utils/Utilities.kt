@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -32,7 +33,7 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
-object Utilities {
+object Utilities {      //this class is for common util functions
     fun dpToPx(context: Context, dp: Int): Int {
         val density = context.resources.displayMetrics.density
         return (dp * density).toInt()
@@ -69,7 +70,7 @@ object Utilities {
     }
 
 
-    fun showDatePickerFromCurrentDate(
+    private fun showDatePickerFromCurrentDate(
         context: Context,
         onDateSelected: (selectedDate: Calendar) -> Unit
     ) {
@@ -86,7 +87,7 @@ object Utilities {
                 onDateSelected(selectedDate)
             }, year, month, day
         )
-  //      datePickerDialog.datePicker.minDate = calendar.timeInMillis
+        //      datePickerDialog.datePicker.minDate = calendar.timeInMillis
         datePickerDialog.show()
     }
 
@@ -102,7 +103,7 @@ object Utilities {
             return true
         }
 
-        fun isDivisibleBy97Modulo1(numberString: String): Boolean {
+        private fun isDivisibleBy97Modulo1(numberString: String): Boolean {
             try {
                 val numberBigInteger = BigInteger(numberString)
                 val remainder = numberBigInteger.mod(BigInteger.valueOf(97))
@@ -114,7 +115,7 @@ object Utilities {
             }
         }
 
-        fun replaceAlphabetsWithNumbers(text: String): String {
+        private fun replaceAlphabetsWithNumbers(text: String): String {
             val alphabetMap =
                 ('a'..'z').mapIndexed { index, char -> char to (index + 10).toString() }.toMap()
             val result = StringBuilder()
@@ -180,62 +181,6 @@ object Utilities {
         val length = str.length
         return if (length <= maxLength) str else str.substring(length - maxLength)
     }
-
-//    fun initializeDropDownWithStringAndIdArray(
-//        firstHintText: String = "Choose an option",
-//        context: BaseActivity,
-//        stringsArray: Array<String>,
-//        spinner: Spinner,
-//        commonInterface: ClickInterfaces.CommonInterface
-//    ) {
-////        val adapter =
-////            ArrayAdapter(context, android.R.layout.simple_dropdown_item_1line, stringsArray){
-////
-////            }
-//
-//
-//        val adapter = object : ArrayAdapter<String>(.layout.spinner_item_layout, stringsArray) {
-//            override fun isEnabled(position: Int): Boolean {
-//                // Disable the first item from being selected (it acts as a placeholder)
-//                return position != 0
-//            }
-//
-//            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-//                val view = super.getDropDownView(position, convertView, parent)
-//                val textView = view.findViewById<TextView>(R.id.spinnerItem)
-//
-//                // Set the color for the placeholder text
-//                if (position == 0) {
-//                    textView.setTextColor(Color.GRAY)
-//                } else {
-//                    textView.setTextColor(Color.BLACK)
-//                }
-//
-//                return view
-//            }
-//        }
-//
-//
-//        spinner.adapter = adapter
-//
-//        spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//            override fun onItemSelected(
-//                parent: AdapterView<*>,
-//                view: View?,
-//                position: Int,
-//                id: Long
-//            ) {
-//                val selectedItem = parent.getItemAtPosition(position) as String
-//                commonInterface.triggerWithInt(position)
-//                commonInterface.triggerWithString(selectedItem)
-//            }
-//
-//            override fun onNothingSelected(parent: AdapterView<*>) {//-
-//            }
-//
-//
-//        }
-//    }
 
     fun initializeDropDownWithStringAndIdArray(
         firstHintText: String = "Choose an option",
@@ -350,11 +295,10 @@ object Utilities {
         }
     }
 
-     fun showTaskDetailsPopupWithoutStart(
+    fun showTaskDetailsPopupWithoutStart(
         context: BaseActivity,
         taskResponse: TaskResponse
     ) {
-        context ?: return
         val dialog = Dialog(context)
         val binding = TaskDetailsPopupBinding.inflate(context.layoutInflater)
         dialog.setContentView(binding.root)
@@ -396,15 +340,17 @@ object Utilities {
         binding.customerSiteIdValue.text = taskResponse.customerSiteId ?: ""
         binding.tawalSiteIdValue.text = taskResponse.siteId ?: ""
         binding.planStartDateValue.text =
-            taskResponse.forecastStartDate?.let { Utilities.getDateFromISO8601(it) }
+            taskResponse.startDate?.let { Utilities.getDateFromISO8601(it) }
         binding.planEndDateValue.text =
-            taskResponse.forecastStartDate?.let { Utilities.getDateFromISO8601(it) }
+            taskResponse.endDate?.let { Utilities.getDateFromISO8601(it) }
 
         binding.requesterValue.text = taskResponse.requester ?: ""
         binding.regionTypeValue.text = taskResponse.region ?: ""
         binding.districtValue.text = taskResponse.district ?: ""
         binding.cityValue.text = taskResponse.city ?: ""
         binding.siteTowerTypeValue.text = taskResponse.towerType ?: ""
+        binding.actualStartDateValue.text =
+            taskResponse.actualStartDate?.let { getDateFromISO8601(it) }
 
         taskResponse.taskStatus?.let {
             if (it != "Assigned") {
@@ -422,33 +368,6 @@ object Utilities {
             }
         }
     }
-
-//    private fun callUnAssignAPi(taskId: Int, context: BaseActivity) {
-//        val api = ApiClient.request
-//        val lsmUserId = KotlinPrefkeeper.lsmUserId ?: ""
-//        val json = "{\"key\":\"value\"}"
-//        val body: RequestBody = RequestBody.create(MediaType.parse("application/json"), json)
-//        val observable: Observable<ApiSuccessFlagResponse> =
-//            api!!.updateTaskStatus(userId = lsmUserId, taskId, "unassign", body)
-//        observable.subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe(object : Observer<ApiSuccessFlagResponse> {
-//                override fun onSubscribe(d: Disposable) {
-//                }
-//
-//                override fun onNext(t: ApiSuccessFlagResponse) {
-//                    context.showToastMessage("Unassigned!")
-//                    context.launchNewActivityCloseAllOther(LsmHomeActivity::class.java)
-//                }
-//
-//                override fun onError(e: Throwable) {
-//                    context.showToastMessage("Unable to unassign!")
-//                }
-//
-//                override fun onComplete() {
-//                }
-//            })
-//    }
 
     fun showDatePickerAndFillDate(view: TextView, context: BaseActivity) {
         showDatePickerFromCurrentDate(context) { selectedDate ->
@@ -476,4 +395,12 @@ object Utilities {
         } else null
     }
 
+    fun setDrawableStartToTextView(textView: TextView, drawable: Drawable) {
+        textView.setCompoundDrawablesRelativeWithIntrinsicBounds(
+            drawable, // Start drawable
+            null,     // Top drawable (set to null for no top drawable)
+            null,     // End drawable (set to null for no top drawable)
+            null      // Bottom drawable (set to null for no bottom drawable)
+        )
+    }
 }

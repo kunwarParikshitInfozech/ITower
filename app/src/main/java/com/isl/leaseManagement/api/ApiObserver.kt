@@ -8,7 +8,7 @@ import okhttp3.ResponseBody
 import retrofit2.HttpException
 import retrofit2.Response
 
-abstract class ApiObserver<T> : Observer<Response<T>> {
+abstract class ApiObserver<T> : Observer<Response<T>> {   //this class is used for observing success/failure response
     override fun onSubscribe(d: Disposable) {
         // Show Dialog
     }

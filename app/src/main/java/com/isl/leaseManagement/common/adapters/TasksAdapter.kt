@@ -8,6 +8,7 @@ import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.dataClasses.responses.TaskResponse
 import com.isl.leaseManagement.utils.ClickInterfaces
 import com.isl.leaseManagement.utils.Utilities.getDateFromISO8601
+import com.isl.leaseManagement.utils.Utilities.setDrawableStartToTextView
 import infozech.itower.R
 import infozech.itower.databinding.TasksListLayoutBinding
 
@@ -63,6 +64,20 @@ class TasksAdapter(
                     binding.taskPriority.setTextColor(ctx.getColor(R.color.color_34C759))
                     binding.taskPriority.background =
                         ctx.getDrawable(R.drawable.rounded_bg_tv_green)
+                }
+            }
+
+            item.slaStatus?.let {
+                binding.slaStatus.text = it
+                if (it == "On Time") {
+                    binding.slaStatus.setTextColor(ctx.getColor(R.color.color_34C759))
+                    binding.taskDays.setTextColor(ctx.getColor(R.color.color_34C759))
+                    ctx.getDrawable(R.drawable.calendar_small_icon_green)?.let { it1 ->
+                        setDrawableStartToTextView(
+                            binding.taskDays,
+                            it1
+                        )
+                    }
                 }
             }
 

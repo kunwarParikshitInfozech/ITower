@@ -384,7 +384,7 @@ class UploadSingleDocumentFragment(
             saveAdditionalDocument.value!!.content = base64String
             saveAdditionalDocument.value!!.docSize = "$imageSize KB"
             saveAdditionalDocument.value!!.docId = ""  // need to upload first
-            saveAdditionalDocument.value!!.fileName = "Camera Image"  // need to upload first
+            saveAdditionalDocument.value!!.fileName = "Camera Image.png"  // need to upload first
 
             callUploadDocumentAndUpdateAll3Places(
                 saveAdditionalDocument

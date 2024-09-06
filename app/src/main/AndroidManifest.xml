@@ -77,6 +77,22 @@
         android:theme="@android:style/Theme.NoTitleBar"
         android:usesCleartextTraffic="false">
         <activity
+            android:name="com.isl.leaseManagement.bts.captureCandidate.captureNewCandidate.CaptureNewCandidateActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
+            android:name="com.isl.leaseManagement.bts.captureCandidate.requestDetailsBts.BtsRequestDetailsActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
+            android:name="com.isl.leaseManagement.common.activities.btsStartTask.BTSStartTaskActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
+            android:name="com.isl.leaseManagement.bts.captureCandidate.taskInProgress.CaptureCandidateTaskInProgressActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
             android:name="com.isl.leaseManagement.baladiya.uploadPermit.activities.uploadPermitCertificate.UploadBaladiyaPermitActivity"
             android:exported="false"
             android:theme="@style/LightTheme" />

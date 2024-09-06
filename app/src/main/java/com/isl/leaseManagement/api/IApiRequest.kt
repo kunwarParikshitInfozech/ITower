@@ -4,7 +4,9 @@ import com.isl.leaseManagement.dataClasses.requests.StartTaskRequest
 import com.isl.leaseManagement.dataClasses.requests.SubmitTaskRequest
 import com.isl.leaseManagement.dataClasses.requests.UploadDocumentRequest
 import com.isl.leaseManagement.dataClasses.responses.ApiSuccessFlagResponse
+import com.isl.leaseManagement.dataClasses.responses.BTSRequestDetailsResponse
 import com.isl.leaseManagement.dataClasses.responses.BaladiyaNamesListResponse
+import com.isl.leaseManagement.dataClasses.responses.BtsCaptureCandidateStartResponse
 import com.isl.leaseManagement.dataClasses.responses.FetchUserIdResponse
 import com.isl.leaseManagement.dataClasses.responses.FieldWorkStartTaskResponse
 import com.isl.leaseManagement.dataClasses.responses.PaymentStartTaskResponse
@@ -17,7 +19,7 @@ import io.reactivex.Observable
 import okhttp3.RequestBody
 import retrofit2.http.*
 
-interface IApiRequest {
+interface IApiRequest {     //this interface is for defining end points of APIs
 
     @GET("leasemanagement/1/users/{userId}/tasks")
     fun getTasks(
@@ -81,6 +83,15 @@ interface IApiRequest {
         @Body body: StartTaskRequest
     ): Observable<FieldWorkStartTaskResponse>
 
+    @Headers("Content-Type: application/json")
+    @PUT("leasemanagement/{leasemanagementId}/users/{userId}/tasks/{taskId}/starttask")
+    fun startTaskCaptureCandidate(                           //this is same as startTaskFieldWork, just in this BTS response differ from baladiya
+        @Path("leasemanagementId") leasemanagementId: String,
+        @Path("userId") userId: String,
+        @Path("taskId") taskId: Int,
+        @Body body: StartTaskRequest
+    ): Observable<BtsCaptureCandidateStartResponse>
+
     @GET("leasemanagement/1/baladiyalist")
     fun getBaladiyaNameList(): Observable<BaladiyaNamesListResponse>
 
@@ -106,4 +117,11 @@ interface IApiRequest {
         @Body body: DeleteDocumentRequest
     ): Observable<ApiSuccessFlagResponse>
 
+
+    @GET("leasemanagement/{leasemanagementId}/users/{userId}/bts/request/{requestId}")
+    fun getRequestDetailsBts(
+        @Path("leasemanagementId") leasemanagementId: String,
+        @Path("userId") userId: String,
+        @Path("requestId") requestId: String
+    ): Observable<BTSRequestDetailsResponse>
 }

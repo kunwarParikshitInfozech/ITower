@@ -65,10 +65,10 @@ class PaymentTaskInProgressActivity : BaseActivity() {
                 showToastMessage("Payment method is check!")
             }
         }
-        binding.actionBtn.setOnClickListener { showTaskDetailsPopup() }
+        binding.actionBtn.setOnClickListener { showActionsPopup() }
     }
 
-    private fun showTaskDetailsPopup() {
+    private fun showActionsPopup() {
         val dialog = Dialog(this)
         val binding = ActionsPopupBinding.inflate(layoutInflater)
         dialog.setContentView(binding.root)

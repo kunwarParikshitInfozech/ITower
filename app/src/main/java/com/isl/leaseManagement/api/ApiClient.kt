@@ -11,13 +11,13 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
-object ApiClient {
+object ApiClient {  //this class is  for creating an instance which will call apis
 
     var request: IApiRequest? = null
 
     fun init() {
         val interceptor = HttpLoggingInterceptor()
-     interceptor.level = HttpLoggingInterceptor.Level.BODY
+        interceptor.level = HttpLoggingInterceptor.Level.BODY
         val okHttpClient = OkHttpClient.Builder()
             .addNetworkInterceptor(ApiInterceptor())
             .addInterceptor(interceptor)

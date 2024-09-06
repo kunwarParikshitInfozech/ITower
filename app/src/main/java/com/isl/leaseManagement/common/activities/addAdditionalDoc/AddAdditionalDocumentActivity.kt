@@ -24,6 +24,7 @@ import com.isl.leaseManagement.dataClasses.otherDataClasses.SaveAdditionalDocume
 import com.isl.leaseManagement.dataClasses.requests.UploadDocumentRequest
 import com.isl.leaseManagement.room.entity.common.SaveAdditionalDocumentPOJO
 import com.isl.leaseManagement.utils.AppConstants
+import com.isl.leaseManagement.utils.AppConstants.CommonConstants.maxAdditionalDocAllowed
 import com.isl.leaseManagement.utils.ClickInterfaces
 import com.isl.leaseManagement.utils.Utilities.showYesNoDialog
 import infozech.itower.R
@@ -42,7 +43,7 @@ class AddAdditionalDocumentActivity : BaseActivity() {
     private var stringBase64: String? = null
     private var deleteDocumentAdapter: DeleteDocumentAdapter? = null
     private var documentList = ArrayList<SaveAdditionalDocument>()
-    private var maxDocAllowed = 5
+    private var maxDocAllowed = maxAdditionalDocAllowed
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -196,7 +197,7 @@ class AddAdditionalDocumentActivity : BaseActivity() {
                     taskId = MyApp.localTempVarStore.taskId,
                     content = base64String,
                     docSize = "$imageSize KB",
-                    fileName = "Camera Image"
+                    fileName = "Camera Image.png"
                 )
             )
         }

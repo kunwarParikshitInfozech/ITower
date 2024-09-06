@@ -23,7 +23,7 @@ class RequestDetailsActivity : BaseActivity() {
 
     private fun init() {
         val factory = RequestDetailsViewModelFactory(RequestDetailsRepository())
-        viewModel = ViewModelProvider(this, factory).get(RequestDetailsViewModel::class.java)
+        viewModel = ViewModelProvider(this, factory)[RequestDetailsViewModel::class.java]
         setClickListeners()
         getRequestDetailsData()
     }
