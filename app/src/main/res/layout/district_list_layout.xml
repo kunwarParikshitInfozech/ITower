@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clDistricts"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/_6sdp"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:background="@color/white"
+        android:paddingBottom="@dimen/_14sdp"
+        android:theme="@style/LightTheme">
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/districtTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:drawableStart="@drawable/small_faded_black_tick"
+            android:drawablePadding="@dimen/_8sdp"
+            android:gravity="center_vertical"
+            android:text="@string/all_task"
+            android:textAlignment="gravity"
+            android:textColor="@color/color_B1B7C8"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

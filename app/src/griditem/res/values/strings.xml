@@ -128,6 +128,7 @@
     <string name="upload_baladiya_permit">Upload Baladiya Permit</string>
     <string name="baladiya_certificate">Baladiya Certificate</string>
     <string name="capture_candidate_details">Capture Candidate Details</string>
+    <string name="captured_candidate_details">Captured Candidate Details</string>
     <string name="add_new_candidate">Add new Candidate</string>
     <string name="select_existing_candidate">Select Existing Candidate</string>
     <string name="site_district">Site District</string>
@@ -156,5 +157,12 @@
     <string name="_3_delegate_details">3. Delegate Details</string>
     <string name="_4_account_details">4. Account Details</string>
     <string name="_5_upload_documents">5. Upload Documents</string>
+    <string name="bahah">Bahah</string>
+    <string name="candidates_selected">Candidates Selected</string>
+    <string name="property_id">Property ID</string>
+    <string name="property_district">Property District</string>
+    <string name="property_city">Property City</string>
+    <string name="enter_property_id_and_landlord_name">Enter Property ID and Landlord Name</string>
+    <string name="_0">0</string>
 
 </resources>

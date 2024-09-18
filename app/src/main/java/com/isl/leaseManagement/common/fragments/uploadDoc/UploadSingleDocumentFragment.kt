@@ -516,7 +516,7 @@ class UploadSingleDocumentFragment(
 
     private fun getBase64StringAndSizeFromBitmapForCamera(bitmap: Bitmap): Pair<String?, Int> {
         val outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
         val byteArray = outputStream.toByteArray()
         val stringBase64 = Base64.encodeToString(byteArray, Base64.NO_WRAP)
         val imageSize =

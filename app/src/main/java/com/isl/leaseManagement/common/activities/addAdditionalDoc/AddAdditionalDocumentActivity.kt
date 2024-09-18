@@ -207,7 +207,7 @@ class AddAdditionalDocumentActivity : BaseActivity() {
         val outputStream = ByteArrayOutputStream()
         bitmap.compress(
             Bitmap.CompressFormat.JPEG,
-            80,
+            100,
             outputStream
         )   //around 30 percent compression
         val byteArray = outputStream.toByteArray()

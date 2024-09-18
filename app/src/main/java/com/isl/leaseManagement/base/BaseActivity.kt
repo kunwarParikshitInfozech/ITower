@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.isl.dao.cache.AppPreferences
-import com.isl.leaseManagement.roomCommon.db.CommonDatabase
+import com.isl.leaseManagement.roomKotlin.db.CommonDatabase
 import infozech.itower.R
 
 open class BaseActivity : AppCompatActivity() {
@@ -27,6 +27,10 @@ open class BaseActivity : AppCompatActivity() {
 
     fun launchActivity(activityClass: Class<out BaseActivity>) {
         startActivity(Intent(this, activityClass))
+    }
+
+    fun launchActivityForResult(activityClass: Class<out BaseActivity>, intentCode: Int) {
+        startActivityForResult(Intent(this, activityClass), intentCode)
     }
 
     fun launchActivityWithIntent(intent: Intent) {

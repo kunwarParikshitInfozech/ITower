@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/light_sky_blue"
+        tools:context="com.isl.leaseManagement.bts.captureCandidate.existingCandidate.SelectExistingCandidateActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/searchSortCl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/toolbarBackIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:contentDescription="@string/image"
+                android:padding="@dimen/_4sdp"
+                android:src="@drawable/back_icon_vector"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <EditText
+                android:id="@+id/searchEt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/light_sky_blue"
+                android:hint="@string/enter_property_id_and_landlord_name"
+                android:inputType="text"
+                android:maxLength="10"
+                android:paddingVertical="@dimen/_4sdp"
+                android:paddingStart="@dimen/_8sdp"
+                android:paddingEnd="@dimen/_8sdp"
+                android:textColor="@color/color_253746"
+                android:textColorHint="@color/color_606F8A"
+                android:textSize="@dimen/_11ssp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/searchIv"
+                app:layout_constraintStart_toEndOf="@id/toolbarBackIv"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:visibility="visible" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_2sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:background="@color/color_dae0e7"
+                app:layout_constraintEnd_toEndOf="@id/searchEt"
+                app:layout_constraintStart_toStartOf="@id/searchEt"
+                app:layout_constraintTop_toBottomOf="@id/searchEt" />
+
+            <ImageView
+                android:id="@+id/searchIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_16sdp"
+                android:contentDescription="@string/image"
+                android:src="@drawable/search_icon_vect"
+                app:layout_constraintEnd_toStartOf="@id/toolbarFilterIv"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/toolbarFilterIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_12sdp"
+                android:contentDescription="@string/image"
+                android:src="@drawable/filter_icon_vect"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/selectExistingCandidateTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_24sdp"
+            android:text="@string/select_existing_candidate"
+            android:textColor="@color/color_001E60"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchSortCl" />
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/districtSelectedTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:layout_marginEnd="@dimen/_4sdp"
+            android:background="@drawable/rounded_bg_tv_blue"
+            android:drawableStart="@drawable/small_blue_tick"
+            android:drawablePadding="@dimen/_4sdp"
+            android:paddingVertical="@dimen/_4sdp"
+            android:paddingStart="@dimen/_4sdp"
+            android:paddingEnd="@dimen/_12sdp"
+            android:singleLine="true"
+            android:textColor="@color/color_2850B9"
+            android:textSize="@dimen/_14ssp"
+            app:layout_constraintStart_toStartOf="@id/selectExistingCandidateTv"
+            app:layout_constraintTop_toBottomOf="@id/selectExistingCandidateTv"
+            tools:text="@string/bahah" />
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/candidateSelectedText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:text="@string/candidates_selected"
+            android:textColor="@color/color_606F8A"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintBottom_toBottomOf="@id/districtSelectedTv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/districtSelectedTv" />
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/candidateSelectedTvCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_3sdp"
+            android:text="@string/_0"
+            android:textColor="@color/color_606F8A"
+            android:textSize="@dimen/_12ssp"
+            app:layout_constraintEnd_toStartOf="@id/candidateSelectedText"
+            app:layout_constraintTop_toTopOf="@id/candidateSelectedText" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/candidatesListRv"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="@dimen/_12sdp"
+            app:layout_constraintBottom_toTopOf="@id/llSave"
+            app:layout_constraintTop_toBottomOf="@id/candidateSelectedText"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="0dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:id="@+id/llSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/_16sdp"
+            android:paddingBottom="@dimen/_16sdp"
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/saveBtn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_grey_border_bg"
+                android:gravity="center"
+                android:text="@string/save"
+                android:textAlignment="gravity"
+                android:textColor="@color/color_606F8A"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintTop_toBottomOf="@id/login" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/actionBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/image"
+            android:src="@drawable/lsm_actions_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.85" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

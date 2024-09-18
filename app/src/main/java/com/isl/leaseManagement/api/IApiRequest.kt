@@ -1,5 +1,6 @@
 import com.isl.leaseManagement.dataClasses.requests.DeleteDocumentRequest
 import com.isl.leaseManagement.dataClasses.requests.FetchDeviceIDRequest
+import com.isl.leaseManagement.dataClasses.requests.LinkExistingCandidateRequest
 import com.isl.leaseManagement.dataClasses.requests.StartTaskRequest
 import com.isl.leaseManagement.dataClasses.requests.SubmitTaskRequest
 import com.isl.leaseManagement.dataClasses.requests.UploadDocumentRequest
@@ -7,8 +8,11 @@ import com.isl.leaseManagement.dataClasses.responses.ApiSuccessFlagResponse
 import com.isl.leaseManagement.dataClasses.responses.BTSRequestDetailsResponse
 import com.isl.leaseManagement.dataClasses.responses.BaladiyaNamesListResponse
 import com.isl.leaseManagement.dataClasses.responses.BtsCaptureCandidateStartResponse
+import com.isl.leaseManagement.dataClasses.responses.ExistingCandidateListResponse
 import com.isl.leaseManagement.dataClasses.responses.FetchUserIdResponse
 import com.isl.leaseManagement.dataClasses.responses.FieldWorkStartTaskResponse
+import com.isl.leaseManagement.dataClasses.responses.LinkExistingCandidateResponse
+import com.isl.leaseManagement.dataClasses.responses.LocationsListResponse
 import com.isl.leaseManagement.dataClasses.responses.PaymentStartTaskResponse
 import com.isl.leaseManagement.dataClasses.responses.RequestDetailsResponse
 import com.isl.leaseManagement.dataClasses.responses.SubmitBaladiyaFWRequest
@@ -124,4 +128,28 @@ interface IApiRequest {     //this interface is for defining end points of APIs
         @Path("userId") userId: String,
         @Path("requestId") requestId: String
     ): Observable<BTSRequestDetailsResponse>
+
+
+    @GET("leasemanagement/{tenantId}/properties")
+    fun getExistingCandidateList(
+        @Path("tenantId") tenantId: String,
+        @Query("districtId") districtId: Int?,
+        @Query("pageNo") pageNo: Int?,
+        @Query("pageSize") pageSize: Int?,
+        @Query("searchString") searchString: String?
+    ): Observable<ExistingCandidateListResponse>
+
+
+    @GET("leasemanagement/{tenantId}/location")
+    fun getLocationsList(
+        @Path("tenantId") tenantId: String,
+    ): Observable<LocationsListResponse>
+
+    @PUT("leasemanagement/{tenantId}/users/{userId}/bts/tasks/{taskId}/linkexistingcandidate")     //save or link existing candidate to this particular task ID  for captured candidate list screen
+    fun linkExistingCandidate(
+        @Path("tenantId") tenantId: String,
+        @Path("userId") userId: String,
+        @Path("taskId") taskId: Int,
+        @Body body: LinkExistingCandidateRequest
+    ): Observable<LinkExistingCandidateResponse>
 }

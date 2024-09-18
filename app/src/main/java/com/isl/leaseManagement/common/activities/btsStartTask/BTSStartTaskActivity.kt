@@ -11,6 +11,8 @@ import com.isl.leaseManagement.common.activities.home.LsmHomeActivity
 import com.isl.leaseManagement.dataClasses.requests.StartTaskRequest
 import com.isl.leaseManagement.dataClasses.responses.BtsCaptureCandidateStartResponse
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
+import com.isl.leaseManagement.utils.MessageConstants.ErrorMessages.unableToSaveResponseToPhone
+import com.isl.leaseManagement.utils.MessageConstants.ErrorMessages.unableToStartTask
 import infozech.itower.R
 import infozech.itower.databinding.ActivityBtsstartTaskBinding
 import io.reactivex.Observable
@@ -76,7 +78,7 @@ class BTSStartTaskActivity : BaseActivity() {    // start task for BTS processes
                 }
 
                 override fun onError(e: Throwable) {
-                    showToastMessage("Unable to start task!")
+                    showToastMessage(unableToStartTask)
                 }
 
                 override fun onComplete() {
@@ -85,6 +87,7 @@ class BTSStartTaskActivity : BaseActivity() {    // start task for BTS processes
     }
 
     private fun saveStartResponseAndProceed(captureCandidateStartResponse: BtsCaptureCandidateStartResponse) {
+        captureCandidateStartResponse.taskId = MyApp.localTempVarStore.taskId
         disposable =
             commonDatabase.captureCandidateStartDao()
                 .insert(response = captureCandidateStartResponse)
@@ -93,7 +96,9 @@ class BTSStartTaskActivity : BaseActivity() {    // start task for BTS processes
                 .subscribe({
                     finish()
                     launchActivity(CaptureCandidateTaskInProgressActivity::class.java)
+
                 }, {// Handle error
+                    showToastMessage(unableToSaveResponseToPhone)
                 })
     }
 

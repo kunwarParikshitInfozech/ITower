@@ -7,6 +7,7 @@ import android.view.WindowManager
 import com.isl.itower.MyApp
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.bts.captureCandidate.captureNewCandidate.CaptureNewCandidateActivity
+import com.isl.leaseManagement.bts.captureCandidate.existingCandidate.SelectExistingCandidateActivity
 import com.isl.leaseManagement.bts.captureCandidate.requestDetailsBts.BtsRequestDetailsActivity
 import com.isl.leaseManagement.common.activities.addAdditionalDoc.AddAdditionalDocumentActivity
 import com.isl.leaseManagement.dataClasses.responses.TaskResponse
@@ -52,6 +53,10 @@ object ActionButtonMethods {
             binding.addNewCandidateTv.setOnClickListener {
                 dialog.dismiss()
                 baseActivity.launchActivity(CaptureNewCandidateActivity::class.java)
+            }
+            binding.selectExistingCandidateTv.setOnClickListener {
+                dialog.dismiss()
+                baseActivity.launchActivity(SelectExistingCandidateActivity::class.java)
             }
         }
 

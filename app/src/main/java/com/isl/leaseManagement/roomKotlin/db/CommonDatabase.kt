@@ -1,4 +1,4 @@
-package com.isl.leaseManagement.roomCommon.db
+package com.isl.leaseManagement.roomKotlin.db
 
 import android.content.Context
 import androidx.room.Database
@@ -9,15 +9,17 @@ import com.isl.leaseManagement.dataClasses.otherDataClasses.SaveAdditionalDocume
 import com.isl.leaseManagement.dataClasses.responses.BaladiyaNamesListResponse
 import com.isl.leaseManagement.dataClasses.responses.BtsCaptureCandidateStartDataConverter
 import com.isl.leaseManagement.dataClasses.responses.BtsCaptureCandidateStartResponse
+import com.isl.leaseManagement.dataClasses.responses.ExistingCandidateListResponse
 import com.isl.leaseManagement.dataClasses.responses.FieldWorkDataConverter
 import com.isl.leaseManagement.dataClasses.responses.FieldWorkStartTaskResponse
-import com.isl.leaseManagement.roomCommon.dao.BaladiyaNamesDao
-import com.isl.leaseManagement.roomCommon.dao.BtsCaptureCandidateStartResponseDao
-import com.isl.leaseManagement.roomCommon.dao.FieldWorkStartTaskResponseDao
+import com.isl.leaseManagement.roomKotlin.dao.BaladiyaNamesDao
+import com.isl.leaseManagement.roomKotlin.dao.BtsCaptureCandidateStartResponseDao
+import com.isl.leaseManagement.roomKotlin.dao.ExistingCandidateListResponseItemDao
+import com.isl.leaseManagement.roomKotlin.dao.FieldWorkStartTaskResponseDao
 
 @Database(
     entities = [FieldWorkStartTaskResponse::class, BaladiyaNamesListResponse.BaladiyaNamesListResponseItem::class,
-        BtsCaptureCandidateStartResponse::class],
+        BtsCaptureCandidateStartResponse::class, ExistingCandidateListResponse.ExistingCandidateListResponseItem::class],
     version = 1,
     exportSchema = false
 )
@@ -31,6 +33,7 @@ abstract class CommonDatabase : RoomDatabase() {
     abstract fun fieldWorkStartDao(): FieldWorkStartTaskResponseDao
     abstract fun baladiyaNameDao(): BaladiyaNamesDao
     abstract fun captureCandidateStartDao(): BtsCaptureCandidateStartResponseDao
+    abstract fun existingCandidateListResponseItemDao(): ExistingCandidateListResponseItemDao
 
     companion object {
         @Volatile

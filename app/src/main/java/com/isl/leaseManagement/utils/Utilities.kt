@@ -11,8 +11,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import com.google.gson.Gson
@@ -21,6 +24,7 @@ import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.common.activities.addAdditionalDoc.AddAdditionalDocumentActivity
 import com.isl.leaseManagement.dataClasses.responses.TaskResponse
 import com.isl.leaseManagement.paymentProcess.activities.requestDetails.RequestDetailsActivity
+import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper.locationsList
 import infozech.itower.R
 import infozech.itower.databinding.ActionsPopupBinding
 import infozech.itower.databinding.TaskDetailsPopupBinding
@@ -403,4 +407,48 @@ object Utilities {      //this class is for common util functions
             null      // Bottom drawable (set to null for no bottom drawable)
         )
     }
+
+    fun EditText.openKeypad(baseActivity: BaseActivity) {
+        val imm = baseActivity.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+    }
+
+    fun EditText.closeKeypad() {
+        val imm = this.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(this.windowToken, 0)
+    }
+
+    fun EditText.keypadDoneClicked(triggerActionInterface: ClickInterfaces.TriggerActionInterface) {
+        this.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                triggerActionInterface.triggerAction()
+                true
+            } else {
+                false
+            }
+        }
+    }
+
+    fun getDistrictFromRegion(regionIdToSearch: Int?): List<Pair<Int?, String?>>? {
+        if (locationsList == null) return null
+
+        val districtDetailsForRegion = if (regionIdToSearch != null) {
+            locationsList!!
+                .filter { it.regionId == regionIdToSearch && it.districtId != null && it.districtName != null }
+                .map { Pair(it.districtId, it.districtName) }.distinct()
+        } else {
+            locationsList!!
+                .filter { it.districtId != null && it.districtName != null }
+                .map { Pair(it.districtId, it.districtName) }
+                .distinct()
+        }
+
+        return districtDetailsForRegion
+    }
+
+    fun ellipTextSizeToSpecificLength(text: String?,maxChars:Int): String {
+        text ?: return ""
+        return if (text.length > maxChars) text.take(maxChars) + "..." else text
+    }
+
 }

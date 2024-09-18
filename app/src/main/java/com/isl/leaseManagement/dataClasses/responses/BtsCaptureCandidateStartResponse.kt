@@ -21,7 +21,11 @@ data class BtsCaptureCandidateStartResponse(
     val additionalDocuments: List<SaveAdditionalDocument?>?,
     @TypeConverters(BtsCaptureCandidateStartDataConverter::class)
     val data: BtsCaptureCandidateStartData?,
-    val processId: Int?
+    val processId: Int?,
+    val reqDistrictName: String?,
+    val reqDistrictId: Int?,
+    val reqCityName: String?,
+    val reqCityId: Int?
 ) {
     data class BtsCaptureCandidateStartData(
         val candidates: List<Candidate?>?
@@ -41,6 +45,7 @@ data class BtsCaptureCandidateStartResponse(
 
 class BtsCaptureCandidateStartDataConverter {
     private val gson = Gson()
+
     @TypeConverter
     fun fromString(value: String?): BtsCaptureCandidateStartResponse.BtsCaptureCandidateStartData? {
         return gson.fromJson(
@@ -49,6 +54,7 @@ class BtsCaptureCandidateStartDataConverter {
                 TypeToken<BtsCaptureCandidateStartResponse.BtsCaptureCandidateStartData>() {}.type
         )
     }
+
     @TypeConverter
     fun toString(data: BtsCaptureCandidateStartResponse.BtsCaptureCandidateStartData?): String? {
         return gson.toJson(data)

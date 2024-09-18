@@ -77,6 +77,18 @@
         android:theme="@android:style/Theme.NoTitleBar"
         android:usesCleartextTraffic="false">
         <activity
+            android:name="com.isl.leaseManagement.bts.captureCandidate.capturedCandidate.CapturedCandidateActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
+            android:name="com.isl.leaseManagement.bts.captureCandidate.existingCandidate.FilterCandidateActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
+            android:name="com.isl.leaseManagement.bts.captureCandidate.existingCandidate.SelectExistingCandidateActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
             android:name="com.isl.leaseManagement.bts.captureCandidate.captureNewCandidate.CaptureNewCandidateActivity"
             android:exported="false"
             android:theme="@style/LightTheme" />

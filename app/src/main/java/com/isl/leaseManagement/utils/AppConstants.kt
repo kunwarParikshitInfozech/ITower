@@ -2,7 +2,7 @@ package com.isl.leaseManagement.utils
 
 object AppConstants {
     const val baseUrl = "https://ileasemvp.infozech.com/rest/mobileappservices/v1/"  //dev
-    // const val baseUrl = "https://ileasemvp-prod.infozech.com/rest/mobileappservices/v1/"   //prod
+    //const val baseUrl = "https://ileasemvp-prod.infozech.com/rest/mobileappservices/v1/"   //prod
     //const val baseUrl = "https://ilease-dev.tawal.com.sa/rest/mobileappservices/v1/"
     //  const val baseUrl = "https://ilease-qa.tawal.com.sa/rest/mobileappservices/v1/"
 
@@ -22,8 +22,9 @@ object AppConstants {
             const val priority = "Priority"
         }
 
-        object UploadDocumentFragmentIntent {
-            const val dataClassToJson = "DataClassToJson"
+        object FilterCandidateActivity {
+            const val districtSelectedID = "districtSelectedID"
+            const val districtSelectedName = "districtSelectedName"
         }
     }
 
@@ -64,6 +65,7 @@ object AppConstants {
         const val lsmUserId = "lsmUserId"
         const val deviceUUID = "deviceUUID"
         const val leaseManagementUserId = "leaseManagementUserId"
+        const val locationList = "locationList"
     }
 
     object ProcessIds {
