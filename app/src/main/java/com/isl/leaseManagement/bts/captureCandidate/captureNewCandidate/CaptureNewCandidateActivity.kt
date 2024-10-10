@@ -3,6 +3,7 @@ package com.isl.leaseManagement.bts.captureCandidate.captureNewCandidate
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import com.isl.leaseManagement.base.BaseActivity
+import com.isl.leaseManagement.bts.captureCandidate.propertyDetails.PropertyDetailsActivity
 import com.isl.leaseManagement.utils.ActionButtonMethods
 import com.isl.leaseManagement.utils.AppConstants
 import infozech.itower.R
@@ -33,6 +34,7 @@ class CaptureNewCandidateActivity : BaseActivity() {
 
     private fun setClickListeners() {
         binding.backIv.setOnClickListener { finish() }
+        binding.propertyDetails.setOnClickListener { launchActivity(PropertyDetailsActivity::class.java) }
         binding.actionBtn.setOnClickListener {
             ActionButtonMethods.Actions.showActionPopup(
                 this, ActionButtonMethods.ActionOpeningProcess.BtsCaptureCandidate

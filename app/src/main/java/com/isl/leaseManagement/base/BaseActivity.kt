@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.isl.dao.cache.AppPreferences
 import com.isl.leaseManagement.roomKotlin.db.CommonDatabase
 import infozech.itower.R
@@ -47,6 +48,12 @@ open class BaseActivity : AppCompatActivity() {
 
     fun showToastMessage(string: String?) {
         Toast.makeText(this, string, Toast.LENGTH_SHORT).show()
+    }
+
+    fun loadFragmentInFrameLayout(fragment: Fragment, frameLayoutID: Int) {
+        supportFragmentManager.beginTransaction()
+            .replace(frameLayoutID, fragment)
+            .commit()
     }
 
 }

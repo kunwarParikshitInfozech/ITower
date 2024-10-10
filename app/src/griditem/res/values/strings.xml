@@ -180,5 +180,24 @@
     <string name="site_neighbourhood">Site Neighbourhood</string>
     <string name="site_neighbourhood_arabic">Site Neighbourhood (Arabic)</string>
     <string name="area_type">Area Type</string>
+    <string name="leased_space_type">Leased Space Type</string>
+    <string name="site_type">Site Type</string>
+    <string name="kindly_upload_proof_of_height_in_case_of_rooftop">*Kindly Upload Proof of height in case of Rooftop.</string>
+    <string name="approx_building_height_without_parapet">Approx. Building Height Without Parapet</string>
+    <string name="penthouse_available">Penthouse Available</string>
+    <string name="candidate_complied_with_momra_regulations">Candidate Complied with MOMRA Regulations</string>
+    <string name="access_road_required">Access Road Required</string>
+    <string name="power_source_type">Power Source Type</string>
+    <string name="owner_approval_to_install_sub_station">Owner approval to install sub station</string>
+    <string name="power_source_distance_from_substation_sceco">Power Source Distance from Substation(SCECO)</string>
+    <string name="power_source_distance_from_road_sceco">Power Source Distance from Road (SCECO)</string>
+    <string name="sceco_access_to_road">SCECO Access to Road</string>
+    <string name="available_power_source_from_owner">Available Power Source from Owner</string>
+    <string name="site_area_length_width">Site Area (Length*Width)</string>
+    <string name="lease_area_in_sq_meter">Lease Area (In Sq Meter)</string>
+    <string name="nearest_electricity_point_distance">Nearest Electricity Point Distance</string>
+    <string name="distance_from_nearest_operator_tower">Distance from nearest operator tower</string>
+    <string name="obstruction_s_exist">Obstruction(s) exist</string>
+    <string name="landlord_approval">Landlord Approval</string>
 
 </resources>

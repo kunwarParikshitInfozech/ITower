@@ -78,7 +78,8 @@
         android:usesCleartextTraffic="false">
         <activity
             android:name="com.isl.leaseManagement.bts.captureCandidate.propertyDetails.PropertyDetailsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/LightTheme" />
         <activity
             android:name="com.isl.leaseManagement.bts.captureCandidate.capturedCandidate.CapturedCandidateActivity"
             android:exported="false"

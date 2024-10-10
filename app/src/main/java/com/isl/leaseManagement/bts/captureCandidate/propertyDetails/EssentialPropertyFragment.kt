@@ -1,4 +1,4 @@
-package com.isl.leaseManagement.common.fragments.profile
+package com.isl.leaseManagement.bts.captureCandidate.propertyDetails
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,6 +18,11 @@ class EssentialPropertyFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        init()
+    }
+
+    private fun init() {
+
     }
 
 }

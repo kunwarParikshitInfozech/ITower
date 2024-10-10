@@ -55,7 +55,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/llSubmitSave"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/clCheckListText"
             tools:context="com.isl.leaseManagement.activities.taskInProgress.TaskInProgressActivity">
 
@@ -65,76 +65,20 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tabGravity="fill"
-                app:tabMode="fixed" />
+                app:tabMode="fixed"
+                app:tabIndicatorColor="@color/black"
+                app:tabSelectedTextColor="@color/black"
+                app:tabTextAppearance="@style/CandidateTabsStyle"
+                app:tabTextColor="@color/color_717E95" />
 
             <FrameLayout
                 android:id="@+id/fragmentContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tabLayout" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <LinearLayout
-            android:id="@+id/llSubmitSave"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            android:orientation="horizontal"
-            android:paddingTop="@dimen/_16sdp"
-            android:paddingBottom="@dimen/_16sdp"
-            android:weightSum="2"
-            app:layout_constraintBottom_toBottomOf="parent">
-
-            <com.isl.leaseManagement.utils.CustomTextView
-                android:id="@+id/saveToApiAndDraft"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_28sdp"
-                android:layout_marginHorizontal="@dimen/_8sdp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_orange_rect_bg"
-                android:gravity="center"
-                android:text="@string/save"
-                android:textAlignment="gravity"
-                android:textColor="@color/white"
-                android:textSize="@dimen/_12ssp" />
-
-            <com.isl.leaseManagement.utils.CustomTextView
-                android:id="@+id/saveAsDraftBtn"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_28sdp"
-                android:layout_marginHorizontal="@dimen/_8sdp"
-                android:layout_weight="1"
-                android:background="@drawable/btn_grey_border_bg"
-                android:gravity="center"
-                android:text="@string/save_as_draft"
-                android:textAlignment="gravity"
-                android:textColor="@color/color_606F8A"
-                android:textSize="@dimen/_12ssp"
-                app:layout_constraintTop_toBottomOf="@id/login" />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/actionBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/image"
-            android:src="@drawable/lsm_actions_icon"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.85" />
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.35" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

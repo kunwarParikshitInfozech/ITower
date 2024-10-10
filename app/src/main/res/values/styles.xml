@@ -998,6 +998,10 @@
         <item name="android:drawableLeft">@drawable/ic_cross</item>
     </style>
 
+    <style name="CandidateTabsStyle" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item> <!-- Disable all caps -->
+    </style>
+
 
 
 </resources>

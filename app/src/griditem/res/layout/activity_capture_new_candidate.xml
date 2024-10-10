@@ -49,6 +49,7 @@
             tools:context="com.isl.leaseManagement.activities.taskInProgress.TaskInProgressActivity">
 
             <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/propertyDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/_8sdp"
