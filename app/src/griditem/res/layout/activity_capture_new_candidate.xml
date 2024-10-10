@@ -118,6 +118,33 @@
                 android:textColor="@color/color_253746"
                 android:textSize="@dimen/_12ssp" />
 
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/rejectionRemarkstext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:paddingVertical="@dimen/_14sdp"
+                android:paddingStart="@dimen/_8sdp"
+                android:paddingEnd="@dimen/_8sdp"
+                android:text="@string/rejection_remarks"
+                android:textColor="@color/color_4D4D56"
+                android:textSize="@dimen/_12ssp" />
+
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/rejectionRemarksValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:paddingVertical="@dimen/_14sdp"
+                android:paddingStart="@dimen/_8sdp"
+                android:paddingEnd="@dimen/_8sdp"
+                android:text="@string/rejection_remarks"
+                android:textColor="@color/color_4D4D56"
+                android:textSize="@dimen/_12ssp" />
+
         </LinearLayout>
 
         <ImageView

@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/clCheckListText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/light_sky_blue"
+            android:paddingBottom="@dimen/_20sdp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/backIv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_12sdp"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:contentDescription="@string/image"
+                android:src="@drawable/back_icon_vector"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/candidateNameTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/backIv"
+                android:layout_marginTop="@dimen/_24sdp"
+                android:text="Abdullah Omar Details"
+                android:textColor="@color/color_001E60"
+                android:textSize="@dimen/_14ssp"
+                app:layout_constraintStart_toStartOf="@id/backIv"
+                app:layout_constraintTop_toBottomOf="@id/backIv" />
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/propertyDetailsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignStart="@id/backIv"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:text="@string/property_details"
+                android:textColor="@color/color_505F6B"
+                android:textSize="@dimen/_11ssp"
+                app:layout_constraintStart_toStartOf="@id/backIv"
+                app:layout_constraintTop_toBottomOf="@id/candidateNameTv" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/llSubmitSave"
+            app:layout_constraintTop_toBottomOf="@id/clCheckListText"
+            tools:context="com.isl.leaseManagement.activities.taskInProgress.TaskInProgressActivity">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tabGravity="fill"
+                app:tabMode="fixed" />
+
+            <FrameLayout
+                android:id="@+id/fragmentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <LinearLayout
+            android:id="@+id/llSubmitSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/_16sdp"
+            android:paddingBottom="@dimen/_16sdp"
+            android:weightSum="2"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/saveToApiAndDraft"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_orange_rect_bg"
+                android:gravity="center"
+                android:text="@string/save"
+                android:textAlignment="gravity"
+                android:textColor="@color/white"
+                android:textSize="@dimen/_12ssp" />
+
+            <com.isl.leaseManagement.utils.CustomTextView
+                android:id="@+id/saveAsDraftBtn"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_28sdp"
+                android:layout_marginHorizontal="@dimen/_8sdp"
+                android:layout_weight="1"
+                android:background="@drawable/btn_grey_border_bg"
+                android:gravity="center"
+                android:text="@string/save_as_draft"
+                android:textAlignment="gravity"
+                android:textColor="@color/color_606F8A"
+                android:textSize="@dimen/_12ssp"
+                app:layout_constraintTop_toBottomOf="@id/login" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/actionBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/image"
+            android:src="@drawable/lsm_actions_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.85" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.35" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

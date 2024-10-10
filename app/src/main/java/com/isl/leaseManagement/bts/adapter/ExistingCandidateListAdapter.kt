@@ -31,7 +31,7 @@ class ExistingCandidateListAdapter(
                 parent,
                 false
             )
-        return CandidateListHolder(binding, existingCandidateSelection)
+        return CandidateListHolder(binding, existingCandidateSelection, ctx)
     }
 
     override fun onBindViewHolder(holder: CandidateListHolder, position: Int) {
@@ -48,17 +48,20 @@ class ExistingCandidateListAdapter(
 
     class CandidateListHolder(
         private val binding: ExistingCandidateListLayoutBinding,
-        private val existingCandidateSelection: ClickInterfaces.ExistingCandidateSelection
+        private val existingCandidateSelection: ClickInterfaces.ExistingCandidateSelection,
+        val ctx: BaseActivity
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bindItems(
             item: ExistingCandidateListResponse.ExistingCandidateListResponseItem?,
         ) {
             item ?: return
-            item.landlordName?.let { binding.landlordNameTv.text = it }
-            item.propertyId?.let { binding.propertyIdValue.text = it }
-            item.propertyDistrict?.let { binding.propertyDistrictValue.text = it }
-            item.landlordId?.let { binding.landLordIDValue.text = it }
-            item.propertyCity?.let { binding.propertyCityValue.text = it }
+            binding.landlordNameTv.text = item.landlordName ?: ctx.getString(R.string.na)   // NA not working for default in RV as placeholder is set in xml but android does not recreate at evry 3rd time
+            binding.propertyIdValue.text = item.propertyId ?: ctx.getString(R.string.na)
+            binding.propertyDistrictValue.text = item.propertyDistrict ?: ctx.getString(R.string.na)
+            binding.landLordIDValue.text = item.landlordId ?: ctx.getString(R.string.na)
+            binding.propertyCityValue.text = item.propertyCity ?: ctx.getString(R.string.na)
+
+
             binding.llCandidateDetails.setOnClickListener {
                 binding.selectedTickIv.visibility =
                     if (binding.selectedTickIv.visibility == View.VISIBLE) View.GONE else View.VISIBLE

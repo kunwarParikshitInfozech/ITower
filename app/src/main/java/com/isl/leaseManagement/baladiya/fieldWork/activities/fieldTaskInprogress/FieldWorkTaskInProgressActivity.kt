@@ -14,8 +14,8 @@ import com.isl.leaseManagement.common.activities.home.LsmHomeActivity
 import com.isl.leaseManagement.dataClasses.responses.SubmitBaladiyaFWRequest
 import com.isl.leaseManagement.dataClasses.responses.TaskResponse
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
+import com.isl.leaseManagement.utils.ActionButtonMethods
 import com.isl.leaseManagement.utils.Utilities
-import com.isl.leaseManagement.utils.Utilities.showActionPopup
 import infozech.itower.R
 import infozech.itower.databinding.ActivityFieldWorkTaskInProgressBinding
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -118,7 +118,9 @@ class FieldWorkTaskInProgressActivity : BaseActivity() {
         binding.additionalDocuments.setOnClickListener {
             launchActivity(AdditionalDocumentsActivity::class.java)
         }
-        binding.actionBtn.setOnClickListener { showActionPopup(this) }
+        binding.actionBtn.setOnClickListener {    ActionButtonMethods.Actions.showActionPopup(this,
+            ActionButtonMethods.ActionOpeningProcess.PaymentAndBaladiya
+        ) }
 
         binding.submitApiBtn.setOnClickListener {
             checkIfSecondFormNeedsToBeSubmittedAndCallSubmitApi()

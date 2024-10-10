@@ -45,8 +45,8 @@ class BtsRequestDetailsActivity : BaseActivity() {
     private fun setClickListeners() {
         binding.backIv.setOnClickListener { finish() }
         binding.actionBtn.setOnClickListener {
-            ActionButtonMethods.CaptureCandidateActions.showActionPopup(
-                this
+            ActionButtonMethods.Actions.showActionPopup(
+                this, ActionButtonMethods.ActionOpeningProcess.BtsCaptureCandidate
             )
         }
     }

@@ -164,5 +164,21 @@
     <string name="property_city">Property City</string>
     <string name="enter_property_id_and_landlord_name">Enter Property ID and Landlord Name</string>
     <string name="_0">0</string>
+    <string name="select_all">Select all</string>
+    <string name="are_you_sure_you_want_to_delete_this_candidate">Are you sure you want to delete this Candidate ?</string>
+    <string name="this_candidate_will_be_deleted_permanently">This candidate will be deleted permanently.</string>
+    <string name="fill_mandatory_details">Fill mandatory Details</string>
+    <string name="no_candidate_added">No Candidate Added</string>
+    <string name="rejection_remarks">Rejection Remarks</string>
+    <string name="property_details">Property Details</string>
+    <string name="essential_property">Essential Property</string>
+    <string name="landlord_price_quoted">Landlord Price (Quoted)</string>
+    <string name="site_address">Site Address</string>
+    <string name="site_street">Site Street</string>
+    <string name="site_street_arabic">Site Street (Arabic)</string>
+    <string name="distance_from_road_in_meter">Distance From Road (in Meter)</string>
+    <string name="site_neighbourhood">Site Neighbourhood</string>
+    <string name="site_neighbourhood_arabic">Site Neighbourhood (Arabic)</string>
+    <string name="area_type">Area Type</string>
 
 </resources>

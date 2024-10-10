@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/_6sdp"
         android:layout_marginTop="@dimen/_12sdp"
-        android:background="@drawable/white_rounded_rect_bg"
+        android:background="@drawable/white_rounded_rect_bg_red_error"
         android:paddingBottom="@dimen/_14sdp"
         android:theme="@style/LightTheme">
 
@@ -20,11 +20,35 @@
             android:layout_marginStart="@dimen/_12sdp"
             android:layout_marginTop="@dimen/_14sdp"
             android:layout_marginEnd="@dimen/_8sdp"
+            android:text="@string/na"
             android:textColor="@color/color_48484A"
             android:textSize="@dimen/_14ssp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="Murtuza Ali" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/validOrNotImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:contentDescription="@string/image"
+            android:src="@drawable/red_exclamation"
+            app:layout_constraintBottom_toBottomOf="@id/landlordNameTv"
+            app:layout_constraintStart_toEndOf="@id/landlordNameTv"
+            app:layout_constraintTop_toTopOf="@id/landlordNameTv" />
+
+        <com.isl.leaseManagement.utils.CustomTextView
+            android:id="@+id/fillDetailsText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_6sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:text="@string/fill_mandatory_details"
+            android:textColor="@color/color_FF4D4F"
+            android:textSize="@dimen/_11ssp"
+            app:layout_constraintBottom_toBottomOf="@id/validOrNotImageView"
+            app:layout_constraintStart_toEndOf="@id/validOrNotImageView"
+            app:layout_constraintTop_toTopOf="@id/validOrNotImageView" />
 
         <LinearLayout
             android:id="@+id/llCandidateDetails"
@@ -58,6 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_8sdp"
+                    android:text="@string/na"
                     android:textColor="@color/color_253746"
                     android:textSize="@dimen/_10ssp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -80,6 +105,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_8sdp"
+                    android:text="@string/na"
                     android:textColor="@color/color_253746"
                     android:textSize="@dimen/_10ssp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -108,6 +134,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_8sdp"
+                    android:text="@string/na"
                     android:textColor="@color/color_253746"
                     android:textSize="@dimen/_10ssp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -130,6 +157,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/_8sdp"
+                    android:text="@string/na"
                     android:textColor="@color/color_253746"
                     android:textSize="@dimen/_10ssp"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -138,5 +166,17 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/selectedTickIv"
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="@dimen/_24sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:contentDescription="@string/image"
+            android:src="@drawable/blue_rounded_tick"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

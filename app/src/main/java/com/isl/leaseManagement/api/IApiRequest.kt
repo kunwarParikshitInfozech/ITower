@@ -1,3 +1,4 @@
+import com.isl.leaseManagement.dataClasses.requests.DeleteCandidateRequest
 import com.isl.leaseManagement.dataClasses.requests.DeleteDocumentRequest
 import com.isl.leaseManagement.dataClasses.requests.FetchDeviceIDRequest
 import com.isl.leaseManagement.dataClasses.requests.LinkExistingCandidateRequest
@@ -133,7 +134,7 @@ interface IApiRequest {     //this interface is for defining end points of APIs
     @GET("leasemanagement/{tenantId}/properties")
     fun getExistingCandidateList(
         @Path("tenantId") tenantId: String,
-        @Query("districtId") districtId: Int?,
+        @Query("districtId") districtId: Int,
         @Query("pageNo") pageNo: Int?,
         @Query("pageSize") pageSize: Int?,
         @Query("searchString") searchString: String?
@@ -145,11 +146,18 @@ interface IApiRequest {     //this interface is for defining end points of APIs
         @Path("tenantId") tenantId: String,
     ): Observable<LocationsListResponse>
 
-    @PUT("leasemanagement/{tenantId}/users/{userId}/bts/tasks/{taskId}/linkexistingcandidate")     //save or link existing candidate to this particular task ID  for captured candidate list screen
+    @PUT("leasemanagement/{tenantId}/bts/tasks/{taskId}/candidate/link")     //save or link existing candidate to this particular task ID  for captured candidate list screen
     fun linkExistingCandidate(
         @Path("tenantId") tenantId: String,
-        @Path("userId") userId: String,
         @Path("taskId") taskId: Int,
         @Body body: LinkExistingCandidateRequest
     ): Observable<LinkExistingCandidateResponse>
+
+    @PUT("leasemanagement/{tenantId}/bts/tasks/{taskId}/candidate/delete")
+    fun deleteCandidate(
+        @Path("tenantId") tenantId: String,
+        @Path("taskId") taskId: Int,
+        @Body body: DeleteCandidateRequest
+    ): Observable<ApiSuccessFlagResponse>
+
 }

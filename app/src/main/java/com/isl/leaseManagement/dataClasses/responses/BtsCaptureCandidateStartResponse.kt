@@ -11,7 +11,7 @@ import com.isl.leaseManagement.dataClasses.otherDataClasses.SaveAdditionalDocume
 
 @Entity
 @TypeConverters(
-    BtsCaptureCandidateStartDataConverter::class,
+    ExistingCandidateListResponseConverter::class,
     SaveAdditionalDocumentListConverter::class
 )
 data class BtsCaptureCandidateStartResponse(
@@ -19,44 +19,13 @@ data class BtsCaptureCandidateStartResponse(
     var taskId: Int = 0,    //task id is used for room,and not fetched by API
     @TypeConverters(SaveAdditionalDocumentListConverter::class)
     val additionalDocuments: List<SaveAdditionalDocument?>?,
-    @TypeConverters(BtsCaptureCandidateStartDataConverter::class)
-    val data: BtsCaptureCandidateStartData?,
+    @TypeConverters(ExistingCandidateListResponseConverter::class)
+    val data: ExistingCandidateListResponse?,
     val processId: Int?,
     val reqDistrictName: String?,
     val reqDistrictId: Int?,
     val reqCityName: String?,
-    val reqCityId: Int?
-) {
-    data class BtsCaptureCandidateStartData(
-        val candidates: List<Candidate?>?
-    ) {
-        data class Candidate(
-            val candidateId: Int?,
-            val candidateStatus: String?,
-            val landlordId: String?,
-            val landlordName: String?,
-            val propertyCity: String?,
-            val propertyDistrict: String?,
-            val propertyId: String?,
-            val remarks: String?
-        )
-    }
-}
-
-class BtsCaptureCandidateStartDataConverter {
-    private val gson = Gson()
-
-    @TypeConverter
-    fun fromString(value: String?): BtsCaptureCandidateStartResponse.BtsCaptureCandidateStartData? {
-        return gson.fromJson(
-            value,
-            object :
-                TypeToken<BtsCaptureCandidateStartResponse.BtsCaptureCandidateStartData>() {}.type
-        )
-    }
-
-    @TypeConverter
-    fun toString(data: BtsCaptureCandidateStartResponse.BtsCaptureCandidateStartData?): String? {
-        return gson.toJson(data)
-    }
-}
+    val reqCityId: Int?,
+    val latitudeOfNominalPoint: String?,
+    val longitudeOfNominalPoint: String?
+)

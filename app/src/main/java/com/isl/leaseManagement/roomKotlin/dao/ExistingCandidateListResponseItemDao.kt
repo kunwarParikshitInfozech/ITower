@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.isl.itower.MyApp
 import com.isl.leaseManagement.dataClasses.responses.ExistingCandidateListResponse.ExistingCandidateListResponseItem
 import io.reactivex.Single
 
@@ -27,9 +28,12 @@ interface ExistingCandidateListResponseItemDao {
     @Query("SELECT * FROM ExistingCandidateListResponseItem WHERE propertyId = :propertyId")
     fun getCandidateByPropertyId(propertyId: String): Single<ExistingCandidateListResponseItem>
 
-    @Query("SELECT * FROM ExistingCandidateListResponseItem")
-    fun getAllCandidates(): Single<List<ExistingCandidateListResponseItem>>
+    @Query("SELECT * FROM ExistingCandidateListResponseItem WHERE taskId = :taskId")
+    fun getAllCandidates(taskId: Int = MyApp.localTempVarStore.taskId): Single<List<ExistingCandidateListResponseItem>>
 
     @Query("DELETE FROM ExistingCandidateListResponseItem WHERE propertyId = :propertyId")
     fun deleteByPropertyId(propertyId: String): Single<Int>
+
+    @Query("DELETE FROM ExistingCandidateListResponseItem WHERE propertyId IN (:propertyIds)")
+    fun deleteByPropertyIds(propertyIds: List<String>): Single<Int>
 }

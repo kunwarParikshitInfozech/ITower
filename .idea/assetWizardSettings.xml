@@ -14,8 +14,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="blue_rounded_tick" />
-                            <entry key="sourceFile" value="$USER_HOME$/Downloads/blue_rounded_tick.svg" />
+                            <entry key="outputName" value="red_exclamation" />
+                            <entry key="sourceFile" value="$USER_HOME$/Downloads/red_exclamation.svg" />
                           </map>
                         </option>
                       </PersistentState>

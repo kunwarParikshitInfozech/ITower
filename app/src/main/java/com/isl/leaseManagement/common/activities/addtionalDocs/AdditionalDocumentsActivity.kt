@@ -22,16 +22,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.isl.itower.MyApp
 import com.isl.leaseManagement.base.BaseActivity
-import com.isl.leaseManagement.common.activities.addAdditionalDoc.AddAdditionalDocumentActivity
 import com.isl.leaseManagement.common.adapters.AdditionalDocumentsListAdapter
 import com.isl.leaseManagement.dataClasses.otherDataClasses.SaveAdditionalDocument
-import com.isl.leaseManagement.paymentProcess.activities.requestDetails.RequestDetailsActivity
 import com.isl.leaseManagement.room.entity.common.SaveAdditionalDocumentPOJO
+import com.isl.leaseManagement.utils.ActionButtonMethods
 import com.isl.leaseManagement.utils.ClickInterfaces
 import com.isl.leaseManagement.utils.Utilities
 import com.isl.leaseManagement.utils.Utilities.getLastChars
 import infozech.itower.R
-import infozech.itower.databinding.ActionsPopupBinding
 import infozech.itower.databinding.ActivityAdditonalDocumentsBinding
 import infozech.itower.databinding.DocInfoPopupBinding
 import kotlinx.coroutines.Dispatchers
@@ -62,7 +60,12 @@ class AdditionalDocumentsActivity : BaseActivity() {
 
     private fun setClickListeners() {
         binding.backIv.setOnClickListener { finish() }
-        binding.actionsBtn.setOnClickListener { showActionsPopup() }
+        binding.actionsBtn.setOnClickListener {
+            ActionButtonMethods.Actions.showActionPopup(
+                this,
+                ActionButtonMethods.ActionOpeningProcess.PaymentAndBaladiya
+            )
+        }
     }
 
     private fun getAdditionalDocListOfThisTask() {
@@ -246,38 +249,4 @@ class AdditionalDocumentsActivity : BaseActivity() {
         }
     }
 
-    private fun showActionsPopup() {
-        val dialog = Dialog(this)
-        val binding = ActionsPopupBinding.inflate(layoutInflater)
-        dialog.setContentView(binding.root)
-        dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
-        val layoutParams = WindowManager.LayoutParams()
-        layoutParams.copyFrom(dialog.window!!.attributes)
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
-        val heightInPixels = Utilities.dpToPx(this, 480)
-        layoutParams.height = heightInPixels
-        layoutParams.gravity = Gravity.BOTTOM
-        dialog.window!!.attributes = layoutParams
-        dialog.show()
-        binding.closeTv.setOnClickListener {
-            dialog.dismiss()
-        }
-        binding.requestDetailsTv.setOnClickListener {
-            dialog.dismiss()
-            launchActivity(RequestDetailsActivity::class.java)
-        }
-        binding.taskDetailTv.setOnClickListener {
-            dialog.dismiss()
-            MyApp.localTempVarStore.taskResponse?.let { it1 ->
-                Utilities.showTaskDetailsPopupWithoutStart(
-                    this,
-                    it1
-                )
-            }
-        }
-        binding.addAdditionalDocTv.setOnClickListener {
-            dialog.dismiss()
-            launchActivity(AddAdditionalDocumentActivity::class.java)
-        }
-    }
 }

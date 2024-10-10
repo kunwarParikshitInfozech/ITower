@@ -13,6 +13,8 @@ object AppConstants {
     object IntentKeys {
         const val taskDetailIntentExtra = "TaskDetailIntentExtra"
         const val isStartCalledFromRoom = "IsStartCalledFromRoom"
+        const val candidateID = "candidateID"
+        const val candidateRejectionRemarks = "CandidateRejectionRemarks"
     }
 
     object ActivityResultKeys {

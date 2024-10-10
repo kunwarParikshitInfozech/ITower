@@ -10,7 +10,6 @@ import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
@@ -19,15 +18,9 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import com.google.gson.Gson
-import com.isl.itower.MyApp
 import com.isl.leaseManagement.base.BaseActivity
-import com.isl.leaseManagement.common.activities.addAdditionalDoc.AddAdditionalDocumentActivity
-import com.isl.leaseManagement.dataClasses.responses.TaskResponse
-import com.isl.leaseManagement.paymentProcess.activities.requestDetails.RequestDetailsActivity
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper.locationsList
 import infozech.itower.R
-import infozech.itower.databinding.ActionsPopupBinding
-import infozech.itower.databinding.TaskDetailsPopupBinding
 import java.math.BigInteger
 import java.text.SimpleDateFormat
 import java.time.ZoneId
@@ -132,9 +125,10 @@ object Utilities {      //this class is for common util functions
 
     fun showYesNoDialog(
         context: Context,
+        title: String? = null,
         message: String,
-        firstOptionName: String,
-        secondOptionName: String,
+        firstOptionName: String = "Yes",
+        secondOptionName: String = "No",
         optionSelection: ClickInterfaces.TwoOptionSelection
     ) {
         try {
@@ -153,7 +147,9 @@ object Utilities {      //this class is for common util functions
             val btnOption2: CustomTextView = dialog.findViewById(R.id.option2Btn)
             tvMsg.visibility = View.VISIBLE
             tvTitle.gravity = Gravity.CENTER
+
             tvMsg.text = message
+            title?.let { tvTitle.text = it }
 
             tvTitle.setPadding(30, 0, 30, 0)
             btnOption1.text = firstOptionName
@@ -263,116 +259,6 @@ object Utilities {      //this class is for common util functions
         }
     }
 
-
-    fun showActionPopup(context: BaseActivity) {
-        val dialog = Dialog(context)
-        val binding = ActionsPopupBinding.inflate(context.layoutInflater)
-        dialog.setContentView(binding.root)
-        dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
-        val layoutParams = WindowManager.LayoutParams()
-        layoutParams.copyFrom(dialog.window!!.attributes)
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
-        val heightInPixels = Utilities.dpToPx(context, 480)
-        layoutParams.height = heightInPixels
-        layoutParams.gravity = Gravity.BOTTOM
-        dialog.window!!.attributes = layoutParams
-        dialog.show()
-        binding.closeTv.setOnClickListener {
-            dialog.dismiss()
-        }
-        binding.requestDetailsTv.setOnClickListener {
-            dialog.dismiss()
-            context.launchActivity(RequestDetailsActivity::class.java)
-        }
-        binding.taskDetailTv.setOnClickListener {
-            dialog.dismiss()
-            MyApp.localTempVarStore.taskResponse?.let { it1 ->
-                showTaskDetailsPopupWithoutStart(
-                    context,
-                    it1
-                )
-            }
-        }
-        binding.addAdditionalDocTv.setOnClickListener {
-            dialog.dismiss()
-            context.launchActivity(AddAdditionalDocumentActivity::class.java)
-        }
-    }
-
-    fun showTaskDetailsPopupWithoutStart(
-        context: BaseActivity,
-        taskResponse: TaskResponse
-    ) {
-        val dialog = Dialog(context)
-        val binding = TaskDetailsPopupBinding.inflate(context.layoutInflater)
-        dialog.setContentView(binding.root)
-        dialog.window!!.setBackgroundDrawableResource(android.R.color.transparent)
-        val layoutParams = WindowManager.LayoutParams()
-        layoutParams.copyFrom(dialog.window!!.attributes)
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
-        val heightInPixels = dpToPx(context, 480)
-        layoutParams.height = heightInPixels
-        layoutParams.gravity = Gravity.BOTTOM
-        dialog.window!!.attributes = layoutParams
-        fillDataInTaskDetailsPopupAndAttachClicks(context = context, taskResponse, binding, dialog)
-        dialog.show()
-    }
-
-    private fun fillDataInTaskDetailsPopupAndAttachClicks(
-        context: BaseActivity,
-        taskResponse: TaskResponse,
-        binding: TaskDetailsPopupBinding,
-        dialog: Dialog
-    ) {
-        binding.taskNumber.text = (taskResponse.siteId ?: "").toString()
-        binding.taskName.text = taskResponse.taskName ?: ""
-        binding.forecastStartDateValue.text =
-            taskResponse.forecastStartDate?.let { Utilities.getDateFromISO8601(it) }
-        binding.taskPriority.text =
-            taskResponse.requestPriority ?: "".also { binding.taskPriority.visibility = View.GONE }
-        if (taskResponse.requestPriority != null && taskResponse.requestPriority == "Low") {
-            binding.taskPriority.setTextColor(context.getColor(R.color.color_34C759))
-            binding.taskPriority.background =
-                context.getDrawable(R.drawable.rounded_bg_tv_green)
-        }
-        binding.forecastEndDateValue.text =
-            taskResponse.forecastEndDate?.let { Utilities.getDateFromISO8601(it) }
-        //     binding.taskStatusValue.text = taskResponse.taskStatus ?: ""
-        binding.taskStatusValue.text =
-            "In-Progress" // as the task would always be in progress state and this change is not saved while saving in room , to getupdated status we have to call api again.
-        binding.slaStatusValue.text = taskResponse.slaStatus ?: ""
-        binding.customerSiteIdValue.text = taskResponse.customerSiteId ?: ""
-        binding.tawalSiteIdValue.text = taskResponse.siteId ?: ""
-        binding.planStartDateValue.text =
-            taskResponse.startDate?.let { Utilities.getDateFromISO8601(it) }
-        binding.planEndDateValue.text =
-            taskResponse.endDate?.let { Utilities.getDateFromISO8601(it) }
-
-        binding.requesterValue.text = taskResponse.requester ?: ""
-        binding.regionTypeValue.text = taskResponse.region ?: ""
-        binding.districtValue.text = taskResponse.district ?: ""
-        binding.cityValue.text = taskResponse.city ?: ""
-        binding.siteTowerTypeValue.text = taskResponse.towerType ?: ""
-        binding.actualStartDateValue.text =
-            taskResponse.actualStartDate?.let { getDateFromISO8601(it) }
-
-        taskResponse.taskStatus?.let {
-            if (it != "Assigned") {
-                binding.llStartActivity.visibility = View.GONE
-            }
-        }
-        binding.closeTv.setOnClickListener {
-            dialog.dismiss()
-        }
-        binding.startActivity.visibility = View.GONE
-        binding.unAssign.visibility = View.GONE
-        taskResponse.taskId?.let { taskId ->
-            binding.unAssign.setOnClickListener {
-//                callUnAssignAPi(taskId,context)
-            }
-        }
-    }
-
     fun showDatePickerAndFillDate(view: TextView, context: BaseActivity) {
         showDatePickerFromCurrentDate(context) { selectedDate ->
             val formatter = SimpleDateFormat(
@@ -446,7 +332,7 @@ object Utilities {      //this class is for common util functions
         return districtDetailsForRegion
     }
 
-    fun ellipTextSizeToSpecificLength(text: String?,maxChars:Int): String {
+    fun ellipTextSizeToSpecificLength(text: String?, maxChars: Int = 24): String {
         text ?: return ""
         return if (text.length > maxChars) text.take(maxChars) + "..." else text
     }

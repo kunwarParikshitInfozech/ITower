@@ -11,13 +11,19 @@ import com.isl.leaseManagement.bts.captureCandidate.existingCandidate.SelectExis
 import com.isl.leaseManagement.bts.captureCandidate.requestDetailsBts.BtsRequestDetailsActivity
 import com.isl.leaseManagement.common.activities.addAdditionalDoc.AddAdditionalDocumentActivity
 import com.isl.leaseManagement.dataClasses.responses.TaskResponse
+import com.isl.leaseManagement.paymentProcess.activities.requestDetails.RequestDetailsActivity
 import infozech.itower.R
 import infozech.itower.databinding.ActionsPopupCaptureCandidateBinding
 import infozech.itower.databinding.TaskDetailsPopupBinding
 
 object ActionButtonMethods {
-    object CaptureCandidateActions {
-        fun showActionPopup(baseActivity: BaseActivity) {
+    enum class ActionOpeningProcess {
+        PaymentAndBaladiya,
+        BtsCaptureCandidate
+    }
+
+    object Actions {
+        fun showActionPopup(baseActivity: BaseActivity, openingClass: ActionOpeningProcess) {
             val dialog = Dialog(baseActivity)
             val binding = ActionsPopupCaptureCandidateBinding.inflate(baseActivity.layoutInflater)
             dialog.setContentView(binding.root)
@@ -33,10 +39,6 @@ object ActionButtonMethods {
             binding.closeTv.setOnClickListener {
                 dialog.dismiss()
             }
-            binding.requestDetailsTv.setOnClickListener {
-                dialog.dismiss()
-                baseActivity.launchActivity(BtsRequestDetailsActivity::class.java)
-            }
             binding.taskDetailTv.setOnClickListener {
                 dialog.dismiss()
                 MyApp.localTempVarStore.taskResponse?.let { it1 ->
@@ -45,19 +47,46 @@ object ActionButtonMethods {
                         it1
                     )
                 }
+            }        //close and task details common
+
+            when (openingClass) {
+
+                ActionOpeningProcess.PaymentAndBaladiya -> {
+
+                    binding.addNewCandidateTv.visibility = View.GONE
+                    binding.selectExistingCandidateTv.visibility = View.GONE
+
+                    binding.requestDetailsTv.setOnClickListener {
+                        dialog.dismiss()
+                        baseActivity.launchActivity(RequestDetailsActivity::class.java)   //process specific request details for baladiya and payment
+                    }
+                    binding.addAdditionalDocTv.setOnClickListener {
+                        dialog.dismiss()
+                        baseActivity.launchActivity(AddAdditionalDocumentActivity::class.java)
+                    }
+                }
+
+                ActionOpeningProcess.BtsCaptureCandidate -> {
+
+                    binding.addAdditionalDocTv.visibility = View.GONE
+
+                    binding.requestDetailsTv.setOnClickListener {
+                        dialog.dismiss()
+                        baseActivity.launchActivity(BtsRequestDetailsActivity::class.java)
+                    }
+
+                    binding.addNewCandidateTv.setOnClickListener {
+                        dialog.dismiss()
+                        baseActivity.launchActivity(CaptureNewCandidateActivity::class.java)
+                    }
+                    binding.selectExistingCandidateTv.setOnClickListener {
+                        dialog.dismiss()
+                        baseActivity.launchActivity(SelectExistingCandidateActivity::class.java)
+                    }
+                }
+
             }
-            binding.addAdditionalDocTv.setOnClickListener {
-                dialog.dismiss()
-                baseActivity.launchActivity(AddAdditionalDocumentActivity::class.java)
-            }
-            binding.addNewCandidateTv.setOnClickListener {
-                dialog.dismiss()
-                baseActivity.launchActivity(CaptureNewCandidateActivity::class.java)
-            }
-            binding.selectExistingCandidateTv.setOnClickListener {
-                dialog.dismiss()
-                baseActivity.launchActivity(SelectExistingCandidateActivity::class.java)
-            }
+
         }
 
         private fun showTaskDetailsPopupWithoutStart(

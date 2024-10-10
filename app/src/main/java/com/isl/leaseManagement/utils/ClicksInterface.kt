@@ -44,5 +44,6 @@ object ClickInterfaces {
 
     interface ExistingCandidateSelection {
         fun candidateClicked(selectedCandidateData: ExistingCandidateListResponse.ExistingCandidateListResponseItem)
+        fun candidateNameSelected(selectedCandidateData: ExistingCandidateListResponse.ExistingCandidateListResponseItem){}
     }
 }

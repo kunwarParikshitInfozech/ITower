@@ -10,8 +10,8 @@ import com.isl.leaseManagement.common.activities.addtionalDocs.AdditionalDocumen
 import com.isl.leaseManagement.dataClasses.responses.LocationsListResponse
 import com.isl.leaseManagement.dataClasses.responses.TaskResponse
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
-import com.isl.leaseManagement.utils.MessageConstants
 import com.isl.leaseManagement.utils.ActionButtonMethods
+import com.isl.leaseManagement.utils.MessageConstants
 import com.isl.leaseManagement.utils.Utilities
 import infozech.itower.R
 import infozech.itower.databinding.ActivityCaptureCandidateTaskInProgressBinding
@@ -52,15 +52,15 @@ class CaptureCandidateTaskInProgressActivity : BaseActivity() {
 
     private fun setClickListeners() {
         binding.backIv.setOnClickListener { finish() }
-        binding.additionalDocuments.setOnClickListener {
-            launchActivity(AdditionalDocumentsActivity::class.java)
-        }
+//        binding.additionalDocuments.setOnClickListener {
+//            launchActivity(AdditionalDocumentsActivity::class.java)
+//        }
         binding.actionBtn.setOnClickListener {
-            ActionButtonMethods.CaptureCandidateActions.showActionPopup(
-                this
+            ActionButtonMethods.Actions.showActionPopup(
+                this, ActionButtonMethods.ActionOpeningProcess.BtsCaptureCandidate
             )
         }
-        binding.captureCandidateBtn.setOnClickListener {launchActivity(CapturedCandidateActivity::class.java) }
+        binding.captureCandidateBtn.setOnClickListener { launchActivity(CapturedCandidateActivity::class.java) }
     }
 
     private fun getRegionDistrictForFutureUse() {

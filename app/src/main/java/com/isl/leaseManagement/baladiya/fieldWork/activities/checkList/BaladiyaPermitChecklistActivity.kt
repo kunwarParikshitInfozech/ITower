@@ -14,6 +14,7 @@ import com.isl.leaseManagement.common.fragments.uploadDoc.UploadSingleDocumentFr
 import com.isl.leaseManagement.dataClasses.otherDataClasses.SaveAdditionalDocument
 import com.isl.leaseManagement.dataClasses.responses.FieldWorkStartTaskResponse
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
+import com.isl.leaseManagement.utils.ActionButtonMethods
 import com.isl.leaseManagement.utils.AppConstants
 import com.isl.leaseManagement.utils.ClickInterfaces
 import com.isl.leaseManagement.utils.Utilities
@@ -72,7 +73,9 @@ class BaladiyaPermitChecklistActivity : BaseActivity() {
                 saveToApiAsWell = true, shouldShowPhoneSaveSuccessToast = false
             )
         }
-        binding.actionBtn.setOnClickListener { Utilities.showActionPopup(this) }
+        binding.actionBtn.setOnClickListener {    ActionButtonMethods.Actions.showActionPopup(this,
+            ActionButtonMethods.ActionOpeningProcess.PaymentAndBaladiya
+        ) }
     }
 
     private fun getDataFromRoomUpdateItAndSave(

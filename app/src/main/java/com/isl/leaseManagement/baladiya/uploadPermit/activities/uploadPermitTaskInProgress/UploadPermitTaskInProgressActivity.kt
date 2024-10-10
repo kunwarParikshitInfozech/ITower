@@ -16,6 +16,7 @@ import com.isl.leaseManagement.common.activities.home.LsmHomeActivity
 import com.isl.leaseManagement.dataClasses.responses.SubmitBaladiyaFWRequest
 import com.isl.leaseManagement.dataClasses.responses.TaskResponse
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
+import com.isl.leaseManagement.utils.ActionButtonMethods
 import com.isl.leaseManagement.utils.AppConstants
 import com.isl.leaseManagement.utils.Utilities
 import infozech.itower.R
@@ -63,7 +64,9 @@ class UploadPermitTaskInProgressActivity : BaseActivity() {
         binding.additionalDocuments.setOnClickListener {
             launchActivity(AdditionalDocumentsActivity::class.java)
         }
-        binding.actionBtn.setOnClickListener { Utilities.showActionPopup(this) }
+        binding.actionBtn.setOnClickListener {    ActionButtonMethods.Actions.showActionPopup(this,
+            ActionButtonMethods.ActionOpeningProcess.PaymentAndBaladiya
+        ) }
 
         binding.submitApiBtn.setOnClickListener {
             checkIfBaladiyaCertificateUploadedAndCallSubmitApi()

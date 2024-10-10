@@ -3,6 +3,8 @@ package com.isl.leaseManagement.bts.captureCandidate.existingCandidate
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -49,12 +51,13 @@ class SelectExistingCandidateActivity : BaseActivity() {
     private var pageNo = 1
     private var isLoading = false
     private val filterIntentCode = 100
-    private val candidatesList: ArrayList<ExistingCandidateListResponse.ExistingCandidateListResponseItem> =
+    private val candidatesListSelected: ArrayList<ExistingCandidateListResponse.ExistingCandidateListResponseItem> =
         arrayListOf()
     private var disposable: Disposable? = null
     private var alreadyCapturedCandidatesCount = 0
-    private var districtIDSelected: Int? = 0
     private var districtNameSelected: String? = ""
+    private val maxCandidatesAllowed = 6
+    private var globalDistrictID: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +69,6 @@ class SelectExistingCandidateActivity : BaseActivity() {
         getStartTaskData(MyApp.localTempVarStore.taskId)
         getCapturedCandidateCount()
         initializeCandidateAdapter()
-        getExistingCandidates()
         addPaginationInCandidateRv()
         setClickListeners()
     }
@@ -80,13 +82,13 @@ class SelectExistingCandidateActivity : BaseActivity() {
                 .subscribe({ startResponse ->
                     startResponse.reqDistrictName?.let {
                         districtNameSelected = it
-
                         binding.districtSelectedTv.text = ellipTextSizeToSpecificLength(it, 15)
                     }
                     startResponse.reqDistrictId?.let {
-                        districtIDSelected = it
+                        globalDistrictID = it
                     }
-                }, { error ->
+                    getExistingCandidates()
+                }, { _ ->
                 })
     }
 
@@ -106,17 +108,18 @@ class SelectExistingCandidateActivity : BaseActivity() {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ candidatesList ->
                     callback(candidatesList)
-                }, { error ->
+                }, { _ ->
                 })
     }
 
     private fun candidateSelected(selectedCandidateData: ExistingCandidateListResponse.ExistingCandidateListResponseItem) {
-        val exists = candidatesList.any { it.propertyId == selectedCandidateData.propertyId }
-        candidatesList.removeAll { it.propertyId == selectedCandidateData.propertyId }
+        val exists =
+            candidatesListSelected.any { it.propertyId == selectedCandidateData.propertyId }
+        candidatesListSelected.removeAll { it.propertyId == selectedCandidateData.propertyId }
         if (!exists) {
-            candidatesList.add(selectedCandidateData)
+            candidatesListSelected.add(selectedCandidateData)
         }
-        binding.candidateSelectedTvCount.text = candidatesList.size.toString()
+        binding.candidateSelectedTvCount.text = candidatesListSelected.size.toString()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -131,9 +134,8 @@ class SelectExistingCandidateActivity : BaseActivity() {
                 )
             binding.districtSelectedTv.text = ellipTextSizeToSpecificLength(districtName, 15)
             clearCandidateList()
-            getExistingCandidates(districtId = districtID)
-
-            districtIDSelected = districtID
+            globalDistrictID = districtID ?: 0
+            getExistingCandidates()
             districtNameSelected = districtName
 
         }
@@ -151,7 +153,7 @@ class SelectExistingCandidateActivity : BaseActivity() {
             )
             intent.putExtra(
                 AppConstants.ActivityResultKeys.FilterCandidateActivity.districtSelectedID,
-                districtIDSelected
+                globalDistrictID
             )
             startActivityForResult(
                 intent,
@@ -161,28 +163,29 @@ class SelectExistingCandidateActivity : BaseActivity() {
         }
         binding.toolbarBackIv.setOnClickListener { backClicked() }
         binding.actionBtn.setOnClickListener {
-            ActionButtonMethods.CaptureCandidateActions.showActionPopup(
-                this
+            ActionButtonMethods.Actions.showActionPopup(
+                this, ActionButtonMethods.ActionOpeningProcess.BtsCaptureCandidate
             )
         }
-        binding.saveBtn.setOnClickListener { saveCandidatesListAndProceed(candidatesList) }
+        binding.saveBtn.setOnClickListener { saveCandidatesListAndProceed(candidatesListSelected) }
     }
 
     private fun saveCandidatesListAndProceed(candidates: List<ExistingCandidateListResponse.ExistingCandidateListResponseItem>) {
-        if (candidates.size + alreadyCapturedCandidatesCount > 5) {
+        if (candidates.size + alreadyCapturedCandidatesCount > maxCandidatesAllowed) {
             showToastMessage(onlyFiveCandidatesCanBeCaptured)
             return
         }
-        saveOrLinkCandidateToApi(candidates)
+        linkCandidateAndSaveToPhone(candidates)
     }
 
-    private fun saveOrLinkCandidateToApi(candidates: List<ExistingCandidateListResponse.ExistingCandidateListResponseItem>) {
+    private fun linkCandidateAndSaveToPhone(candidates: List<ExistingCandidateListResponse.ExistingCandidateListResponseItem>) {
         val requestID = MyApp.localTempVarStore.taskResponse?.requestId
         val selectedProperties: List<LinkExistingCandidateRequest.SelectedProperty?> = candidates
             .filter { it.propertyId != null }  // Ensure that propertyId is not null
             .map { candidate ->
                 LinkExistingCandidateRequest.SelectedProperty(
-                    propertyId = candidate.propertyId
+                    propertyId = candidate.propertyId,
+                    candidateId = candidate.candidateId
                 )
             }
 
@@ -195,7 +198,7 @@ class SelectExistingCandidateActivity : BaseActivity() {
         val observable: Observable<LinkExistingCandidateResponse> =
             api!!.linkExistingCandidate(
                 tenantId = KotlinPrefkeeper.leaseManagementUserID!!,
-                userId = lsmUserId,
+                //            userId = lsmUserId,  // was used earlier
                 taskId = MyApp.localTempVarStore.taskId,
                 body = requestBody
             )
@@ -207,9 +210,29 @@ class SelectExistingCandidateActivity : BaseActivity() {
                     showProgressBar()
                 }
 
-                override fun onNext(t: LinkExistingCandidateResponse) {
+                override fun onNext(linkExistingCandidateResponse: LinkExistingCandidateResponse) {
                     hideProgressBar()
-                    t.data
+
+                    val updatedCandidates = candidates.map { candidate ->
+                        val matchingLink = linkExistingCandidateResponse.data?.find { link ->
+                            link?.propertyId == candidate.propertyId
+                        }
+                        if (matchingLink != null) {
+                            candidate.copy(
+                                candidateId = matchingLink.candidateId,
+                                isPropertyValid = matchingLink.isPropertyValid ?: false,
+                                isLandlordValid = matchingLink.isLandlordValid ?: false,
+                                isAccountValid = matchingLink.isAccountValid ?: false,
+                                isDelegateValid = matchingLink.isDelegateValid ?: false,
+                                isDocValid = matchingLink.isDocValid ?: false
+                            )
+                        } else {
+                            candidate // If no matching propertyId, return the candidate as is
+                        }
+                    }
+
+                    saveCandidateToRoom(updatedCandidates)
+
                 }
 
                 override fun onError(e: Throwable) {
@@ -220,20 +243,21 @@ class SelectExistingCandidateActivity : BaseActivity() {
                 override fun onComplete() {
                 }
             })
-
-        //    saveCandidateToRoom(candidates)   // in success
     }
 
     private fun saveCandidateToRoom(candidates: List<ExistingCandidateListResponse.ExistingCandidateListResponseItem>) {
+        for (candidate in candidates) {
+            candidate.taskId = MyApp.localTempVarStore.taskId
+        }
         disposable =
             commonDatabase.existingCandidateListResponseItemDao()
                 .insertAll(candidates)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ rowIds ->
+                .subscribe({ _ ->
                     launchActivity(CapturedCandidateActivity::class.java)
                     finish()
-                }, { error ->
+                }, { _ ->
                     // Handle error
                 })
     }
@@ -261,16 +285,36 @@ class SelectExistingCandidateActivity : BaseActivity() {
         binding.searchEt.keypadDoneClicked(triggerActionInterface = object :
             ClickInterfaces.TriggerActionInterface {
             override fun triggerAction() {
-                clearCandidateList()
-                getExistingCandidates(
-                    searchString = binding.searchEt.text.toString()
-                )
+                performSearch()
+            }
+        })
+        binding.searchEt.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // No action needed before text changes
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                // No action needed during text changes
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                val newText = s?.toString() ?: ""
+                if (newText.isEmpty()) {
+                    performSearch()
+                }
             }
         })
     }
 
+    private fun performSearch() {
+        pageNo = 1
+        clearCandidateList()
+        getExistingCandidates(
+        )
+    }
+
     private fun clearCandidateList() {
-        candidatesList.clear()
+        candidatesListSelected.clear()
         binding.candidateSelectedTvCount.text = getString(R.string._0)
         existingCandidateListAdapter.removeAllData()
     }
@@ -299,7 +343,8 @@ class SelectExistingCandidateActivity : BaseActivity() {
         })
     }
 
-    private fun getExistingCandidates(districtId: Int? = null, searchString: String? = null) {
+    private fun getExistingCandidates(
+    ) {
         val layoutManager = binding.candidatesListRv.layoutManager as LinearLayoutManager
         val currentPosition =
             layoutManager.findFirstVisibleItemPosition()      // Save the current scroll position
@@ -307,10 +352,10 @@ class SelectExistingCandidateActivity : BaseActivity() {
         val observable: Observable<ExistingCandidateListResponse> =
             api!!.getExistingCandidateList(
                 tenantId = KotlinPrefkeeper.leaseManagementUserID!!,
-                districtId = districtId,
+                districtId = globalDistrictID,
                 pageNo = pageNo,
                 pageSize = pageSize,
-                searchString = searchString
+                searchString = binding.searchEt.text?.toString() ?: ""
             )
         observable.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
