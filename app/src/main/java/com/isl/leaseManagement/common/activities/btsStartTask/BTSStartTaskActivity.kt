@@ -9,7 +9,7 @@ import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.bts.captureCandidate.taskInProgress.CaptureCandidateTaskInProgressActivity
 import com.isl.leaseManagement.common.activities.home.LsmHomeActivity
 import com.isl.leaseManagement.dataClasses.requests.StartTaskRequest
-import com.isl.leaseManagement.dataClasses.responses.BtsCaptureCandidateStartResponse
+import com.isl.leaseManagement.dataClasses.responses.BTSStartTaskAndWebCandidateResponse
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
 import com.isl.leaseManagement.utils.MessageConstants.ErrorMessages.unableToSaveResponseToPhone
 import com.isl.leaseManagement.utils.MessageConstants.ErrorMessages.unableToStartTask
@@ -63,17 +63,17 @@ class BTSStartTaskActivity : BaseActivity() {    // start task for BTS processes
         body: StartTaskRequest
     ) {
         val lsmUserId = KotlinPrefkeeper.lsmUserId ?: ""
-        val observable: Observable<BtsCaptureCandidateStartResponse> =
+        val observable: Observable<BTSStartTaskAndWebCandidateResponse> =
             api!!.startTaskCaptureCandidate(
                 leasemanagementId = KotlinPrefkeeper.leaseManagementUserID!!,
                 userId = lsmUserId, taskId, body = body
             )
         observable.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Observer<BtsCaptureCandidateStartResponse> {
+            .subscribe(object : Observer<BTSStartTaskAndWebCandidateResponse> {
                 override fun onSubscribe(d: Disposable) {
                 }
 
-                override fun onNext(t: BtsCaptureCandidateStartResponse) {
+                override fun onNext(t: BTSStartTaskAndWebCandidateResponse) {
                     saveStartResponseAndProceed(t)
                 }
 
@@ -86,7 +86,7 @@ class BTSStartTaskActivity : BaseActivity() {    // start task for BTS processes
             })
     }
 
-    private fun saveStartResponseAndProceed(captureCandidateStartResponse: BtsCaptureCandidateStartResponse) {
+    private fun saveStartResponseAndProceed(captureCandidateStartResponse: BTSStartTaskAndWebCandidateResponse) {
         captureCandidateStartResponse.taskId = MyApp.localTempVarStore.taskId
         disposable =
             commonDatabase.captureCandidateStartDao()

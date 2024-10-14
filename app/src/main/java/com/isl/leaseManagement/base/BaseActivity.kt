@@ -50,7 +50,10 @@ open class BaseActivity : AppCompatActivity() {
         Toast.makeText(this, string, Toast.LENGTH_SHORT).show()
     }
 
-    fun loadFragmentInFrameLayout(fragment: Fragment, frameLayoutID: Int) {
+    fun loadFragmentInFrameLayout(fragment: Fragment, frameLayoutID: Int, bundle: Bundle? = null) {
+        bundle?.let {
+            fragment.arguments = it
+        }
         supportFragmentManager.beginTransaction()
             .replace(frameLayoutID, fragment)
             .commit()

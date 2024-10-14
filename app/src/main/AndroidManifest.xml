@@ -77,6 +77,10 @@
         android:theme="@android:style/Theme.NoTitleBar"
         android:usesCleartextTraffic="false">
         <activity
+            android:name="com.isl.leaseManagement.bts.captureCandidate.landlordDetails.LandlordDetailsActivity"
+            android:exported="false"
+            android:theme="@style/LightTheme" />
+        <activity
             android:name="com.isl.leaseManagement.bts.captureCandidate.propertyDetails.PropertyDetailsActivity"
             android:exported="false"
             android:theme="@style/LightTheme" />

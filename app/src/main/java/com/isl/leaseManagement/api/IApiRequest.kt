@@ -7,8 +7,10 @@ import com.isl.leaseManagement.dataClasses.requests.SubmitTaskRequest
 import com.isl.leaseManagement.dataClasses.requests.UploadDocumentRequest
 import com.isl.leaseManagement.dataClasses.responses.ApiSuccessFlagResponse
 import com.isl.leaseManagement.dataClasses.responses.BTSRequestDetailsResponse
+import com.isl.leaseManagement.dataClasses.responses.BTSStartTaskAndWebCandidateResponse
 import com.isl.leaseManagement.dataClasses.responses.BaladiyaNamesListResponse
-import com.isl.leaseManagement.dataClasses.responses.BtsCaptureCandidateStartResponse
+import com.isl.leaseManagement.dataClasses.responses.CandidateDetailsAPIResponse
+import com.isl.leaseManagement.dataClasses.responses.DropdownDataResponse
 import com.isl.leaseManagement.dataClasses.responses.ExistingCandidateListResponse
 import com.isl.leaseManagement.dataClasses.responses.FetchUserIdResponse
 import com.isl.leaseManagement.dataClasses.responses.FieldWorkStartTaskResponse
@@ -19,6 +21,7 @@ import com.isl.leaseManagement.dataClasses.responses.RequestDetailsResponse
 import com.isl.leaseManagement.dataClasses.responses.SubmitBaladiyaFWRequest
 import com.isl.leaseManagement.dataClasses.responses.TaskResponse
 import com.isl.leaseManagement.dataClasses.responses.TasksSummaryResponse
+import com.isl.leaseManagement.dataClasses.responses.UpdatePropertyResponse
 import com.isl.leaseManagement.dataClasses.responses.UploadDocumentResponse
 import io.reactivex.Observable
 import okhttp3.RequestBody
@@ -95,7 +98,7 @@ interface IApiRequest {     //this interface is for defining end points of APIs
         @Path("userId") userId: String,
         @Path("taskId") taskId: Int,
         @Body body: StartTaskRequest
-    ): Observable<BtsCaptureCandidateStartResponse>
+    ): Observable<BTSStartTaskAndWebCandidateResponse>
 
     @GET("leasemanagement/1/baladiyalist")
     fun getBaladiyaNameList(): Observable<BaladiyaNamesListResponse>
@@ -159,5 +162,23 @@ interface IApiRequest {     //this interface is for defining end points of APIs
         @Path("taskId") taskId: Int,
         @Body body: DeleteCandidateRequest
     ): Observable<ApiSuccessFlagResponse>
+
+    @GET("leasemanagement/{tenantId}/candidates/{propertyId}")
+    fun getCandidateDetails(
+        @Path("tenantId") tenantId: String,
+        @Path("propertyId") propertyId: String
+    ): Observable<CandidateDetailsAPIResponse>
+
+    @PUT("leasemanagement/{tenantId}/bts/tasks/{taskId}/candidate")
+    fun updateEssentialProperties(
+        @Path("tenantId") tenantId: String,
+        @Path("taskId") taskId: Int,
+        @Body body: CandidateDetailsAPIResponse.PropertyDetails
+    ): Observable<UpdatePropertyResponse>
+
+    @GET("leasemanagement/{tenantId}/configdata")
+    fun getDropdownsList(
+        @Path("tenantId") tenantId: String,
+    ): Observable<DropdownDataResponse>
 
 }

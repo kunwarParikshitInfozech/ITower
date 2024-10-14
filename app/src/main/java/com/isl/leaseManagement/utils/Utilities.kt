@@ -19,6 +19,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import com.google.gson.Gson
 import com.isl.leaseManagement.base.BaseActivity
+import com.isl.leaseManagement.dataClasses.responses.LocationsListResponse
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper.locationsList
 import infozech.itower.R
 import java.math.BigInteger
@@ -314,6 +315,31 @@ object Utilities {      //this class is for common util functions
             }
         }
     }
+
+    fun getLocationListForUniqueRegions(): List<LocationsListResponse.LocationsListResponseItem>? {
+        if (locationsList == null) return null
+
+        return locationsList!!
+            .filter { it.regionId != null && it.regionName != null }
+            .distinctBy { it.regionId } // Ensure uniqueness by regionId
+    }
+
+    fun getLocationsListForDistrictsInRegion(regionName: String?): List<LocationsListResponse.LocationsListResponseItem>? {
+        if (locationsList == null) return null
+
+        return locationsList!!
+            .filter { it.regionName == regionName && it.districtId != null && it.districtName != null }
+            .distinctBy { it.districtId } // Ensure uniqueness by districtId
+    }
+
+    fun getLocationsListForCitiesInDistrict(districtName: String?): List<LocationsListResponse.LocationsListResponseItem>? {
+        if (locationsList == null) return null
+
+        return locationsList!!
+            .filter { it.districtName == districtName && it.cityId != null && it.cityName != null }
+            .distinctBy { it.cityId } // Ensure uniqueness by cityId
+    }
+
 
     fun getDistrictFromRegion(regionIdToSearch: Int?): List<Pair<Int?, String?>>? {
         if (locationsList == null) return null

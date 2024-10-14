@@ -110,6 +110,8 @@
     <string name="is_the_follow_up_with_baladiya_completed">Is the follow-up with Baladiya completed?</string>
     <string name="is_the_baladiyah_permit_acquired">Is the Baladiyah Permit acquired?</string>
     <string name="enter_number">Enter Number</string>
+    <string name="enter_text">Enter Text</string>
+    <string name="enter_decimal_value">Enter Decimal Value</string>
     <string name="payment_period_in_days">Payment Period (in days)</string>
     <string name="size">size</string>
     <string name="empty_string" />
@@ -199,5 +201,14 @@
     <string name="distance_from_nearest_operator_tower">Distance from nearest operator tower</string>
     <string name="obstruction_s_exist">Obstruction(s) exist</string>
     <string name="landlord_approval">Landlord Approval</string>
+    <string name="land_deed_is_available">Land Deed is Available?</string>
+    <string name="potential_property_status">Potential Property Status</string>
+    <string name="distance_from_nominal_in_meter">Distance from Nominal (in Meter)</string>
+    <string name="landlord_government_type">Landlord Government Type</string>
+    <string name="landlord_country">Landlord Country</string>
+    <string name="landlord_region">Landlord Region</string>
+    <string name="landlord_region_arabic">Landlord Region (Arabic)</string>
+    <string name="vat_percentage">VAT Percentage</string>
+    <string name="enter_arabic">Enter Arabic</string>
 
 </resources>

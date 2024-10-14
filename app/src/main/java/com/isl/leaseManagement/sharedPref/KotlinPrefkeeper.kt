@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.isl.leaseManagement.dataClasses.responses.DropdownDataResponse
 import com.isl.leaseManagement.dataClasses.responses.LocationsListResponse
 import com.isl.leaseManagement.utils.AppConstants
 
@@ -31,7 +32,8 @@ object KotlinPrefkeeper {    //this class is used for saving data to shared pref
 
     var leaseManagementUserID: String?
         get() = prefs!!.getString(AppConstants.PrefsName.leaseManagementUserId, "1")
-        set(leaseManagementUserId) = prefs!!.edit().putString(AppConstants.PrefsName.leaseManagementUserId, leaseManagementUserId)
+        set(leaseManagementUserId) = prefs!!.edit()
+            .putString(AppConstants.PrefsName.leaseManagementUserId, leaseManagementUserId)
             .apply()
 
     var deviceUUID: String?
@@ -43,7 +45,8 @@ object KotlinPrefkeeper {    //this class is used for saving data to shared pref
         get() {
             val json = prefs!!.getString(AppConstants.PrefsName.locationList, null)
             return if (json != null) {
-                val type = object : TypeToken<List<LocationsListResponse.LocationsListResponseItem>>() {}.type
+                val type = object :
+                    TypeToken<List<LocationsListResponse.LocationsListResponseItem>>() {}.type
                 Gson().fromJson(json, type)
             } else {
                 null
@@ -52,6 +55,21 @@ object KotlinPrefkeeper {    //this class is used for saving data to shared pref
         set(locationsList) {
             val json = Gson().toJson(locationsList)
             prefs!!.edit().putString(AppConstants.PrefsName.locationList, json).apply()
+        }
+
+    var dropdownsList: DropdownDataResponse?
+        get() {
+            val json = prefs!!.getString(AppConstants.PrefsName.dropdownList, null)
+            return if (json != null) {
+                val type = object : TypeToken<DropdownDataResponse>() {}.type
+                Gson().fromJson(json, type)
+            } else {
+                null
+            }
+        }
+        set(value) {
+            val json = Gson().toJson(value)
+            prefs!!.edit().putString(AppConstants.PrefsName.dropdownList, json).apply()
         }
 
     fun clear() = prefs?.edit()?.clear()?.apply()

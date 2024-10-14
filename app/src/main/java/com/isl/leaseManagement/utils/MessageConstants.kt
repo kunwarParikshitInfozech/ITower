@@ -14,6 +14,7 @@ object MessageConstants {
         const val selectedDistrictIdIsEmpty = "Selected District is empty!"
         const val unableToSaveExistingCandidate = "Unable to save existing candidate!"
         const val unableToDeleteExistingCandidate = "Unable to delete existing candidate!"
+        const val unableToGetDropdownData = "Unable to get dropdown list!"
     }
 
     object SuccessMessages {

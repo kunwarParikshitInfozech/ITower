@@ -54,9 +54,12 @@ class SubmitBaladiyaRequestActivity : BaseActivity() {
         binding.backIv.setOnClickListener { finish() }
         binding.saveAsDraftBtn.setOnClickListener { getDataFromRoomUpdateAndSave(saveToApiAsWell = false) }
         binding.saveToApiAndDraft.setOnClickListener { getDataFromRoomUpdateAndSave(saveToApiAsWell = true) }
-        binding.actionBtn.setOnClickListener {    ActionButtonMethods.Actions.showActionPopup(this,
-            ActionButtonMethods.ActionOpeningProcess.PaymentAndBaladiya
-        ) }
+        binding.actionBtn.setOnClickListener {
+            ActionButtonMethods.Actions.showActionPopup(
+                this,
+                ActionButtonMethods.ActionOpeningProcess.PaymentAndBaladiya
+            )
+        }
     }
 
 
@@ -119,7 +122,8 @@ class SubmitBaladiyaRequestActivity : BaseActivity() {
                 return
             }
         }
-        fieldWorkResponse.additionalDocuments = null   // to avoid uploading it here as it cause error due to old doc
+        fieldWorkResponse.additionalDocuments =
+            null   // to avoid uploading it here as it cause error due to old doc
         fieldWorkResponse.data?.taskFlag = AppConstants.TaskFlags.taskBaladiyaRequest
         val lsmUserId = KotlinPrefkeeper.lsmUserId ?: ""
         showProgressBar()

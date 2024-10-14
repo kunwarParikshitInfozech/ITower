@@ -6,7 +6,7 @@ import com.isl.itower.MyApp
 import com.isl.leaseManagement.api.ApiClient
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.bts.captureCandidate.capturedCandidate.CapturedCandidateActivity
-import com.isl.leaseManagement.common.activities.addtionalDocs.AdditionalDocumentsActivity
+import com.isl.leaseManagement.dataClasses.responses.DropdownDataResponse
 import com.isl.leaseManagement.dataClasses.responses.LocationsListResponse
 import com.isl.leaseManagement.dataClasses.responses.TaskResponse
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
@@ -39,6 +39,7 @@ class CaptureCandidateTaskInProgressActivity : BaseActivity() {
         setClickListeners()
         MyApp.localTempVarStore.taskResponse?.let { fillTaskDetailsData(it) }
         getRegionDistrictForFutureUse()
+        getConfigDataLovValues()
     }
 
     private fun fillTaskDetailsData(taskResponse: TaskResponse) {
@@ -81,6 +82,31 @@ class CaptureCandidateTaskInProgressActivity : BaseActivity() {
 
                 override fun onError(e: Throwable) {
                     showToastMessage(MessageConstants.ErrorMessages.unableToGetLocationList)
+                }
+
+                override fun onComplete() {
+                }
+            })
+    }
+
+    private fun getConfigDataLovValues() {
+        val observable: Observable<DropdownDataResponse> =
+            api!!.getDropdownsList(
+                tenantId = KotlinPrefkeeper.leaseManagementUserID!!,
+            )
+        observable.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object :
+                Observer<DropdownDataResponse> {
+                override fun onSubscribe(d: Disposable) {
+                }
+
+                override fun onNext(t: DropdownDataResponse) {
+                    KotlinPrefkeeper.dropdownsList = t
+                }
+
+                override fun onError(e: Throwable) {
+                    showToastMessage(MessageConstants.ErrorMessages.unableToGetDropdownData)
                 }
 
                 override fun onComplete() {
