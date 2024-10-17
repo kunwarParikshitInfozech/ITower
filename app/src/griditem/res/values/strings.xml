@@ -126,7 +126,7 @@
         <item>Rejected</item>
     </string-array>
 
-    <string name="alpha_numeric_values">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789</string>
+    <string name="alpha_numeric_values">ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz 0123456789</string>
     <string name="upload_baladiya_permit">Upload Baladiya Permit</string>
     <string name="baladiya_certificate">Baladiya Certificate</string>
     <string name="capture_candidate_details">Capture Candidate Details</string>

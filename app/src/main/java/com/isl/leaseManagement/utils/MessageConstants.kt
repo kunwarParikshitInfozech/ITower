@@ -15,6 +15,13 @@ object MessageConstants {
         const val unableToSaveExistingCandidate = "Unable to save existing candidate!"
         const val unableToDeleteExistingCandidate = "Unable to delete existing candidate!"
         const val unableToGetDropdownData = "Unable to get dropdown list!"
+//        const val propertyDetailsMissing = "Property details are missing!"
+//        const val landlordPriceMissing = "Please enter landlord price!"
+//        const val pleaseSelectRegion = "Please select Region!"
+        const val mandatoryFieldsAreRequired = "Mandatory Fields are required"
+        const val fieldsCleared = "Fields Cleared"
+        const val pleaseEnterValidLatitude = "Please enter valid latitude!"
+        const val pleaseEnterValidLongitude = "Please enter valid longitude!"
     }
 
     object SuccessMessages {

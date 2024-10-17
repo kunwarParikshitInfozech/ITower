@@ -18,6 +18,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import com.google.gson.Gson
+import com.isl.itower.GPSTracker
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.dataClasses.responses.LocationsListResponse
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper.locationsList
@@ -288,10 +289,10 @@ object Utilities {      //this class is for common util functions
 
     fun setDrawableStartToTextView(textView: TextView, drawable: Drawable) {
         textView.setCompoundDrawablesRelativeWithIntrinsicBounds(
-            drawable, // Start drawable
-            null,     // Top drawable (set to null for no top drawable)
-            null,     // End drawable (set to null for no top drawable)
-            null      // Bottom drawable (set to null for no bottom drawable)
+            drawable,
+            null,
+            null,
+            null
         )
     }
 
@@ -362,5 +363,54 @@ object Utilities {      //this class is for common util functions
         text ?: return ""
         return if (text.length > maxChars) text.take(maxChars) + "..." else text
     }
+
+//    fun getCurrentLatitude(context: Context) {
+//        val gps = GPSTracker(context)
+//        if (gps.canGetLocation() == true) {
+//            var latitude = gps.getLatitude().toString()
+//            var longitude = gps.getLongitude().toString()
+//            if (latitude == null || latitude.equals(
+//                    "0.0",
+//                    ignoreCase = true
+//                ) || latitude.isEmpty() || longitude == null || longitude.equals(
+//                    "0.0",
+//                    ignoreCase = true
+//                ) || longitude.isEmpty()
+//            ) {
+//            } else {
+//                latitude = gps.getLatitude().toString()
+//                longitude = gps.getLongitude().toString()
+//            }
+//        }
+//
+//    }
+
+    fun getLatitude(context: Context): String {
+        val gps = GPSTracker(context)
+        if (gps.canGetLocation() == true) {
+            var latitude = gps.getLatitude().toString()
+            if (latitude == "0.0" || latitude.isEmpty()) {
+                return ""
+            } else {
+                return latitude
+            }
+        }
+        return ""
+    }
+
+    fun getLongitude(context: Context): String {
+        val gps = GPSTracker(context)
+        if (gps.canGetLocation() == true) {
+            var longitude = gps.getLongitude().toString()
+            if (longitude == "0.0" || longitude.isEmpty()) {
+                return ""
+            } else {
+                return longitude
+            }
+        }
+        return ""
+    }
+
+
 
 }

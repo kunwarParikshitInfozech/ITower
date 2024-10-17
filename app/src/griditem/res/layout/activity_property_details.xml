@@ -28,12 +28,12 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.isl.leaseManagement.utils.CustomTextView
-                android:id="@+id/candidateNameTv"
+                android:id="@+id/candidateOrLandlordNameTv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignStart="@id/backIv"
                 android:layout_marginTop="@dimen/_24sdp"
-                android:text="Abdullah Omar Details"
+                android:text="@string/na"
                 android:textColor="@color/color_001E60"
                 android:textSize="@dimen/_14ssp"
                 app:layout_constraintStart_toStartOf="@id/backIv"
@@ -49,7 +49,7 @@
                 android:textColor="@color/color_505F6B"
                 android:textSize="@dimen/_11ssp"
                 app:layout_constraintStart_toStartOf="@id/backIv"
-                app:layout_constraintTop_toBottomOf="@id/candidateNameTv" />
+                app:layout_constraintTop_toBottomOf="@id/candidateOrLandlordNameTv" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

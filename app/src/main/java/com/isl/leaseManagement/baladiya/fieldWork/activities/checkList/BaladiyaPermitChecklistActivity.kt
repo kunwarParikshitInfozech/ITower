@@ -73,9 +73,12 @@ class BaladiyaPermitChecklistActivity : BaseActivity() {
                 saveToApiAsWell = true, shouldShowPhoneSaveSuccessToast = false
             )
         }
-        binding.actionBtn.setOnClickListener {    ActionButtonMethods.Actions.showActionPopup(this,
-            ActionButtonMethods.ActionOpeningProcess.PaymentAndBaladiya
-        ) }
+        binding.actionBtn.setOnClickListener {
+            ActionButtonMethods.Actions.showActionPopup(
+                this,
+                ActionButtonMethods.ActionOpeningProcess.PaymentAndBaladiya
+            )
+        }
     }
 
     private fun getDataFromRoomUpdateItAndSave(

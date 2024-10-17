@@ -8,9 +8,10 @@ import android.widget.Spinner
 import android.widget.TextView
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.dataClasses.responses.DropdownDataResponse
+import infozech.itower.R
 
 class SpinnerGenericAPILovAdapter(
-    context: BaseActivity,
+    private val context: BaseActivity,
     private val items: List<DropdownDataResponse.DropdownDataResponseItem>
 ) : ArrayAdapter<DropdownDataResponse.DropdownDataResponseItem>(
     context, android.R.layout.simple_spinner_item, items
@@ -27,13 +28,27 @@ class SpinnerGenericAPILovAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = super.getView(position, convertView, parent) as TextView
-        view.text = items[position].paramId // Display paramId as the name
+        view.text = items[position].paramId
+
+        // Apply red color to the first item
+        if (position == 0) {
+            view.setTextColor(context.getColor(R.color.color_B1B7C8))
+        } else {
+            view.setTextColor(context.getColor(R.color.color_606F8A)) // Default color for other items
+        }
         return view
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = super.getDropDownView(position, convertView, parent) as TextView
         view.text = items[position].paramId
+
+        // Apply red color to the first item in the dropdown
+        if (position == 0) {
+            view.setTextColor(context.getColor(R.color.color_B1B7C8))
+        } else {
+            view.setTextColor(context.getColor(R.color.color_606F8A)) // Default color for other items
+        }
         return view
     }
 
@@ -59,5 +74,3 @@ class SpinnerGenericAPILovAdapter(
         return if (selectedPosition >= 0) items[selectedPosition] else null
     }
 }
-
-

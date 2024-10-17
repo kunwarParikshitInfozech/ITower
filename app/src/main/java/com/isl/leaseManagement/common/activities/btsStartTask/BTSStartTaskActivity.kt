@@ -13,6 +13,7 @@ import com.isl.leaseManagement.dataClasses.responses.BTSStartTaskAndWebCandidate
 import com.isl.leaseManagement.sharedPref.KotlinPrefkeeper
 import com.isl.leaseManagement.utils.MessageConstants.ErrorMessages.unableToSaveResponseToPhone
 import com.isl.leaseManagement.utils.MessageConstants.ErrorMessages.unableToStartTask
+import com.isl.leaseManagement.utils.Utilities
 import infozech.itower.R
 import infozech.itower.databinding.ActivityBtsstartTaskBinding
 import io.reactivex.Observable
@@ -42,8 +43,8 @@ class BTSStartTaskActivity : BaseActivity() {    // start task for BTS processes
             btsCalledFromRoom()
         } else {
             val startTaskRequest = StartTaskRequest(
-                latitude = 0,
-                longitude = 0,
+                latitude = Utilities.getLatitude(this),
+                longitude = Utilities.getLongitude(this),
                 requestId = "",
                 source = "",
                 timestamp = ""

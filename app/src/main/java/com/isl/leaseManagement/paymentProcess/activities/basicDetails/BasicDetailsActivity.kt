@@ -165,8 +165,7 @@ class BasicDetailsActivity : BaseActivity() {
             UploadDocumentRequest(
                 content = docFromStartTask.content,
                 fileName = docFromStartTask.fileName,
-                latitude = 0,
-                longitude = 0,
+
                 requestId = MyApp.localTempVarStore.taskResponse?.requestId,
                 tagName = tagName,
                 timeStamp = "",
@@ -481,8 +480,6 @@ class BasicDetailsActivity : BaseActivity() {
             UploadDocumentRequest(
                 content = saveAdditionalDocument.content,
                 fileName = saveAdditionalDocument.fileName,
-                latitude = 0,
-                longitude = 0,
                 requestId = MyApp.localTempVarStore.taskResponse?.requestId,
                 tagName = tagName,
                 timeStamp = "",

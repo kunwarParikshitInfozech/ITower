@@ -466,8 +466,6 @@ class UploadSingleDocumentFragment(
             UploadDocumentRequest(
                 content = uploadDoc.value!!.content,
                 fileName = uploadDoc.value!!.fileName,
-                latitude = 0,
-                longitude = 0,
                 requestId = MyApp.localTempVarStore.taskResponse?.requestId,
                 tagName = uploadDoc.value!!.tagName,
                 timeStamp = "",

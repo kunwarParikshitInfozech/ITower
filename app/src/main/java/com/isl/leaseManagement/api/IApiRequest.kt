@@ -59,7 +59,7 @@ interface IApiRequest {     //this interface is for defining end points of APIs
     ): Observable<PaymentStartTaskResponse>
 
     @Headers("Content-Type: application/json")
-    @PUT("leasemanagement/1/users/{userId}/tasks/{taskId}/submit")
+    @PUT("leasemanagement/1/users/{userId}/tasks/{taskId}/submit")   // for payment
     fun submitTask(
         @Path("userId") userId: String,
         @Path("taskId") taskId: Int,
@@ -169,7 +169,7 @@ interface IApiRequest {     //this interface is for defining end points of APIs
         @Path("propertyId") propertyId: String
     ): Observable<CandidateDetailsAPIResponse>
 
-    @PUT("leasemanagement/{tenantId}/bts/tasks/{taskId}/candidate")
+    @POST("leasemanagement/{tenantId}/bts/tasks/{taskId}/properties")
     fun updateEssentialProperties(
         @Path("tenantId") tenantId: String,
         @Path("taskId") taskId: Int,

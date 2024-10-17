@@ -7,6 +7,9 @@ class LocationsListResponse : ArrayList<LocationsListResponse.LocationsListRespo
         val districtId: Int?,
         val districtName: String?,
         val regionId: Int?,
-        val regionName: String?
+        val regionName: String?,
+        val regionLocalName: String?,
+        val districtLocalName: String?,
+        val cityLocalName: String?
     )
 }

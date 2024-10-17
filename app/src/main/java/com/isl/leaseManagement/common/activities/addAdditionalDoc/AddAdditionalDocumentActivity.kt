@@ -300,8 +300,6 @@ class AddAdditionalDocumentActivity : BaseActivity() {
             UploadDocumentRequest(
                 content = saveAdditionalDocument.content,
                 fileName = saveAdditionalDocument.fileName,
-                latitude = 0,
-                longitude = 0,
                 requestId = MyApp.localTempVarStore.taskResponse?.requestId,
                 tagName = AppConstants.DocsTagNames.additionalDocumentTagName,
                 timeStamp = "",

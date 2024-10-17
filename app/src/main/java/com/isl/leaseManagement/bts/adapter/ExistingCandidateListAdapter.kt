@@ -62,7 +62,7 @@ class ExistingCandidateListAdapter(
             binding.propertyCityValue.text = item.propertyCity ?: ctx.getString(R.string.na)
 
 
-            binding.llCandidateDetails.setOnClickListener {
+            binding.clCandidates.setOnClickListener {
                 binding.selectedTickIv.visibility =
                     if (binding.selectedTickIv.visibility == View.VISIBLE) View.GONE else View.VISIBLE
                 existingCandidateSelection.candidateClicked(item)

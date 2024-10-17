@@ -1,5 +1,6 @@
 package com.isl.leaseManagement.bts.adapter
 
+import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -7,6 +8,7 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
 import com.isl.leaseManagement.base.BaseActivity
+import infozech.itower.R
 
 class SpinnerGenericYesNoAdapter(
     context: BaseActivity
@@ -22,19 +24,32 @@ class SpinnerGenericYesNoAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = super.getView(position, convertView, parent) as TextView
-        view.text = getItem(position) // Display string value
+        view.text = getItem(position)
+
+        // Apply red color to the first item
+        if (position == 0) {
+            view.setTextColor(context.getColor(R.color.color_B1B7C8))
+        } else {
+            view.setTextColor(context.getColor(R.color.color_606F8A)) // Default color for other items
+        }
         return view
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = super.getDropDownView(position, convertView, parent) as TextView
         view.text = getItem(position)
+
+        // Apply red color to the first item in the dropdown
+        if (position == 0) {
+            view.setTextColor(context.getColor(R.color.color_B1B7C8))
+        } else {
+            view.setTextColor(context.getColor(R.color.color_606F8A))
+        }
         return view
     }
 
     fun getSelectedItem(): String? {
         return if (selectedPosition >= 0) getItem(selectedPosition) else null
-
     }
 
     fun attachSpinner(spinner: Spinner) {
@@ -58,7 +73,7 @@ class SpinnerGenericYesNoAdapter(
 
     companion object {
         private fun predefinedValues(): List<String> {
-            return listOf("Choose an option", "Yes", "No", "Unavailable")
+            return listOf("Choose an option", "Yes", "No", "Unknown")
         }
     }
 }

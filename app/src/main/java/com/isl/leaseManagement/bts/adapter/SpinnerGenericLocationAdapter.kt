@@ -8,6 +8,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.dataClasses.responses.LocationsListResponse
+import infozech.itower.R
 
 enum class AreaType {
     REGION,
@@ -51,6 +52,7 @@ class SpinnerGenericLocationAdapter(
             AreaType.DISTRICT -> mutableItems[position].districtName
             AreaType.CITY -> mutableItems[position].cityName
         }
+        view.setTextColor(context.getColor(R.color.color_606F8A))
         return view
     }
 
@@ -61,6 +63,7 @@ class SpinnerGenericLocationAdapter(
             AreaType.DISTRICT -> mutableItems[position].districtName
             AreaType.CITY -> mutableItems[position].cityName
         }
+        view.setTextColor(context.getColor(R.color.color_606F8A))
         return view
     }
 

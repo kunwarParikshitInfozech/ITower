@@ -24,6 +24,7 @@ import com.isl.leaseManagement.utils.AppConstants
 import com.isl.leaseManagement.utils.AppConstants.IntentKeys.isStartCalledFromRoom
 import com.isl.leaseManagement.utils.AppConstants.TaskNames.completeRequiredDetails
 import com.isl.leaseManagement.utils.AppConstants.TaskNames.uploadBaladiyaPermit
+import com.isl.leaseManagement.utils.Utilities
 import infozech.itower.R
 import infozech.itower.databinding.ActivityGetStartDataBinding
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -188,8 +189,8 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
     private fun callStartTaskAPIForPayment(currentTaskId: Int) {
         showProgressBar()
         val startTaskRequest = StartTaskRequest(
-            latitude = 0,
-            longitude = 0,
+            latitude = Utilities.getLatitude(this),
+            longitude = Utilities.getLongitude(this),
             requestId = "",
             source = "",
             timestamp = ""
@@ -220,8 +221,8 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
     private fun callStartTaskAPIForFieldWork(currentTaskId: Int) {
         showProgressBar()
         val startTaskRequest = StartTaskRequest(
-            latitude = 0,
-            longitude = 0,
+            latitude = Utilities.getLatitude(this),
+            longitude = Utilities.getLongitude(this),
             requestId = "",
             source = "",
             timestamp = ""

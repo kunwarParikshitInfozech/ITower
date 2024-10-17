@@ -18,7 +18,7 @@ class ExistingCandidateListResponse :
         val propertyId: String?,             //getting this in both api i.e. existing candidate and link existing candidate so this will be used for mapping correct candidate data
         val propertyCity: String?,
         val propertyDistrict: String?,
-        val remarks: String?,               //until here getting data from existing captured candidate list in starttask
+        val remarks: String?=null,               //until here getting data from existing captured candidate list in starttask
         val candidateId: Int?,            //now from here getting after saving existing captured candidate by link existing candidate API
         val isPropertyValid: Boolean = false,    //from saving/liking candidate api and for all below fields as well
         val isLandlordValid: Boolean = false,

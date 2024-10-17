@@ -118,9 +118,12 @@ class FieldWorkTaskInProgressActivity : BaseActivity() {
         binding.additionalDocuments.setOnClickListener {
             launchActivity(AdditionalDocumentsActivity::class.java)
         }
-        binding.actionBtn.setOnClickListener {    ActionButtonMethods.Actions.showActionPopup(this,
-            ActionButtonMethods.ActionOpeningProcess.PaymentAndBaladiya
-        ) }
+        binding.actionBtn.setOnClickListener {
+            ActionButtonMethods.Actions.showActionPopup(
+                this,
+                ActionButtonMethods.ActionOpeningProcess.PaymentAndBaladiya
+            )
+        }
 
         binding.submitApiBtn.setOnClickListener {
             checkIfSecondFormNeedsToBeSubmittedAndCallSubmitApi()
@@ -140,7 +143,7 @@ class FieldWorkTaskInProgressActivity : BaseActivity() {
                         } else {
                             showToastMessage("Mandatory Fields are required")
                         }
-                    } else if ((it.baladiyaApplicationSubmitted?.contains("oose") == true )|| it.baladiyaApplicationSubmitted == null) {  //no option selected
+                    } else if ((it.baladiyaApplicationSubmitted?.contains("oose") == true) || it.baladiyaApplicationSubmitted == null) {  //no option selected
                         showToastMessage("Mandatory Fields are required")
                     } else {
                         getAdditionalDocsAndCallSubmitApi()
@@ -182,6 +185,8 @@ class FieldWorkTaskInProgressActivity : BaseActivity() {
             userId = lsmUserId,
             taskId = MyApp.localTempVarStore.taskId,
             submitBaladiyaFWRequest = SubmitBaladiyaFWRequest(
+                latitude = Utilities.getLatitude(this),
+                longitude = Utilities.getLongitude(this),
                 processId = MyApp.localTempVarStore.taskResponse?.processId,
                 requestId = MyApp.localTempVarStore.taskResponse?.requestId,
                 additionalDocs = additionalDocuments
