@@ -230,15 +230,19 @@ class SelectExistingCandidateActivity : BaseActivity() {
                             candidate // If no matching propertyId, return the candidate as is
                         }
                     }
-
                     saveCandidateToRoom(updatedCandidates)
 
                 }
 
                 override fun onError(e: Throwable) {
                     hideProgressBar()
-                    showToastMessage(MessageConstants.ErrorMessages.unableToSaveExistingCandidate)
+                    ApiClient.handleApiError(
+                        e,
+                        MessageConstants.ErrorMessages.unableToSaveExistingCandidate,
+                        this@SelectExistingCandidateActivity
+                    )
                 }
+
 
                 override fun onComplete() {
                 }

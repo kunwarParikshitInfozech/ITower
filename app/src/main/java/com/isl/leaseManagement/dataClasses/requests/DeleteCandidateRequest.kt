@@ -5,8 +5,8 @@ import com.isl.leaseManagement.utils.Utilities
 
 data class DeleteCandidateRequest(
     val selectedProperties: List<DeleteCandidate?>?,
-    val latitude: String? = Utilities.getLatitude(MyApp.getAppContext()),
-    val longitude: String? = Utilities.getLongitude(MyApp.getAppContext()),
+    val latitude: Double = Utilities.getLatitude(MyApp.getAppContext()),
+    val longitude: Double = Utilities.getLongitude(MyApp.getAppContext()),
     val requestId: String?,
     val source: String?="",
     val timestamp: String?=""

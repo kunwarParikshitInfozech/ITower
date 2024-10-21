@@ -185,8 +185,6 @@ class FieldWorkTaskInProgressActivity : BaseActivity() {
             userId = lsmUserId,
             taskId = MyApp.localTempVarStore.taskId,
             submitBaladiyaFWRequest = SubmitBaladiyaFWRequest(
-                latitude = Utilities.getLatitude(this),
-                longitude = Utilities.getLongitude(this),
                 processId = MyApp.localTempVarStore.taskResponse?.processId,
                 requestId = MyApp.localTempVarStore.taskResponse?.requestId,
                 additionalDocs = additionalDocuments

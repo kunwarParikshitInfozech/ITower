@@ -189,8 +189,6 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
     private fun callStartTaskAPIForPayment(currentTaskId: Int) {
         showProgressBar()
         val startTaskRequest = StartTaskRequest(
-            latitude = Utilities.getLatitude(this),
-            longitude = Utilities.getLongitude(this),
             requestId = "",
             source = "",
             timestamp = ""
@@ -221,8 +219,6 @@ class StartTaskActivity : BaseActivity() {                   // all lsm modules 
     private fun callStartTaskAPIForFieldWork(currentTaskId: Int) {
         showProgressBar()
         val startTaskRequest = StartTaskRequest(
-            latitude = Utilities.getLatitude(this),
-            longitude = Utilities.getLongitude(this),
             requestId = "",
             source = "",
             timestamp = ""

@@ -3,9 +3,12 @@ package com.isl.leaseManagement.api
 import ApiInterceptor
 import IApiRequest
 import com.google.gson.GsonBuilder
+import com.isl.leaseManagement.base.BaseActivity
 import com.isl.leaseManagement.utils.AppConstants
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.json.JSONObject
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -40,5 +43,25 @@ object ApiClient {  //this class is  for creating an instance which will call ap
 
         request = retrofit.create(IApiRequest::class.java)
     }
+
+    fun handleApiError(e: Throwable, defaultErrorMessage: String, baseActivity: BaseActivity) {
+        if (e is HttpException) {
+            try {
+                val errorBody = e.response()?.errorBody()?.string()
+                if (!errorBody.isNullOrEmpty()) {
+                    val jsonError = JSONObject(errorBody)
+                    val errorMessage = jsonError.getJSONObject("error").getString("message")
+                    baseActivity.showToastMessage(errorMessage)
+                } else {
+                    baseActivity.showToastMessage(defaultErrorMessage)
+                }
+            } catch (jsonException: Exception) {
+                baseActivity.showToastMessage(defaultErrorMessage)
+            }
+        } else {
+            baseActivity.showToastMessage(defaultErrorMessage)
+        }
+    }
+
 
 }

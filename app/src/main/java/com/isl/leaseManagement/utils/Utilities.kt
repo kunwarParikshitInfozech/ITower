@@ -385,32 +385,27 @@ object Utilities {      //this class is for common util functions
 //
 //    }
 
-    fun getLatitude(context: Context): String {
+    fun getLatitude(context: Context): Double {
         val gps = GPSTracker(context)
-        if (gps.canGetLocation() == true) {
-            var latitude = gps.getLatitude().toString()
-            if (latitude == "0.0" || latitude.isEmpty()) {
-                return ""
-            } else {
+        if (gps.canGetLocation()) {
+            val latitude = gps.latitude
+            if (latitude != 0.0) {
                 return latitude
             }
         }
-        return ""
+        return 0.0
     }
 
-    fun getLongitude(context: Context): String {
+    fun getLongitude(context: Context): Double {
         val gps = GPSTracker(context)
-        if (gps.canGetLocation() == true) {
-            var longitude = gps.getLongitude().toString()
-            if (longitude == "0.0" || longitude.isEmpty()) {
-                return ""
-            } else {
+        if (gps.canGetLocation()) {
+            val longitude = gps.longitude
+            if (longitude != 0.0) {
                 return longitude
             }
         }
-        return ""
+        return 0.0
     }
-
 
 
 }

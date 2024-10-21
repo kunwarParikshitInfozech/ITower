@@ -43,8 +43,6 @@ class BTSStartTaskActivity : BaseActivity() {    // start task for BTS processes
             btsCalledFromRoom()
         } else {
             val startTaskRequest = StartTaskRequest(
-                latitude = Utilities.getLatitude(this),
-                longitude = Utilities.getLongitude(this),
                 requestId = "",
                 source = "",
                 timestamp = ""
