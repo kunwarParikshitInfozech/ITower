@@ -210,5 +210,9 @@
     <string name="landlord_region_arabic">Landlord Region (Arabic)</string>
     <string name="vat_percentage">VAT Percentage</string>
     <string name="enter_arabic">Enter Arabic</string>
+    <string name="tax_organization_type">Tax Organization Type</string>
+    <string name="national_po_box_number">National PO Box Number</string>
+    <string name="candidate_eligible_for_site">Candidate Eligible for Site?</string>
+    <string name="justification_for_ineligible_candidate">Justification for Ineligible Candidate</string>
 
 </resources>

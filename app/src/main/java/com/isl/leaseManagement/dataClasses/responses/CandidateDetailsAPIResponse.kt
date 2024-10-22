@@ -87,33 +87,31 @@ data class CandidateDetailsAPIResponse(
 
     @Entity
     data class LandlordDetail(
-        val _Id: Int?,
-        val commercialRegistrationNo: String?,
+        val _id: Int?,
+        val commercialRegistrationNumber: String?,
         val countryCode: String?,
-
-        @TypeConverters(DocumentConverter::class)
-        val documents: List<Document?>?,
-
-        val eligibleForSite: String?,
+        val eligibleforSite: String?,
         val governmentType: String?,
-        val ineligiblityJustification: String?,
         val investerFlag: String?,
         val isVATApplicable: String?,
-        val landlordCity: String?,
-        val landlordCityLocal: String?,
-        val landlordCountry: String?,
-        val landlordDistrict: String?,
-        val landlordDistrictLocal: String?,
+        val justificationForIneligibleCandidate: String?,
+        val landlordCityName: String?,
+        val landlordCityNameInArabic: String?,
+        val landlordCountryName: String?,
+        val landlordDistrictName: String?,
+        val landlordDistrictNameInArabic: String?,
         val landlordId: String?,
         val landlordName: String?,
-        val landlordNameLocal: String?,
-        val landlordRegion: String?,
-        val landlordRegionLocal: String?,
+        val landlordNameInArabic: String?,
+        val landlordNationalIdNumber: String?,
+        val landlordRegionName: String?,
+        val landlordRegionNameInArabic: String?,
         val landlordType: String?,
-        val nationalIdNo: String?,
-        val nationalPOBoxNo: Int?,
+        val nationalPOBoxNumber: Int?,
         val taxOrganizationType: String?,
-        val vatPercentage: String?
+        val vatPercentage: String?,
+        @TypeConverters(DocumentConverter::class)
+        val documents: List<Document?>?
     ) {
         @Entity
         data class Document(

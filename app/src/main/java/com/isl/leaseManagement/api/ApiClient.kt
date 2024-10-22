@@ -50,8 +50,26 @@ object ApiClient {  //this class is  for creating an instance which will call ap
                 val errorBody = e.response()?.errorBody()?.string()
                 if (!errorBody.isNullOrEmpty()) {
                     val jsonError = JSONObject(errorBody)
-                    val errorMessage = jsonError.getJSONObject("error").getString("message")
-                    baseActivity.showToastMessage(errorMessage)
+
+                    // First, try to parse the single error message format
+                    if (jsonError.has("error") && jsonError.getJSONObject("error").has("message")) {
+                        val errorMessage = jsonError.getJSONObject("error").getString("message")
+                        baseActivity.showToastMessage(errorMessage)
+                    }
+                    // If not, try to parse the array of errors
+                    else if (jsonError.has("errors")) {
+                        val errorsArray = jsonError.getJSONArray("errors")
+                        if (errorsArray.length() > 0) {
+                            val firstError = errorsArray.getJSONObject(0).getString("message")
+                            baseActivity.showToastMessage(firstError)
+                        } else {
+                            baseActivity.showToastMessage(defaultErrorMessage)
+                        }
+                    }
+                    // Fallback to the default message if neither format is found
+                    else {
+                        baseActivity.showToastMessage(defaultErrorMessage)
+                    }
                 } else {
                     baseActivity.showToastMessage(defaultErrorMessage)
                 }
@@ -62,6 +80,7 @@ object ApiClient {  //this class is  for creating an instance which will call ap
             baseActivity.showToastMessage(defaultErrorMessage)
         }
     }
+
 
 
 }
